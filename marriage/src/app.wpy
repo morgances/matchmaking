@@ -16,13 +16,35 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/index'
+      'pages/index',
+      'pages/fate',
+      'pages/love',
+      'pages/mall',
+      'pages/setting'
     ],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: 'WeChat',
       navigationBarTextStyle: 'black'
+    },
+    tabBar: {
+      list: [{
+        pagePath: 'pages/index',
+        text: '首页'
+      }, {
+        pagePath: 'pages/fate',
+        text: '缘分推荐'
+      }, {
+        pagePath: 'pages/love',
+        text: '恋爱圈'
+      }, {
+        pagePath: 'pages/mall',
+        text: '商城'
+      }, {
+        pagePath: 'pages/setting',
+        text: '我的'
+      }]
     }
   }
 

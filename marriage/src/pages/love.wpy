@@ -1,0 +1,26 @@
+/**
+ * Revision History:
+ *   Initial: 2018/09/20          Wang Huajian
+ */
+
+<style lang="less">
+</style>
+
+<template>
+  <view>
+    <text>恋爱圈</text>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Fate extends wepy.page {
+    config = {
+      navigationBarTitleText: '恋爱圈'
+    }
+    data = {
+
+    }
+  }
+</script>

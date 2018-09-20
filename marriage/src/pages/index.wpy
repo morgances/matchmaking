@@ -2,7 +2,7 @@
 </style>
 
 <template>
-  <view class="container">
+  <view>
     <text>以婚至上</text>
   </view>
 </template>
