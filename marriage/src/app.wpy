@@ -29,21 +29,33 @@ export default class extends wepy.app {
       navigationBarTextStyle: 'black'
     },
     tabBar: {
+      color: '#707070',
+      selectedColor: '#ec6787',
       list: [{
         pagePath: 'pages/index',
-        text: '首页'
+        text: '首页',
+        iconPath: './assets/images/ball.png',
+        selectedIconPath: './assets/images/balls.png'
       }, {
         pagePath: 'pages/fate',
-        text: '缘分推荐'
+        text: '缘分推荐',
+        iconPath: './assets/images/see.png',
+        selectedIconPath: './assets/images/sees.png'
       }, {
         pagePath: 'pages/love',
-        text: '恋爱圈'
+        text: '恋爱圈',
+        iconPath: './assets/images/love.png',
+        selectedIconPath: './assets/images/loves.png'
       }, {
         pagePath: 'pages/mall',
-        text: '商城'
+        text: '商城',
+        iconPath: './assets/images/mall.png',
+        selectedIconPath: './assets/images/malls.png'
       }, {
         pagePath: 'pages/setting',
-        text: '我的'
+        text: '我的',
+        iconPath: './assets/images/me.png',
+        selectedIconPath: './assets/images/mes.png'
       }]
     }
   }
