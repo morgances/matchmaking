@@ -4,12 +4,105 @@
  */
 
 <style lang="less">
+.container {
+  background-color: #F8F8F8;
+}
+.card-flex {
+  display: flex;
+  flex-direction: column;
+  background-color: #FFFFFF;
+  width: 96%;
+  margin: 0 auto;
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+}
+.image {
+  height: 700rpx;
+  width: 100%;
+}
+.word-name {
+  font-weight: 300;
+  font-size: 30rpx;
+}
+.word-date {
+  font-size: 20rpx;
+  color: yellowgreen;
+}
+.name-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12rpx;
+  padding-left: 24rpx;
+  padding-right: 24rpx;
+}
+.word-age {
+  font-size: 26rpx;
+  color: #999;
+}
+.word-location {
+  font-size: 20rpx;
+  color: #999;
+}
+.brief-flex {
+  padding-top: 34rpx;
+  padding-left: 40rpx;
+  padding-bottom: 16rpx;
+}
 </style>
 
 <template>
-  <view>
-    <text>缘分推荐</text>
-  </view>
+  <view class="container">
+    <view class="card-flex">
+      <view class="image-flex">
+        <image class="image" src="{{photos}}" />
+      </view>
+      <view class="name-flex">
+        <text class="word-name">雪儿</text>
+        <text class="word-date">ο 期望一年内结婚</text>
+      </view>
+      <view class="name-flex">
+        <text class="word-age">23岁 · 170cm · 20W以下 · 天羯座</text>
+        <text class="word-location">北京</text>
+      </view>
+      <view class="brief-flex">
+        <text class="word-age">好看的皮囊千篇一律 有趣的灵魂万里挑一</text>
+      </view>
+    </view>
+    <view class="card-flex">
+      <view class="image-flex">
+        <image class="image" src="{{img}}" />
+      </view>
+      <view class="name-flex">
+        <text class="word-name">雪儿</text>
+        <text class="word-date">ο 期望一年内结婚</text>
+      </view>
+      <view class="name-flex">
+        <text class="word-age">22岁 · 160cm · 10W以下 · 摩羯座</text>
+        <text class="word-location">西双版纳</text>
+      </view>
+      <view class="brief-flex">
+        <text class="word-age">遇见 你的一次主动 说不定 我们刚好聊得来呢</text>
+      </view>
+    </view>
+    <view class="card-flex">
+      <view class="image-flex">
+        <image class="image" src="{{photo}}" />
+      </view>
+      <view class="name-flex">
+        <text class="word-name">雪儿</text>
+        <text class="word-date">ο 期望一年内结婚</text>
+      </view>
+      <view class="name-flex">
+        <text class="word-age">23岁 · 170cm · 20W以下 · 天羯座</text>
+        <text class="word-location">北京</text>
+      </view>
+      <view class="brief-flex">
+        <text class="word-age">好看的皮囊千篇一律 有趣的灵魂万里挑一</text>
+      </view>
+    </view>
+  </view>  
 </template>
 
 <script>
@@ -20,7 +113,9 @@
       navigationBarTitleText: '缘分推荐'
     }
     data = {
-
+      img: 'https://images.pexels.com/photos/1139793/pexels-photo-1139793.jpeg?auto=compress&cs=tinysrgb&h=350',
+      photo: 'https://images.pexels.com/photos/713312/pexels-photo-713312.jpeg?auto=compress&cs=tinysrgb&h=350',
+      photos: 'https://images.pexels.com/photos/1062280/pexels-photo-1062280.jpeg?auto=compress&cs=tinysrgb&h=350'
     }
   }
 </script>
