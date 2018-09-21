@@ -4,11 +4,185 @@
  */
 
 <style lang="less">
+.layout-flex {
+  display: flex;
+  flex-direction: column;
+}
+.avatar {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 50%;
+  margin-top: 20rpx;
+  margin-left: 30rpx;
+  margin-right: 20rpx;
+}
+.icon-vip {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+}
+.head-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 120rpx;
+}
+.body-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.Id-flex {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 20rpx;
+}
+.name-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.age-flex {
+  padding-top: 14rpx;
+}
+.word-name {
+  font-size: 30rpx;
+}
+.word-age {
+  font-size: 26rpx;
+  font-weight: 300;
+}
+.word-time {
+  font-size: 26rpx;
+  font-weight: 300;
+}
+.time-flex {
+  padding-top: 20rpx;
+  padding-right: 50rpx;
+}
+.content-flex {
+  text-indent: 24rpx;
+  padding-top: 10rpx;
+  padding-left: 140rpx;
+  padding-bottom: 15rpx;
+  padding-right: 30rpx;
+}
+.word-content {
+  font-size: 28rpx;
+  color: #999999;
+}
+.picture-flex {
+  padding-left: 140rpx;
+}
+.picture {
+  width: 60%;
+}
+.footer-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 140rpx;
+  padding-bottom: 20rpx;
+}
+.icon-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20rpx;
+  padding-top: 14rpx;
+}
+.icon {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
+  color: #999999;
+}
+.word-icon {
+  color: #999999;
+  font-size: 24rpx;
+}
+.flower {
+  border-radius: 60rpx;
+  margin-left: 200rpx;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 24rpx;
+  background-color: #bd5959;
+  line-height: 70rpx
+}
 </style>
 
 <template>
-  <view>
-    <text>恋爱圈</text>
+  <view class="layout-flex">
+    <view class="head-flex">
+      <view class="body-flex">
+        <image class="avatar" src="https://images.pexels.com/photos/373945/pexels-photo-373945.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" />
+        <view class="Id-flex">
+          <view class="name-flex">
+            <text class="word-name">我想静静</text>
+            <image class="icon-vip" src="{{vip}}" />
+          </view>
+          <text class="word-age">28岁 · 北京 · 165cm ·双子座</text>
+        </view>
+      </view>
+      <view class="time-flex">
+        <text class="word-age">15:55</text>
+      </view>
+    </view>
+    <view class="content-flex">
+      <text class="word-content">我更新了个人相册，快来看看吧! 又到了一年的中秋佳节，只可惜自己独身异乡</text>
+    </view>
+    <view class="picture-flex">
+      <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/713132/pexels-photo-713132.jpeg?auto=compress&cs=tinysrgb&h=350" />
+    </view>
+    <view class="footer-flex">
+      <view class="icon-flex">
+        <image class="icon" src="{{heart}}" />
+        <text class="word-icon">2</text>
+      </view>
+      <view class="icon-flex">
+        <image class="icon" src="{{message}}" />
+        <text class="word-icon">私密评论</text>
+      </view>
+      <button @tap="give" class="flower">送花</button>
+    </view>
+    <view class="head-flex">
+      <view class="body-flex">
+        <image class="avatar" src="https://images.pexels.com/photos/373945/pexels-photo-373945.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" />
+        <view class="Id-flex">
+          <view class="name-flex">
+            <text class="word-name">我想静静</text>
+            <image class="icon-vip" src="{{vip}}" />
+          </view>
+          <text class="word-age">28岁 · 北京 · 165cm ·双子座</text>
+        </view>
+      </view>
+      <view class="time-flex">
+        <text class="word-age">15:55</text>
+      </view>
+    </view>
+    <view class="content-flex">
+      <text class="word-content">我更新了个人相册，快来看看吧! 又到了一年的中秋佳节，只可惜自己独身异乡</text>
+    </view>
+    <view class="picture-flex">
+      <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/1226458/pexels-photo-1226458.jpeg?auto=compress&cs=tinysrgb&h=350" />
+    </view>
+    <view class="footer-flex">
+      <view class="icon-flex">
+        <image class="icon" src="{{heart}}" />
+        <text class="word-icon">2</text>
+      </view>
+      <view class="icon-flex">
+        <image class="icon" src="{{message}}" />
+        <text class="word-icon">私密评论</text>
+      </view>
+      <button @tap="give" class="flower">送花</button>
+    </view>
   </view>
 </template>
 
@@ -20,7 +194,9 @@
       navigationBarTitleText: '恋爱圈'
     }
     data = {
-
+      vip: '../assets/images/v.png',
+      heart: '../assets/images/heart.png',
+      message: '../assets/images/message.png'
     }
   }
 </script>

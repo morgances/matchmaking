@@ -17,7 +17,7 @@
   margin-bottom: 20rpx;
 }
 .image {
-  height: 700rpx;
+  height: 500rpx;
   width: 100%;
 }
 .word-name {
@@ -37,18 +37,42 @@
   padding-left: 24rpx;
   padding-right: 24rpx;
 }
-.word-age {
+.word-content {
   font-size: 26rpx;
   color: #999;
+}
+.word-age {
+  font-size: 24rpx;
+  color: #999999;
 }
 .word-location {
   font-size: 20rpx;
   color: #999;
 }
 .brief-flex {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-indent: 24rpx;
   padding-top: 34rpx;
-  padding-left: 40rpx;
+  padding-bottom: 12rpx;
+  padding-left: 24rpx;
+  padding-right: 24rpx;
+}
+.brief-flexf {
+  text-indent: 24rpx;
+  padding-top: 34rpx;
   padding-bottom: 16rpx;
+  padding-left: 24rpx;
+  padding-right: 24rpx;
+}
+.fold {
+  display: flex;
+  padding-left: 24rpx;
+  padding-bottom: 28rpx;
+  color: yellowgreen;
+  font-size: 24rpx;
 }
 </style>
 
@@ -56,50 +80,38 @@
   <view class="container">
     <view class="card-flex">
       <view class="image-flex">
+        <image class="image" mode="widthFix" src="{{photo}}" />
+      </view>
+      <view class="name-flex">
+        <text class="word-name">雪儿</text>
+        <text class="word-date">ο 期望一年内结婚</text>
+      </view>
+      <view class="name-flex">
+        <text class="word-age">23岁 · 170cm · 20W以下 · 天羯座</text>
+        <text class="word-location">北京</text>
+      </view>
+      <view class="brief-flexf" wx:if="{{isFold}}">
+        <text class="word-content">好看的皮囊千篇一律 有趣的灵魂万里挑一好看的皮囊千篇一律 有趣的灵魂万里挑一好看的皮囊千篇一律 有趣的灵魂万里挑一 我爱你哦！</text>
+      </view>
+      <view class="brief-flex" wx:else>
+        <text class="word-content">好看的皮囊千篇一律 有趣的灵魂万里挑一好看的皮囊千篇一律 有趣的灵魂万里挑一好看的皮囊千篇一律 有趣的灵魂万里挑一 我爱你哦！</text>
+      </view>
+      <view @tap="flodFn" class="fold">{{fold}}</view>
+    </view>
+    <view class="card-flex">
+      <view class="image-flex">
         <image class="image" src="{{photos}}" />
       </view>
       <view class="name-flex">
-        <text class="word-name">雪儿</text>
+        <text class="word-name">霜儿</text>
         <text class="word-date">ο 期望一年内结婚</text>
       </view>
       <view class="name-flex">
         <text class="word-age">23岁 · 170cm · 20W以下 · 天羯座</text>
-        <text class="word-location">北京</text>
-      </view>
-      <view class="brief-flex">
-        <text class="word-age">好看的皮囊千篇一律 有趣的灵魂万里挑一</text>
-      </view>
-    </view>
-    <view class="card-flex">
-      <view class="image-flex">
-        <image class="image" src="{{img}}" />
-      </view>
-      <view class="name-flex">
-        <text class="word-name">雪儿</text>
-        <text class="word-date">ο 期望一年内结婚</text>
-      </view>
-      <view class="name-flex">
-        <text class="word-age">22岁 · 160cm · 10W以下 · 摩羯座</text>
         <text class="word-location">西双版纳</text>
       </view>
       <view class="brief-flex">
-        <text class="word-age">遇见 你的一次主动 说不定 我们刚好聊得来呢</text>
-      </view>
-    </view>
-    <view class="card-flex">
-      <view class="image-flex">
-        <image class="image" src="{{photo}}" />
-      </view>
-      <view class="name-flex">
-        <text class="word-name">雪儿</text>
-        <text class="word-date">ο 期望一年内结婚</text>
-      </view>
-      <view class="name-flex">
-        <text class="word-age">23岁 · 170cm · 20W以下 · 天羯座</text>
-        <text class="word-location">北京</text>
-      </view>
-      <view class="brief-flex">
-        <text class="word-age">好看的皮囊千篇一律 有趣的灵魂万里挑一</text>
+        <text class="word-content">好看的皮囊千篇一律 有趣的灵魂万里挑一</text>
       </view>
     </view>
   </view>  
@@ -113,9 +125,21 @@
       navigationBarTitleText: '缘分推荐'
     }
     data = {
-      img: 'https://images.pexels.com/photos/1139793/pexels-photo-1139793.jpeg?auto=compress&cs=tinysrgb&h=350',
+      isFold: false,
+      fold: '全文',
       photo: 'https://images.pexels.com/photos/713312/pexels-photo-713312.jpeg?auto=compress&cs=tinysrgb&h=350',
-      photos: 'https://images.pexels.com/photos/1062280/pexels-photo-1062280.jpeg?auto=compress&cs=tinysrgb&h=350'
+      photos: 'https://cdn.magdeleine.co/wp-content/uploads/2018/07/DSCF0780-1400x933.jpg'
+    }
+    methods = {
+      flodFn() {
+        let self = this
+        self.isFold = !self.isFold
+        if (self.isFold === true) {
+          self.fold = '收起'
+        } else {
+          self.fold = '全文'
+        }
+      }
     }
   }
 </script>

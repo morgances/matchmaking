@@ -1,0 +1,43 @@
+/**
+ * Revision History:
+ *   Initial: 2018/09/21          Wang Huajian
+ */
+
+<style lang="less">
+</style>
+
+<template>
+<view>
+  <view class="head-flex">
+    <view class="body-flex">
+      <image class="avatar" src="{{item.avatar}}" />
+      <view class="Id-flex">
+        <view class="name-flex">
+          <text class="word-name">{{item.name}}</text>
+          <image class="icon-vip" src="{{item.vip}}" />
+        </view>
+        <text class="word-age">{{item.age}}</text>
+      </view>
+    </view>
+    <view class="time-flex">
+      <text class="word-age">{{item.date}}</text>
+    </view>
+  </view>
+  <view class="content-flex">
+    <text class="word-content">{{item.content}}</text>
+  </view>
+  <view class="picture-flex">
+    <image class="picture" mode="widthFix" src="{{item.picture}}" />
+  </view>
+</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class LoveCard extends wepy.component {
+    props = {
+      item: Object
+    }
+  }
+</script>
