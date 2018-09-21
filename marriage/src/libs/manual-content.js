@@ -14,3 +14,10 @@ export const LoveCircle = [
     picture: 'https://images.pexels.com/photos/713132/pexels-photo-713132.jpeg?auto=compress&cs=tinysrgb&h=350'
   }
 ]
+
+export const SwiperPicture = [
+  'https://images.pexels.com/photos/920381/pexels-photo-920381.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/769584/pexels-photo-769584.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/1079796/pexels-photo-1079796.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/1386603/pexels-photo-1386603.jpeg?auto=compress&cs=tinysrgb&h=350'
+]

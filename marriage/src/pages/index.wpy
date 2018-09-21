@@ -1,14 +1,79 @@
 <style lang="less">
+.swiper {
+ height: 240px;
+ width: 100%;
+}
+.swiperImage {
+  height: 100%;
+  width: 100%;
+}
+.head-flex {
+  display: flex;
+  flex-direction: column;
+}
+.neck-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  padding-top: 20rpx;
+  margin-bottom: 20rpx;
+}
+.icon-rose {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+}
+.word-icon {
+  font-size: 24rpx;
+  color: #999999
+}
+.icon-flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 </style>
 
 <template>
-  <view>
-    <text>以婚至上</text>
+  <view class="head-flex">
+    <swiper
+      class="swiper"
+      autoplay="{{autoplay}}"
+      indicator-dots="{{dots}}"
+      indicator-color="{{dotsColor}}"
+      indicator-active-color="{{dotsActiveColor}}"
+      circular="{{circular}}"
+      interval="{{interval}}"
+      duration="{{duration}}"
+    >
+    <block wx:for="{{imgUrls}}" wx:key="index">
+      <swiper-item>
+        <image class="swiperImage" src="{{item}}"/>
+      </swiper-item>
+    </block>
+    </swiper>
+    <view class="neck-flex">
+      <view class="icon-flex">
+        <image class="icon-rose" src="{{rose}}" />
+        <text class="word-icon">排行榜</text>
+      </view>
+      <view class="icon-flex">
+        <image class="icon-rose" src="{{registration}}" />
+        <text class="word-icon">线上报名</text>
+      </view>
+      <view class="icon-flex">
+        <image class="icon-rose" src="{{consult}}" />
+        <text class="word-icon">咨询预约</text>
+      </view>
+    </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import { SwiperPicture } from '../libs/manual-content'
 
   export default class Index extends wepy.page {
     config = {
@@ -19,13 +84,17 @@
     }
 
     data = {
-
-    }
-
-    computed = {
-      now () {
-        return +new Date()
-      }
+      imgUrls: SwiperPicture,
+      circular: true,
+      autoplay: true,
+      interval: 5000,
+      duration: 1000,
+      dots: true,
+      dotsColor: '#ffffff',
+      dotsActiveColor: '#349BFF',
+      rose: '../assets/images/rose.png',
+      registration: '../assets/images/team.png',
+      consult: '../assets/images/consult.png'
     }
 
     methods = {
