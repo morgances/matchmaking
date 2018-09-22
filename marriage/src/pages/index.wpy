@@ -1,4 +1,7 @@
 <style lang="less">
+.layout {
+  background-color: #F8F8F8;
+}
 .swiper {
  height: 240px;
  width: 100%;
@@ -18,6 +21,7 @@
   align-items: center;
   padding-top: 20rpx;
   margin-bottom: 20rpx;
+  background-color: #FFFFFF;
 }
 .icon-rose {
   width: 80rpx;
@@ -34,9 +38,33 @@
   justify-content: center;
   align-items: center;
 }
+.card-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 10rpx;
+  padding-bottom: 10rpx;
+  padding-left: 10rpx;
+  border-bottom: 1px solid #EFEFEF;
+  background-color: #FFFFFF;
+}
+.picture {
+  height: 100rpx;
+  width: 300rpx;
+  border-radius: 8rpx;
+}
+.brief-flex {
+  width: 400rpx;
+  padding-left: 20rpx;
+}
+.brief {
+  font-weight: 300;
+  font-size: 28rpx;
+}
 </style>
 
 <template>
+<view class="layout">
   <view class="head-flex">
     <swiper
       class="swiper"
@@ -67,8 +95,31 @@
         <image class="icon-rose" src="{{consult}}" />
         <text class="word-icon">咨询预约</text>
       </view>
+      <view class="icon-flex">
+        <image class="icon-rose" src="{{consult}}" />
+        <text class="word-icon">咨询预约</text>
+      </view>
+    </view>
+    <view class="card-flex">
+      <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/864990/pexels-photo-864990.jpeg?auto=compress&cs=tinysrgb&h=350" />
+      <view class="brief-flex">
+        <text class="brief">一'健'钟情 运动主题单身联谊派对，遇见运动遇见爱！</text>
+      </view>
+    </view>
+    <view class="card-flex">
+      <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/256737/pexels-photo-256737.jpeg?auto=compress&cs=tinysrgb&h=350" />
+      <view class="brief-flex">
+        <text class="brief">相亲99次我终于结婚了！！！</text>
+      </view>
+    </view>
+    <view class="card-flex">
+      <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/1288485/pexels-photo-1288485.jpeg?auto=compress&cs=tinysrgb&h=350" />
+      <view class="brief-flex">
+        <text class="brief">福利来啦！！搞定你喜欢的只差这篇文章</text>
+      </view>
     </view>
   </view>
+</view>
 </template>
 
 <script>
