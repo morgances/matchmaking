@@ -4,23 +4,142 @@
  */
 
 <style lang="less">
+.layout {
+  background-color: #F8F8F8;
+}
+.swiper {
+ height: 360rpx;
+ width: 100%;
+}
+.swiperImage {
+  height: 100%;
+  width: 100%;
+}
+.neck-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  background-color: #FFFFFF;
+}
+.integral-flex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20rpx;
+  padding-left: 16rpx;
+  padding-bottom: 20rpx;
+}
+.integrals-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.word-integral {
+  font-weight: 300;
+  font-size: 40rpx;
+  margin-right: 16rpx;
+}
+.word-points {
+  font-weight: 300;
+  font-size: 40rpx;
+  color: #65ba6b;
+}
+.word-how {
+  font-weight: 300;
+  font-size: 26rpx;
+  color: #999999;
+}
+.button-flex {
+  padding-right: 16rpx;
+}
+.button {
+  font-size: 28rpx;
+  color: #999999;
+}
+.tab {
+  display: flex;
+  z-index: 10;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 50;
+  background-color: #FFFFFF;
+}
+.tabContent {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.tabFont {
+  padding-top: 10px;
+  margin-bottom: 10px;
+}
 </style>
 
 <template>
-  <view>
-    <text>商城</text>
+  <view class="layout">
+    <swiper
+      class="swiper"
+      autoplay="{{autoplay}}"
+      indicator-dots="{{dots}}"
+      indicator-color="{{dotsColor}}"
+      indicator-active-color="{{dotsActiveColor}}"
+      circular="{{circular}}"
+      interval="{{interval}}"
+      duration="{{duration}}"
+    >
+    <block wx:for="{{imgUrl}}" wx:key="index">
+      <swiper-item>
+        <image class="swiperImage" src="{{item}}"/>
+      </swiper-item>
+    </block>
+    </swiper>
+    <view class="neck-flex">
+      <view class="integral-flex">
+        <view class="integrals-flex">
+          <text class="word-integral">我的积分</text>
+          <text class="word-points">6666</text>
+        </view>
+        <text class="word-how">如何获取更多积分</text>
+      </view>
+      <view class="button-flex">
+        <button class="button">兑换记录</button>
+      </view>
+    </view>
+    <view class="tab">
+      <view class="tabContent" wx:for="{{tab}}" wx:key="index" bindtap="tap" id="{{index}}">
+        <view
+          class="tabFont"
+          style="color: {{index == currentTargetId ? '#349BFF' : '#666666'}};border-bottom: {{index == currentTargetId ? '2px solid #349BFF' : ''}};"
+        >
+          {{item}}
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import { SwiperPhoto } from '../libs/manual-content'
 
   export default class Fate extends wepy.page {
     config = {
       navigationBarTitleText: '积分商城'
     }
     data = {
-
+      imgUrl: SwiperPhoto,
+      circular: true,
+      autoplay: true,
+      interval: 5000,
+      duration: 1000,
+      dots: true,
+      dotsColor: '#ffffff',
+      dotsActiveColor: '#349BFF',
+      tab: ['线上商品', '线下商品']
     }
   }
 </script>

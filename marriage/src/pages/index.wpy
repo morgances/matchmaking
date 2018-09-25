@@ -153,7 +153,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-right: 20rpx;
+  margin-right: 40rpx;
   padding-top: 14rpx;
 }
 .icon {
