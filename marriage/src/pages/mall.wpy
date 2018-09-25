@@ -119,6 +119,13 @@
         </view>
       </view>
     </view>
+    <view wx:if="{{currentTargetId == 0}}">
+      <view>
+        <text></text>
+        <text></text>
+        <image />
+      </view>
+    </view>
   </view>
 </template>
 
@@ -139,7 +146,15 @@
       dots: true,
       dotsColor: '#ffffff',
       dotsActiveColor: '#349BFF',
-      tab: ['线上商品', '线下商品']
+      tab: ['线上商品', '线下商品'],
+      currentTargetId: 0
+    }
+    methods = {
+      tap(e) {
+        let self = this
+        self.currentTargetId = e.currentTarget.id
+        self.type = self.tab[self.currentTargetId]
+      }
     }
   }
 </script>
