@@ -10,7 +10,7 @@
   height: 100%;
   width: 100%;
 }
-.head-flex {
+.swiper-flex {
   display: flex;
   flex-direction: column;
 }
@@ -33,40 +33,143 @@
   font-size: 24rpx;
   color: #999999
 }
-.icon-flex {
+.neck-icon-flex {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-.card-flex {
+.recommend-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #FFFFFF;
+  // margin-top: 20rpx;
+  margin-bottom: 10rpx;
+}
+.word-recommend {
+  font-weight: 500;
+  font-size: 30rpx;
+  padding-top: 30rpx;
+  padding-left: 30rpx;
+  padding-bottom: 30rpx;
+  color: #e89abe;
+}
+.word-circle {
+  font-size: 24rpx;
+  color: yellowgreen;
+  padding-top: 30rpx;
+  padding-right: 30rpx;
+  padding-bottom: 30rpx;
+}
+.head-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 120rpx;
+  padding-top: 20rpx;
+}
+.body-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.Id-flex {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 20rpx;
+}
+.name-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.age-flex {
+  padding-top: 14rpx;
+}
+.content-flex {
+  padding-top: 10rpx;
+  padding-left: 30rpx;
+  padding-bottom: 15rpx;
+  padding-right: 30rpx;
+}
+.picture-flex {
+  padding-left: 30rpx;
+}
+.avatar {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 50%;
+  margin-top: 20rpx;
+  margin-left: 30rpx;
+  margin-right: 20rpx;
+}
+.icon-vip {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+}
+.picture {
+  width: 85%;
+}
+.word-name {
+  font-size: 30rpx;
+}
+.word-age {
+  font-size: 26rpx;
+  font-weight: 300;
+}
+.word-content {
+  font-size: 28rpx;
+  color: #999999;
+}
+.belly-flex {
+  margin-bottom: 10rpx;
+  background-color: #FFFFFF;
+}
+.footer-flex {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-top: 20rpx;
-  padding-bottom: 10rpx;
-  padding-left: 10rpx;
-  border-bottom: 1px solid #EFEFEF;
-  background-color: #FFFFFF;
+  padding-left: 30rpx;
+  padding-bottom: 20rpx;
 }
-.picture {
-  height: 100rpx;
-  width: 300rpx;
-  border-radius: 8rpx;
+.icon-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20rpx;
+  padding-top: 14rpx;
 }
-.brief-flex {
-  width: 400rpx;
-  padding-left: 20rpx;
+.icon {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
+  color: #999999;
 }
-.brief {
-  font-weight: 300;
-  font-size: 28rpx;
+.word-icon {
+  color: #e89abe;
+  font-size: 24rpx;
+}
+.flower {
+  border-radius: 60rpx;
+  margin-left: 200rpx;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 24rpx;
+  background-color: #bd5959;
+  line-height: 70rpx
 }
 </style>
 
 <template>
 <view class="layout">
-  <view class="head-flex">
+  <view class="swiper-flex">
     <swiper
       class="swiper"
       autoplay="{{autoplay}}"
@@ -84,39 +187,85 @@
     </block>
     </swiper>
     <view class="neck-flex">
-      <view class="icon-flex">
+      <view class="neck-icon-flex">
         <image class="icon-rose" src="../assets/images/test.png" />
         <text class="word-icon">测试题</text>
       </view>
-      <view class="icon-flex">
+      <view class="neck-icon-flex">
         <image class="icon-rose" src="../assets/images/check.png" />
         <text class="word-icon">线上报名</text>
       </view>
-      <view class="icon-flex">
+      <view class="neck-icon-flex">
         <image class="icon-rose" src="../assets/images/strategy.png" />
         <text class="word-icon">攻略课堂</text>
       </view>
-      <view class="icon-flex">
+      <view class="neck-icon-flex">
         <image class="icon-rose" src="../assets/images/infor.png" />
         <text class="word-icon">咨询预约</text>
       </view>
     </view>
-    <view class="card-flex">
-      <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/864990/pexels-photo-864990.jpeg?auto=compress&cs=tinysrgb&h=350" />
-      <view class="brief-flex">
-        <text class="brief">一'健'钟情 运动主题单身联谊派对，遇见运动遇见爱！</text>
+    <view class="recommend-flex">
+      <text class="word-recommend">为你推荐</text>
+      <text class="word-circle">换一批</text>
+    </view>
+    <view class="belly-flex">
+      <view class="head-flex">
+        <view class="body-flex">
+          <image class="avatar" src="https://images.pexels.com/photos/373945/pexels-photo-373945.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" />
+          <view class="Id-flex">
+            <view class="name-flex">
+              <text class="word-name">我想静静</text>
+              <image class="icon-vip" src="../assets/images/v.png" />
+            </view>
+            <text class="word-age">28岁 · 北京 · 165cm ·双子座</text>
+          </view>
+        </view>
+      </view>
+      <view class="content-flex">
+        <text class="word-content">我更新了相册，快来看看吧！</text>
+      </view>
+      <view class="picture-flex">
+        <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/713132/pexels-photo-713132.jpeg?auto=compress&cs=tinysrgb&h=350" />
+      </view>
+      <view class="footer-flex">
+        <view class="icon-flex">
+          <image class="icon" src="../assets/images/hands.png" />
+          <text class="word-icon">2</text>
+        </view>
+        <view class="icon-flex">
+          <image class="icon" src="../assets/images/like.png" />
+          <text class="word-icon">pick</text>
+        </view>
       </view>
     </view>
-    <view class="card-flex">
-      <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/256737/pexels-photo-256737.jpeg?auto=compress&cs=tinysrgb&h=350" />
-      <view class="brief-flex">
-        <text class="brief">相亲99次我终于结婚了！！！</text>
+    <view class="belly-flex">
+      <view class="head-flex">
+        <view class="body-flex">
+          <image class="avatar" src="https://images.pexels.com/photos/373945/pexels-photo-373945.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" />
+          <view class="Id-flex">
+            <view class="name-flex">
+              <text class="word-name">我想静静</text>
+              <image class="icon-vip" src="../assets/images/v.png" />
+            </view>
+            <text class="word-age">28岁 · 北京 · 165cm ·双子座</text>
+          </view>
+        </view>
       </view>
-    </view>
-    <view class="card-flex">
-      <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/1288485/pexels-photo-1288485.jpeg?auto=compress&cs=tinysrgb&h=350" />
-      <view class="brief-flex">
-        <text class="brief">福利来啦！！搞定你喜欢的只差这篇文章</text>
+      <view class="content-flex">
+        <text class="word-content">我更新了相册，快来看看吧！</text>
+      </view>
+      <view class="picture-flex">
+        <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/713132/pexels-photo-713132.jpeg?auto=compress&cs=tinysrgb&h=350" />
+      </view>
+      <view class="footer-flex">
+        <view class="icon-flex">
+          <image class="icon" src="../assets/images/hands.png" />
+          <text class="word-icon">2</text>
+        </view>
+        <view class="icon-flex">
+          <image class="icon" src="../assets/images/like.png" />
+          <text class="word-icon">pick</text>
+        </view>
       </view>
     </view>
   </view>
