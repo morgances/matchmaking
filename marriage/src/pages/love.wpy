@@ -53,6 +53,11 @@
       </view>
     </repeat>
     <view class="footer-flex">
+      <!-- <repeat for="{{clickLike}}" key="index" index="index" item="item">
+        <view @tap="knows" id="{{index}}">
+          <clickHeart :item="item"></clickHeart>
+        </view>
+      </repeat> -->
       <view class="icon-flex">
         <image class="icon" src="{{heart}}" />
         <text class="word-icon">2</text>
@@ -69,6 +74,7 @@
 <script>
   import wepy from 'wepy'
   import LoveCard from '../components/lovecard'
+  // import ClickHeart from '../components/clickheart'
 
   import { LoveCircle } from '../libs/manual-content'
 
@@ -78,9 +84,11 @@
     }
     components = {
       loveCard: LoveCard
+      // clickHeart: ClickHeart
     }
     data = {
       loveCircle: LoveCircle,
+      // clickLike: ClickLike,
       heart: '../assets/images/heart.png',
       message: '../assets/images/message.png'
     }

@@ -23,6 +23,23 @@ export const LoveCircle = [
   }
 ]
 
+export const ClickLike = [
+  {
+    heart: '../assets/images/heart.png',
+    number: 3
+  }
+]
+
+export const CommentHer = [
+  {
+    message: '../assets/images/message.png',
+    comment: '私密评论'
+  }, {
+    message: '../assets/images/message.png',
+    comment: '私密评论'
+  }
+]
+
 export const SwiperPicture = [
   'https://images.pexels.com/photos/920381/pexels-photo-920381.jpeg?auto=compress&cs=tinysrgb&h=350',
   'https://images.pexels.com/photos/769584/pexels-photo-769584.jpeg?auto=compress&cs=tinysrgb&h=350',

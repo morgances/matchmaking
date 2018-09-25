@@ -4,117 +4,181 @@
  */
 
 <style lang="less">
-.container {
+.layout-flex {
   background-color: #F8F8F8;
+  padding-top: 10rpx;
+  padding-bottom: 10rpx
 }
-.card-flex {
+.single-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 10rpx;
+  margin-right: 10rpx;
+  margin-bottom: 10rpx;
+  padding-top: 20rpx;
+  padding-left: 20rpx;
+  padding-bottom: 20rpx;
+  padding-right: 20rpx;
+  background-color: #FFFFFF;
+}
+.message-flex {
   display: flex;
   flex-direction: column;
-  background-color: #FFFFFF;
-  width: 96%;
-  margin: 0 auto;
-  margin-top: 20rpx;
-  margin-bottom: 20rpx;
-}
-.image {
-  height: 500rpx;
-  width: 100%;
-}
-.word-name {
-  font-weight: 300;
-  font-size: 30rpx;
-}
-.word-date {
-  font-size: 20rpx;
-  color: yellowgreen;
+  height: 150rpx;
+  padding-left: 30rpx;
 }
 .name-flex {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
-  padding-top: 12rpx;
-  padding-left: 24rpx;
-  padding-right: 24rpx;
 }
-.word-content {
-  font-size: 26rpx;
-  color: #999;
+.button-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 360rpx;
+  margin-top: 6rpx;
+  margin-bottom: 20rpx;
 }
-.word-age {
+.picture {
+  height: 180rpx;
+  width: 200rpx;
+  border-radius: 6rpx;
+}
+.word-name {
   font-size: 24rpx;
-  color: #999999;
 }
-.word-location {
+.icon {
+  height: 40rpx;
+  width: 40rpx;
+  border-radius: 50%;
+}
+.button {
   font-size: 20rpx;
-  color: #999;
 }
-.brief-flex {
+.word-brief {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   overflow: hidden;
-  text-indent: 24rpx;
-  padding-top: 34rpx;
-  padding-bottom: 12rpx;
-  padding-left: 24rpx;
-  padding-right: 24rpx;
-}
-.brief-flexf {
-  text-indent: 24rpx;
-  padding-top: 34rpx;
-  padding-bottom: 16rpx;
-  padding-left: 24rpx;
-  padding-right: 24rpx;
-}
-.fold {
-  display: flex;
-  padding-left: 24rpx;
-  padding-bottom: 28rpx;
-  color: yellowgreen;
+  font-weight: 300;
   font-size: 24rpx;
 }
 </style>
 
 <template>
-  <view class="container">
-    <view class="card-flex">
-      <view class="image-flex">
-        <image class="image" mode="widthFix" src="{{photo}}" />
+  <view class="layout-flex">
+    <view class="single-flex">
+      <view>
+        <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/428321/pexels-photo-428321.jpeg?auto=compress&cs=tinysrgb&h=350" />
       </view>
-      <view class="name-flex">
-        <text class="word-name">雪儿</text>
-        <text class="word-date">ο 期望一年内结婚</text>
-      </view>
-      <view class="name-flex">
-        <text class="word-age">23岁 · 170cm · 20W以下 · 天羯座</text>
-        <text class="word-location">北京</text>
-      </view>
-      <view class="brief-flexf" wx:if="{{isFold}}">
-        <text class="word-content">好看的皮囊千篇一律 有趣的灵魂万里挑一好看的皮囊千篇一律 有趣的灵魂万里挑一好看的皮囊千篇一律 有趣的灵魂万里挑一 我爱你哦！</text>
-      </view>
-      <view class="brief-flex" wx:else>
-        <text class="word-content">好看的皮囊千篇一律 有趣的灵魂万里挑一好看的皮囊千篇一律 有趣的灵魂万里挑一好看的皮囊千篇一律 有趣的灵魂万里挑一 我爱你哦！</text>
-      </view>
-      <view @tap="flodFn" class="fold">{{fold}}</view>
-    </view>
-    <view class="card-flex">
-      <view class="image-flex">
-        <image class="image" src="{{photos}}" />
-      </view>
-      <view class="name-flex">
-        <text class="word-name">霜儿</text>
-        <text class="word-date">ο 期望一年内结婚</text>
-      </view>
-      <view class="name-flex">
-        <text class="word-age">23岁 · 170cm · 20W以下 · 天羯座</text>
-        <text class="word-location">西双版纳</text>
-      </view>
-      <view class="brief-flex">
-        <text class="word-content">好看的皮囊千篇一律 有趣的灵魂万里挑一</text>
+      <view class="message-flex">
+        <view class="name-flex">
+          <text class="word-name">童话</text>
+          <image class="icon" src="../assets/images/viper.png" />
+          <image class="icon" src="../assets/images/idcard.png" />
+        </view>
+        <view class="button-flex">
+          <button class="button">23岁</button>
+          <button class="button">温州</button>
+          <button class="button">客户服务</button>
+        </view>
+        <text class="word-brief">我喜欢爱懂温暖的你，也喜欢爱我喜欢爱懂温暖的你，也喜欢爱你打游戏不回家，你信吗</text> 
       </view>
     </view>
-  </view>  
+    <view class="single-flex">
+      <view>
+        <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/763546/pexels-photo-763546.jpeg?auto=compress&cs=tinysrgb&h=350" />
+      </view>
+      <view class="message-flex">
+        <view class="name-flex">
+          <text class="word-name">我想静静</text>
+          <image class="icon" src="../assets/images/viper.png" />
+          <image class="icon" src="../assets/images/idcard.png" />
+        </view>
+        <view class="button-flex">
+          <button class="button">23岁</button>
+          <button class="button">北京</button>
+          <button class="button">幼师</button>
+        </view>
+        <text class="word-brief">我喜欢爱懂温暖的你，也喜欢爱</text>
+      </view>
+    </view>
+    <view class="single-flex">
+      <view>
+        <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/763546/pexels-photo-763546.jpeg?auto=compress&cs=tinysrgb&h=350" />
+      </view>
+      <view class="message-flex">
+        <view class="name-flex">
+          <text class="word-name">静静不想我</text>
+          <image class="icon" src="../assets/images/viper.png" />
+          <image class="icon" src="../assets/images/idcard.png" />
+        </view>
+        <view class="button-flex">
+          <button class="button">28岁</button>
+          <button class="button">上海</button>
+          <button class="button">其他职业</button>
+        </view>
+        <text class="word-brief">我喜欢爱懂温暖的你，也喜欢爱你打游戏不回家，你信吗</text>
+      </view>
+    </view>
+    <view class="single-flex">
+      <view>
+        <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/428321/pexels-photo-428321.jpeg?auto=compress&cs=tinysrgb&h=350" />
+      </view>
+      <view class="message-flex">
+        <view class="name-flex">
+          <text class="word-name">童话</text>
+          <image class="icon" src="../assets/images/viper.png" />
+          <image class="icon" src="../assets/images/idcard.png" />
+        </view>
+        <view class="button-flex">
+          <button class="button">23岁</button>
+          <button class="button">温州</button>
+          <button class="button">客户服务</button>
+        </view>
+        <text class="word-brief">我喜欢爱懂温暖的你，也喜欢爱我喜欢爱懂温暖的你，也喜欢爱你打游戏不回家，你信吗</text> 
+      </view>
+    </view>
+    <view class="single-flex">
+      <view>
+        <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/428321/pexels-photo-428321.jpeg?auto=compress&cs=tinysrgb&h=350" />
+      </view>
+      <view class="message-flex">
+        <view class="name-flex">
+          <text class="word-name">童话</text>
+          <image class="icon" src="../assets/images/viper.png" />
+          <image class="icon" src="../assets/images/idcard.png" />
+        </view>
+        <view class="button-flex">
+          <button class="button">23岁</button>
+          <button class="button">温州</button>
+          <button class="button">客户服务</button>
+        </view>
+        <text class="word-brief">我喜欢爱懂温暖的你，也喜欢爱我喜欢爱懂温暖的你，也喜欢爱你打游戏不回家，你信吗</text> 
+      </view>
+    </view>
+    <view class="single-flex">
+      <view>
+        <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/428321/pexels-photo-428321.jpeg?auto=compress&cs=tinysrgb&h=350" />
+      </view>
+      <view class="message-flex">
+        <view class="name-flex">
+          <text class="word-name">童话</text>
+          <image class="icon" src="../assets/images/viper.png" />
+          <image class="icon" src="../assets/images/idcard.png" />
+        </view>
+        <view class="button-flex">
+          <button class="button">23岁</button>
+          <button class="button">温州</button>
+          <button class="button">客户服务</button>
+        </view>
+        <text class="word-brief">我喜欢爱懂温暖的你，也喜欢爱我喜欢爱懂温暖的你，也喜欢爱你打游戏不回家，你信吗</text> 
+      </view>
+    </view>
+  </view>
 </template>
 
 <script>
@@ -125,21 +189,10 @@
       navigationBarTitleText: '缘分推荐'
     }
     data = {
-      isFold: false,
-      fold: '全文',
-      photo: 'https://images.pexels.com/photos/713312/pexels-photo-713312.jpeg?auto=compress&cs=tinysrgb&h=350',
-      photos: 'https://cdn.magdeleine.co/wp-content/uploads/2018/07/DSCF0780-1400x933.jpg'
+
     }
     methods = {
-      flodFn() {
-        let self = this
-        self.isFold = !self.isFold
-        if (self.isFold === true) {
-          self.fold = '收起'
-        } else {
-          self.fold = '全文'
-        }
-      }
+
     }
   }
 </script>

@@ -20,12 +20,13 @@
   justify-content: space-around;
   align-items: center;
   padding-top: 20rpx;
+  padding-bottom: 20rpx;
   margin-bottom: 20rpx;
   background-color: #FFFFFF;
 }
 .icon-rose {
-  width: 80rpx;
-  height: 80rpx;
+  width: 60rpx;
+  height: 60rpx;
   border-radius: 50%;
 }
 .word-icon {
@@ -42,7 +43,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-top: 10rpx;
+  padding-top: 20rpx;
   padding-bottom: 10rpx;
   padding-left: 10rpx;
   border-bottom: 1px solid #EFEFEF;
@@ -84,19 +85,19 @@
     </swiper>
     <view class="neck-flex">
       <view class="icon-flex">
-        <image class="icon-rose" src="{{rose}}" />
-        <text class="word-icon">排行榜</text>
+        <image class="icon-rose" src="../assets/images/test.png" />
+        <text class="word-icon">测试题</text>
       </view>
       <view class="icon-flex">
-        <image class="icon-rose" src="{{registration}}" />
+        <image class="icon-rose" src="../assets/images/check.png" />
         <text class="word-icon">线上报名</text>
       </view>
       <view class="icon-flex">
-        <image class="icon-rose" src="{{consult}}" />
-        <text class="word-icon">咨询预约</text>
+        <image class="icon-rose" src="../assets/images/strategy.png" />
+        <text class="word-icon">攻略课堂</text>
       </view>
       <view class="icon-flex">
-        <image class="icon-rose" src="{{consult}}" />
+        <image class="icon-rose" src="../assets/images/infor.png" />
         <text class="word-icon">咨询预约</text>
       </view>
     </view>
@@ -142,10 +143,7 @@
       duration: 1000,
       dots: true,
       dotsColor: '#ffffff',
-      dotsActiveColor: '#349BFF',
-      rose: '../assets/images/rose.png',
-      registration: '../assets/images/team.png',
-      consult: '../assets/images/consult.png'
+      dotsActiveColor: '#349BFF'
     }
 
     methods = {

@@ -1,0 +1,42 @@
+/**
+ * Revision History:
+ *   Initial: 2018/09/22          Wang Huajian
+ */
+
+<style lang="less">
+.icon-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20rpx;
+  padding-top: 14rpx;
+}
+.icon {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
+  color: #999999;
+}
+.word-icon {
+  color: #999999;
+  font-size: 24rpx;
+}
+</style>
+
+<template>
+  <view class="icon-flex">
+    <image class="icon" src="{{item.heart}}" />
+    <text class="word-icon">{{item.number}}</text>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class ClickHeart wepy.component {
+    props = {
+      item: Object
+    }
+  }
+</script>
