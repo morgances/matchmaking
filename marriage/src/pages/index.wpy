@@ -45,8 +45,18 @@
   justify-content: space-between;
   align-items: center;
   background-color: #FFFFFF;
-  // margin-top: 20rpx;
   margin-bottom: 10rpx;
+}
+.change-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.icon-change {
+  height: 40rpx;
+  width: 40rpx;
+  border-radius: 50%;
 }
 .word-recommend {
   font-weight: 500;
@@ -58,7 +68,7 @@
 }
 .word-circle {
   font-size: 24rpx;
-  color: yellowgreen;
+  color: #65ba6b;
   padding-top: 30rpx;
   padding-right: 30rpx;
   padding-bottom: 30rpx;
@@ -206,7 +216,10 @@
     </view>
     <view class="recommend-flex">
       <text class="word-recommend">为你推荐</text>
-      <text class="word-circle">换一批</text>
+      <view class="change-flex">
+        <image class="icon-change" src="../assets/images/change.png" />
+        <text class="word-circle">换一批</text>
+      </view>
     </view>
     <view class="belly-flex">
       <view class="head-flex">
