@@ -215,7 +215,7 @@
       </view>
     </view>
     <view class="recommend-flex">
-      <text class="word-recommend">为你推荐</text>
+      <text class="word-recommend">为您推荐</text>
       <view class="change-flex">
         <image class="icon-change" src="../assets/images/change.png" />
         <text class="word-circle">换一批</text>

@@ -4,11 +4,232 @@
  */
 
 <style lang="less">
+.layout {
+  background-color: #F8F8F8;
+  padding-top: 10rpx;
+}
+.head-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: 2rpx solid #F8F8F8;
+  margin: 0 10 0 10rpx;
+  background-color: #FFFFFF;
+}
+.left-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 40rpx;
+  padding-left: 20rpx;
+  padding-bottom: 30rpx;
+}
+.name-flex {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10rpx;
+}
+.avatar {
+  height: 140rpx;
+  width: 140rpx;
+  border-radius: 50%;
+}
+.word-name {
+  font-size: 40rpx;
+  color: #333333;
+}
+.word-id {
+  font-size: 24rpx;
+  color: #696969;
+}
+.data-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-top: 40rpx;
+  padding-right: 20rpx;
+}
+.word-data {
+  font-size: 30rpx;
+  color: #696969;
+}
+.arrow {
+  height: 40rpx;
+  width: 40rpx;
+  border-radius: 50%;
+}
+.vip-flex {
+  display: flex;
+  flex-direction: row;
+  padding-left: 20rpx;
+}
+.icon-neck-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 30rpx;
+  padding-bottom: 30rpx;
+  margin: 0 0 20rpx;
+  background-color: #FFFFFF;
+}
+.flex-icon {
+  display: flex;
+  flex-direction: row;
+  padding-right: 130rpx;
+}
+.icon {
+  height: 40rpx;
+  width: 40rpx;
+  border-radius: 50%;
+  margin-right: 8rpx;
+}
+.word-vip {
+  font-size: 26rpx;
+  color: #696969;
+}
+.button {
+  font-size: 26rpx;
+  border-radius: 60rpx;
+  line-height: 60rpx;
+  color: rgb(196, 65, 65);
+  background-color: rgb(243, 232, 232);
+  cursor: pointer;
+}
+
+.flex-cat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.background-cat {
+  height: 3rem;
+  border-radius: 5px;
+  border: 1px solid #F8F8F8;
+  background-color: #FFFFFF;
+}
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.flex-next {
+  margin-right: 14px;
+}
+.icons {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  border: 1px solid #F8F8F8;
+}
+.distance {
+  margin: 5px 10px 5px 14px;
+}
+.next {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 10px;
+}
+.word {
+  font-size: 14px;
+}
+.line {
+  width: 340px;
+  border: 1px solid #FFFFFF;
+}
+.footer-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #FFFFFF;
+  margin-top: 20rpx;
+}
+.icon-footer {
+  height: 80rpx;
+  width: 80rpx;
+  border-radius: 50%;
+}
+.icon-footer-flex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 </style>
 
 <template>
-  <view>
-    <text>我的</text>
+  <view class="layout">
+    <view class="head-flex">
+      <view class="left-flex">
+        <image class="avatar" src="https://images.pexels.com/photos/355164/pexels-photo-355164.jpeg?auto=compress&cs=tinysrgb&h=350" />
+        <view class="name-flex">
+          <text class="word-name">One Wechat</text>
+          <text class="word-id">交友ID: 72544</text>
+        </view>
+      </view>
+      <view class="data-flex">
+        <text class="word-data">资料完整度80%</text>
+        <image class="arrow" src="../assets/images/arrow.png" />
+      </view>
+    </view>
+    <view class="icon-neck-flex">
+      <view class="flex-icon">
+        <view class="vip-flex">
+          <image class="icon" src="../assets/images/viper.png" />
+          <text class="word-vip">未开通</text>
+        </view>
+        <view class="vip-flex">
+          <image class="icon" src="../assets/images/idcard.png" />
+          <text class="word-vip">未认证</text>
+        </view>
+      </view>
+      <button class="button">🎁  开通服务</button>
+    </view>
+    <view class="background-cat flex-cat">
+      <view class="flex">
+        <image class="icons distance" src="../assets/images/man.png" />
+        <text class="word">谁看过我（0）</text>
+      </view> 
+      <view class="flex-next">
+        <image class="icons" src="../assets/images/arrow.png" />
+      </view>
+    </view>
+    <view class="background-cat flex-cat">
+      <view class="flex">
+        <image class="icons distance" src="../assets/images/ecg.png" />
+        <text class="word">谁关注我（0）</text>
+      </view> 
+      <view class="flex-next">
+        <image class="icons" src="../assets/images/arrow.png" />
+      </view>
+    </view>
+    <view class="background-cat flex-cat">
+      <view class="flex">
+        <image class="icons distance" src="../assets/images/ec.png" />
+        <text class="word">我关注谁（0）</text>
+      </view> 
+      <view class="flex-next">
+        <image class="icons" src="../assets/images/arrow.png" />
+      </view>
+    </view>
+    <view class="footer-flex">
+      <view class="icon-footer-flex">
+        <image class="icon-footer" src="../assets/images/viper.png" />
+        <text class="word">我的礼物</text>
+      </view>
+      <view class="icon-footer-flex">
+        <image class="icon-footer" src="../assets/images/viper.png" />
+        <text class="word">我的认证</text>
+      </view>
+      <view class="icon-footer-flex">
+        <image class="icon-footer" src="../assets/images/viper.png" />
+        <text class="word">我的钱包</text>
+      </view>
+      <view class="icon-footer-flex">
+        <image class="icon-footer" src="../assets/images/viper.png" />
+        <text class="word">会员服务</text>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -17,7 +238,7 @@
 
   export default class Fate extends wepy.page {
     config = {
-      navigationBarTitleText: '我的'
+      navigationBarTitleText: '个人中心'
     }
     data = {
 

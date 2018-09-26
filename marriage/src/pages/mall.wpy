@@ -39,8 +39,9 @@
 }
 .word-integral {
   font-weight: 300;
-  font-size: 40rpx;
+  font-size: 36rpx;
   margin-right: 16rpx;
+  color: #696969;
 }
 .word-points {
   font-weight: 300;
@@ -76,6 +77,45 @@
 .tabFont {
   padding-top: 10px;
   margin-bottom: 10px;
+}
+.card-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10rpx;
+}
+.goods-flex {
+  display: flex;
+  flex-direction: column;
+  background-color: #FFFFFF;
+  padding-top: 20rpx;
+  padding-bottom: 20rpx;
+  padding-left: 30rpx;
+  padding-right: 30rpx;
+}
+.subtitle {
+  font-size: 26rpx;
+  color: #696969;
+}
+.tag {
+  font-size: 22rpx;
+  color: #999999;
+  margin-left: 6rpx;
+  margin-right: 30rpx;
+}
+.goods {
+  height: 220rpx;
+  width: 300rpx;
+}
+.footer-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.word-goods-integral {
+  font-size: 26rpx;
+  color: #65ba6b;
 }
 </style>
 
@@ -120,11 +160,55 @@
       </view>
     </view>
     <view wx:if="{{currentTargetId == 0}}">
-      <view>
-        <text></text>
-        <text></text>
-        <image />
+      <view class="card-flex">
+        <view class="goods-flex">
+          <text class="subtitle">传奇世界H5游戏大礼包</text>
+          <text class="tag">用户专享</text>
+          <image class="goods" src="https://images.pexels.com/photos/322207/pexels-photo-322207.jpeg?auto=compress&cs=tinysrgb&h=350" />
+          <view class="footer-flex">
+            <text class="word-goods-integral">22</text>
+            <text class="tag">积分</text>
+            <text class="word-goods-integral">抽奖</text>
+          </view>
+        </view>
+        <view class="goods-flex">
+          <text class="subtitle">传奇世界H5游戏大礼包</text>
+          <text class="tag">用户专享</text>
+          <image class="goods" src="https://images.pexels.com/photos/322207/pexels-photo-322207.jpeg?auto=compress&cs=tinysrgb&h=350" />
+          <view class="footer-flex">
+            <text class="word-goods-integral">22</text>
+            <text class="tag">积分</text>
+            <text class="word-goods-integral">抽奖</text>
+          </view>
+        </view>
       </view>
+      <view class="card-flex">
+        <view class="goods-flex">
+          <text class="subtitle">传奇世界H5游戏大礼包</text>
+          <text class="tag">用户专享</text>
+          <image class="goods" src="https://images.pexels.com/photos/322207/pexels-photo-322207.jpeg?auto=compress&cs=tinysrgb&h=350" />
+          <view class="footer-flex">
+            <text class="word-goods-integral">22</text>
+            <text class="tag">积分</text>
+            <text class="word-goods-integral">抽奖</text>
+          </view>
+        </view>
+        <view class="goods-flex">
+          <text class="subtitle">传奇世界H5游戏大礼包</text>
+          <text class="tag">用户专享</text>
+          <image class="goods" src="https://images.pexels.com/photos/322207/pexels-photo-322207.jpeg?auto=compress&cs=tinysrgb&h=350" />
+          <view class="footer-flex">
+            <text class="word-goods-integral">22</text>
+            <text class="tag">积分</text>
+            <text class="word-goods-integral">抽奖</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{currentTargetId == 1}}">
+      <text></text>
+      <text></text>
+      <image />
     </view>
   </view>
 </template>
