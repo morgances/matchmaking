@@ -77,7 +77,7 @@
       <view class="message-flex">
         <view class="name-flex">
           <text class="word-name">童话</text>
-          <image class="icon" src="../assets/images/viper.png" />
+          <image class="icon" src="../assets/images/vip.png" />
           <image class="icon" src="../assets/images/idcard.png" />
         </view>
         <view class="button-flex">
@@ -95,7 +95,7 @@
       <view class="message-flex">
         <view class="name-flex">
           <text class="word-name">我想静静</text>
-          <image class="icon" src="../assets/images/viper.png" />
+          <image class="icon" src="../assets/images/vip.png" />
           <image class="icon" src="../assets/images/idcard.png" />
         </view>
         <view class="button-flex">
@@ -113,7 +113,7 @@
       <view class="message-flex">
         <view class="name-flex">
           <text class="word-name">静静不想我</text>
-          <image class="icon" src="../assets/images/viper.png" />
+          <image class="icon" src="../assets/images/vip.png" />
           <image class="icon" src="../assets/images/idcard.png" />
         </view>
         <view class="button-flex">
@@ -131,7 +131,7 @@
       <view class="message-flex">
         <view class="name-flex">
           <text class="word-name">童话</text>
-          <image class="icon" src="../assets/images/viper.png" />
+          <image class="icon" src="../assets/images/vip.png" />
           <image class="icon" src="../assets/images/idcard.png" />
         </view>
         <view class="button-flex">
@@ -149,7 +149,7 @@
       <view class="message-flex">
         <view class="name-flex">
           <text class="word-name">童话</text>
-          <image class="icon" src="../assets/images/viper.png" />
+          <image class="icon" src="../assets/images/vip.png" />
           <image class="icon" src="../assets/images/idcard.png" />
         </view>
         <view class="button-flex">
@@ -167,7 +167,7 @@
       <view class="message-flex">
         <view class="name-flex">
           <text class="word-name">童话</text>
-          <image class="icon" src="../assets/images/viper.png" />
+          <image class="icon" src="../assets/images/vip.png" />
           <image class="icon" src="../assets/images/idcard.png" />
         </view>
         <view class="button-flex">

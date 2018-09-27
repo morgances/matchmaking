@@ -7,6 +7,7 @@
 .layout {
   background-color: #F8F8F8;
   padding-top: 10rpx;
+  padding-bottom: 20rpx;
 }
 .head-flex {
   display: flex;
@@ -132,6 +133,7 @@
 }
 .word {
   font-size: 14px;
+  color: #696969;
 }
 .line {
   width: 340px;
@@ -143,6 +145,8 @@
   justify-content: space-around;
   align-items: center;
   background-color: #FFFFFF;
+  padding-top: 20rpx;
+  padding-bottom: 20rpx;
   margin-top: 20rpx;
 }
 .icon-footer {
@@ -154,6 +158,30 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 40rpx;
+}
+.a {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+  margin-top: 20rpx;
+  margin-bottom: 40rpx;
+}
+.b {
+  display: flex;
+  flex-direction: row;
+  padding-left: 30rpx;
+}
+.c {
+  display: flex;
+  flex-direction: column;
+  padding: 30rpx 30rpx 0rpx 30rpx;
+}
+.d {
+  display: flex;
+  flex-direction: row;
+  padding-right: 30rpx;
 }
 </style>
 
@@ -212,22 +240,42 @@
         <image class="icons" src="../assets/images/arrow.png" />
       </view>
     </view>
-    <view class="footer-flex">
-      <view class="icon-footer-flex">
-        <image class="icon-footer" src="../assets/images/viper.png" />
-        <text class="word">我的礼物</text>
+    <view class="a">
+      <view class="b">
+        <view class="c">
+          <view class="icon-footer-flex">
+            <image class="icon-footer" src="../assets/images/persent.png" />
+            <text class="word">我的礼物</text>
+          </view>
+          <view class="icon-footer-flex">
+            <image class="icon-footer" src="../assets/images/woman.png" />
+            <text class="word">人工红娘</text>
+          </view>
+        </view>
+        <view class="c">
+          <view class="icon-footer-flex">
+            <image class="icon-footer" src="../assets/images/certification.png" />
+            <text class="word">我的认证</text>
+          </view>
+          <view class="icon-footer-flex">
+            <image class="icon-footer" src="../assets/images/service.png" />
+            <text class="word">服务条款</text>
+          </view>
+        </view>
       </view>
-      <view class="icon-footer-flex">
-        <image class="icon-footer" src="../assets/images/viper.png" />
-        <text class="word">我的认证</text>
-      </view>
-      <view class="icon-footer-flex">
-        <image class="icon-footer" src="../assets/images/viper.png" />
-        <text class="word">我的钱包</text>
-      </view>
-      <view class="icon-footer-flex">
-        <image class="icon-footer" src="../assets/images/viper.png" />
-        <text class="word">会员服务</text>
+      <view class="d">
+        <view class="c">
+          <view class="icon-footer-flex">
+            <image class="icon-footer" src="../assets/images/wallet.png" />
+            <text class="word">我的钱包</text>
+          </view>
+        </view>
+        <view class="c">
+          <view class="icon-footer-flex">
+            <image class="icon-footer" src="../assets/images/vip.png" />
+            <text class="word">会员服务</text>
+          </view>
+        </view>
       </view>
     </view>
   </view>

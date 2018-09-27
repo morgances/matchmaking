@@ -198,19 +198,19 @@
     </swiper>
     <view class="neck-flex">
       <view class="neck-icon-flex">
-        <image class="icon-rose" src="../assets/images/test.png" />
+        <image class="icon-rose" src="../assets/images/tests.png" />
         <text class="word-icon">测试题</text>
       </view>
       <view class="neck-icon-flex">
-        <image class="icon-rose" src="../assets/images/check.png" />
+        <image class="icon-rose" src="../assets/images/doubleball.png" />
         <text class="word-icon">线上报名</text>
       </view>
       <view class="neck-icon-flex">
-        <image class="icon-rose" src="../assets/images/strategy.png" />
+        <image class="icon-rose" src="../assets/images/doublelove.png" />
         <text class="word-icon">攻略课堂</text>
       </view>
       <view class="neck-icon-flex">
-        <image class="icon-rose" src="../assets/images/infor.png" />
+        <image class="icon-rose" src="../assets/images/wechat.png" />
         <text class="word-icon">咨询预约</text>
       </view>
     </view>
