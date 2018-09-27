@@ -19,14 +19,14 @@
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  padding-top: 20rpx;
-  padding-bottom: 20rpx;
+  padding-top: 30rpx;
+  padding-bottom: 30rpx;
   margin-bottom: 20rpx;
   background-color: #FFFFFF;
 }
 .icon-rose {
-  width: 60rpx;
-  height: 60rpx;
+  width: 80rpx;
+  height: 80rpx;
   border-radius: 50%;
 }
 .word-icon {
@@ -45,7 +45,6 @@
   justify-content: space-between;
   align-items: center;
   background-color: #FFFFFF;
-  margin-bottom: 10rpx;
 }
 .change-flex {
   display: flex;
