@@ -59,11 +59,11 @@
         </view>
       </repeat> -->
       <view class="icon-flex">
-        <image class="icon" src="{{heart}}" />
+        <image class="icon" src="../assets/images/heart.png" />
         <text class="word-icon">2</text>
       </view>
       <view class="icon-flex">
-        <image class="icon" src="{{message}}" />
+        <image class="icon" src="../assets/images/message.png" />
         <text class="word-icon">私密评论</text>
       </view>
       <button @tap="give" class="flower">送花</button>
@@ -87,10 +87,7 @@
       // clickHeart: ClickHeart
     }
     data = {
-      loveCircle: LoveCircle,
-      // clickLike: ClickLike,
-      heart: '../assets/images/heart.png',
-      message: '../assets/images/message.png'
+      loveCircle: LoveCircle
     }
   }
 </script>

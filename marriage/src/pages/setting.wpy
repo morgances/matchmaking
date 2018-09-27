@@ -6,8 +6,7 @@
 <style lang="less">
 .layout {
   background-color: #F8F8F8;
-  padding-top: 10rpx;
-  padding-bottom: 20rpx;
+  padding-bottom: 50rpx;
 }
 .head-flex {
   display: flex;
@@ -189,7 +188,7 @@
   <view class="layout">
     <view class="head-flex">
       <view class="left-flex">
-        <image class="avatar" src="https://images.pexels.com/photos/355164/pexels-photo-355164.jpeg?auto=compress&cs=tinysrgb&h=350" />
+        <image class="avatar" src="https://images.pexels.com/photos/894723/pexels-photo-894723.jpeg?auto=compress&cs=tinysrgb&h=350" />
         <view class="name-flex">
           <text class="word-name">One Wechat</text>
           <text class="word-id">交友ID: 72544</text>
@@ -203,7 +202,7 @@
     <view class="icon-neck-flex">
       <view class="flex-icon">
         <view class="vip-flex">
-          <image class="icon" src="../assets/images/viper.png" />
+          <image class="icon" src="../assets/images/vip.png" />
           <text class="word-vip">未开通</text>
         </view>
         <view class="vip-flex">
@@ -248,7 +247,7 @@
             <text class="word">我的礼物</text>
           </view>
           <view class="icon-footer-flex">
-            <image class="icon-footer" src="../assets/images/woman.png" />
+            <image class="icon-footer" src="../assets/images/redwoman.png" />
             <text class="word">人工红娘</text>
           </view>
         </view>

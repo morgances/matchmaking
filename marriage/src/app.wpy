@@ -27,28 +27,28 @@ export default class extends wepy.app {
       list: [{
         pagePath: 'pages/index',
         text: '首页',
-        iconPath: './assets/images/ball.png',
-        selectedIconPath: './assets/images/balls.png'
+        iconPath: './assets/images/home.png',
+        selectedIconPath: './assets/images/selectedhome.png'
       }, {
         pagePath: 'pages/fate',
         text: '缘分推荐',
-        iconPath: './assets/images/see.png',
-        selectedIconPath: './assets/images/sees.png'
+        iconPath: './assets/images/fate.png',
+        selectedIconPath: './assets/images/selectedfate.png'
       }, {
         pagePath: 'pages/love',
         text: '恋爱圈',
-        iconPath: './assets/images/love.png',
-        selectedIconPath: './assets/images/loves.png'
+        iconPath: './assets/images/friendcircle.png',
+        selectedIconPath: './assets/images/selectedcircle.png'
       }, {
         pagePath: 'pages/mall',
         text: '商城',
-        iconPath: './assets/images/mall.png',
-        selectedIconPath: './assets/images/malls.png'
+        iconPath: './assets/images/shop.png',
+        selectedIconPath: './assets/images/selectedshop.png'
       }, {
         pagePath: 'pages/setting',
         text: '我的',
-        iconPath: './assets/images/me.png',
-        selectedIconPath: './assets/images/mes.png'
+        iconPath: './assets/images/my.png',
+        selectedIconPath: './assets/images/selectedmy.png'
       }]
     }
   }
