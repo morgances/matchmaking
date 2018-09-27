@@ -6,7 +6,7 @@
 <style lang="less">
 .layout {
   background-color: #F8F8F8;
-  padding-bottom: 50rpx;
+  padding-bottom: 90rpx;
 }
 .head-flex {
   display: flex;
@@ -138,15 +138,25 @@
   width: 340px;
   border: 1px solid #FFFFFF;
 }
-.footer-flex {
+.layout-footer-flex {
+  margin-top: 20rpx;
+}
+.first-footer-flex {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
   background-color: #FFFFFF;
-  padding-top: 20rpx;
+  padding-top: 30rpx;
   padding-bottom: 20rpx;
-  margin-top: 20rpx;
+}
+.second-footer-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #FFFFFF;
+  padding-bottom: 20rpx;
 }
 .icon-footer {
   height: 80rpx;
@@ -157,30 +167,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 40rpx;
-}
-.a {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  background-color: #FFFFFF;
-  margin-top: 20rpx;
-  margin-bottom: 40rpx;
-}
-.b {
-  display: flex;
-  flex-direction: row;
-  padding-left: 30rpx;
-}
-.c {
-  display: flex;
-  flex-direction: column;
-  padding: 30rpx 30rpx 0rpx 30rpx;
-}
-.d {
-  display: flex;
-  flex-direction: row;
-  padding-right: 30rpx;
+  padding-bottom: 20rpx;
 }
 </style>
 
@@ -239,41 +226,41 @@
         <image class="icons" src="../assets/images/arrow.png" />
       </view>
     </view>
-    <view class="a">
-      <view class="b">
-        <view class="c">
-          <view class="icon-footer-flex">
-            <image class="icon-footer" src="../assets/images/persent.png" />
-            <text class="word">我的礼物</text>
-          </view>
-          <view class="icon-footer-flex">
-            <image class="icon-footer" src="../assets/images/redwoman.png" />
-            <text class="word">人工红娘</text>
-          </view>
+    <view class="layout-footer-flex">
+      <view class="first-footer-flex">
+        <view class="icon-footer-flex">
+          <image class="icon-footer" src="../assets/images/sign.png" />
+          <text class="word">签到积分</text>
         </view>
-        <view class="c">
-          <view class="icon-footer-flex">
-            <image class="icon-footer" src="../assets/images/certification.png" />
-            <text class="word">我的认证</text>
-          </view>
-          <view class="icon-footer-flex">
-            <image class="icon-footer" src="../assets/images/service.png" />
-            <text class="word">服务条款</text>
-          </view>
+        <view class="icon-footer-flex">
+          <image class="icon-footer" src="../assets/images/persent.png" />
+          <text class="word">我的礼物</text>
+        </view>
+        <view class="icon-footer-flex">
+          <image class="icon-footer" src="../assets/images/certification.png" />
+          <text class="word">我的认证</text>
+        </view>
+        <view class="icon-footer-flex">
+          <image class="icon-footer" src="../assets/images/wallet.png" />
+          <text class="word">我的钱包</text>
         </view>
       </view>
-      <view class="d">
-        <view class="c">
-          <view class="icon-footer-flex">
-            <image class="icon-footer" src="../assets/images/wallet.png" />
-            <text class="word">我的钱包</text>
-          </view>
+      <view class="second-footer-flex">
+        <view class="icon-footer-flex">
+          <image class="icon-footer" src="../assets/images/vip.png" />
+          <text class="word">会员服务</text>
         </view>
-        <view class="c">
-          <view class="icon-footer-flex">
-            <image class="icon-footer" src="../assets/images/vip.png" />
-            <text class="word">会员服务</text>
-          </view>
+        <view class="icon-footer-flex">
+          <image class="icon-footer" src="../assets/images/redwoman.png" />
+          <text class="word">人工红娘</text>
+        </view>
+        <view class="icon-footer-flex">
+          <image class="icon-footer" src="../assets/images/service.png" />
+          <text class="word">服务条款</text>
+        </view>
+        <view class="icon-footer-flex">
+          <image class="icon-footer" src="../assets/images/invitation.png" />
+          <text class="word">邀请有奖</text>
         </view>
       </view>
     </view>
