@@ -1,5 +1,5 @@
 export default {
-  namespace: 'products',
+  namespace: 'testPage',
   state: [],
   reducers: {
     'delete'(state, { payload: id }) {

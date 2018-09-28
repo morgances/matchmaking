@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, Popconfirm, Button } from 'antd';
 
-const ProductList = ({ onDelete, products }) => {
+const TestPageList = ({ onDelete, products }) => {
   const columns = [{
     title: 'Name',
     dataIndex: 'name',
@@ -24,9 +24,9 @@ const ProductList = ({ onDelete, products }) => {
   );
 };
 
-ProductList.propTypes = {
+TestPageList.propTypes = {
   onDelete: PropTypes.func.isRequired,
   products: PropTypes.array.isRequired,
 };
 
-export default ProductList;
+export default TestPageList;
