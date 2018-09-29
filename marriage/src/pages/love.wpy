@@ -11,7 +11,7 @@
 .footer-flex {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding-left: 140rpx;
   padding-bottom: 20rpx;
@@ -21,27 +21,46 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-right: 20rpx;
+  margin-right: 14rpx;
   padding-top: 14rpx;
+}
+.click-icon {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
+  margin-right: 5rpx;
 }
 .icon {
   width: 50rpx;
   height: 50rpx;
   border-radius: 50%;
-  color: #999999;
+  margin-right: 5rpx;
 }
 .word-icon {
-  color: #999999;
+  color: #515151;
   font-size: 24rpx;
 }
 .flower {
-  border-radius: 60rpx;
-  margin-left: 200rpx;
+  border-radius: 50rpx;
+  margin-left: 230rpx;
   color: #ffffff;
   cursor: pointer;
-  font-size: 24rpx;
-  background-color: #bd5959;
-  line-height: 70rpx
+  font-size: 18rpx;
+  padding-left: 18rpx;
+  padding-right: 18rpx;
+  margin-top: 10rpx;
+  background-color: #FF6369;
+}
+.release-flex {
+  position: fixed;
+  bottom: 60rpx;
+  right: 30rpx;
+}
+.release {
+  height: 80rpx;
+  width: 80rpx;
+  border-radius: 50%;
+  background: linear-gradient(to right, red , blue);
 }
 </style>
 
@@ -59,14 +78,17 @@
         </view>
       </repeat> -->
       <view class="icon-flex">
-        <image class="icon" src="../assets/images/heart.png" />
-        <text class="word-icon">2</text>
+        <image class="click-icon" src="../assets/images/clickhand.png" />
+        <text class="word-icon">222</text>
       </view>
       <view class="icon-flex">
-        <image class="icon" src="../assets/images/message.png" />
+        <image class="icon" src="../assets/images/comment1.png" />
         <text class="word-icon">私密评论</text>
       </view>
       <button @tap="give" class="flower">送花</button>
+    </view>
+    <view class="release-flex">
+      <image class="release" src="../assets/images/add.png" />
     </view>
   </view>
 </template>
@@ -88,6 +110,7 @@
     }
     data = {
       loveCircle: LoveCircle
+      // clickLike: ClickLike
     }
   }
 </script>

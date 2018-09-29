@@ -140,7 +140,7 @@
     <view class="neck-flex">
       <view class="integral-flex">
         <view class="integrals-flex">
-          <text class="word-integral">我的积分</text>
+          <text class="word-integral">我的积分:</text>
           <text class="word-points">6666</text>
         </view>
         <text class="word-how">如何获取更多积分</text>

@@ -25,13 +25,13 @@
   background-color: #FFFFFF;
 }
 .icon-rose {
-  width: 80rpx;
-  height: 80rpx;
+  width: 100rpx;
+  height: 100rpx;
   border-radius: 50%;
 }
-.word-icon {
+.neck-word-icon {
   font-size: 24rpx;
-  color: #999999
+  color: #696969;
 }
 .neck-icon-flex {
   display: flex;
@@ -198,19 +198,19 @@
     <view class="neck-flex">
       <view class="neck-icon-flex">
         <image class="icon-rose" src="../assets/images/tests.png" />
-        <text class="word-icon">测试题</text>
+        <text class="neck-word-icon">测试题</text>
       </view>
       <view class="neck-icon-flex">
         <image class="icon-rose" src="../assets/images/doubleball.png" />
-        <text class="word-icon">线上报名</text>
+        <text class="neck-word-icon">线上报名</text>
       </view>
       <view class="neck-icon-flex">
         <image class="icon-rose" src="../assets/images/doublelove.png" />
-        <text class="word-icon">攻略课堂</text>
+        <text class="neck-word-icon">幸福Show</text>
       </view>
       <view class="neck-icon-flex">
         <image class="icon-rose" src="../assets/images/wechat.png" />
-        <text class="word-icon">咨询预约</text>
+        <text class="neck-word-icon">咨询预约</text>
       </view>
     </view>
     <view class="recommend-flex">

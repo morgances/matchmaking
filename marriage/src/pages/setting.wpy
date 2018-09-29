@@ -169,6 +169,13 @@
   align-items: center;
   padding-bottom: 20rpx;
 }
+.redwoman {
+  position: fixed;
+  top: 30rpx;
+  right: 30rpx;
+  height: 100rpx;
+  width: 100rpx;
+}
 </style>
 
 <template>
@@ -241,8 +248,8 @@
           <text class="word">我的认证</text>
         </view>
         <view class="icon-footer-flex">
-          <image class="icon-footer" src="../assets/images/wallet.png" />
-          <text class="word">我的钱包</text>
+          <image class="icon-footer" src="../assets/images/albums.png" />
+          <text class="word">我的相册</text>
         </view>
       </view>
       <view class="second-footer-flex">
@@ -264,6 +271,7 @@
         </view>
       </view>
     </view>
+    <image class="redwoman" src="../assets/images/woman.png" />
   </view>
 </template>
 
