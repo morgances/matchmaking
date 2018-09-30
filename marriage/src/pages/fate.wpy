@@ -48,12 +48,13 @@
   border-radius: 6rpx;
 }
 .word-name {
-  font-size: 24rpx;
+  font-size: 26rpx;
+  margin-right: 10rpx;
 }
 .icon {
-  height: 40rpx;
-  width: 40rpx;
-  border-radius: 50%;
+  height: 30rpx;
+  width: 30rpx;
+  margin-right: 10rpx;
 }
 .button {
   font-size: 20rpx;
@@ -72,13 +73,13 @@
   <view class="layout-flex">
     <view class="single-flex">
       <view>
-        <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/428321/pexels-photo-428321.jpeg?auto=compress&cs=tinysrgb&h=350" />
+        <image class="picture" mode="widthFix" src="https://images.unsplash.com/photo-1506179081046-baf977dabfcc?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=0d684f66f5c542bd5ed05abf201403e3&auto=format&fit=crop&w=500&q=60" />
       </view>
       <view class="message-flex">
         <view class="name-flex">
           <text class="word-name">童话</text>
-          <image class="icon" src="../assets/images/vip.png" />
-          <image class="icon" src="../assets/images/idcard.png" />
+          <image class="icon" src="../assets/images/fatevip.png" />
+          <image class="icon" src="../assets/images/fateid.png" />
         </view>
         <view class="button-flex">
           <button class="button">23岁</button>
@@ -90,13 +91,13 @@
     </view>
     <view class="single-flex">
       <view>
-        <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/763546/pexels-photo-763546.jpeg?auto=compress&cs=tinysrgb&h=350" />
+        <image class="picture" mode="widthFix" src="https://images.unsplash.com/photo-1507402086209-7bc75ccf5369?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=76da8cd3566839e142eeace5c2823fb7&auto=format&fit=crop&w=500&q=60" />
       </view>
       <view class="message-flex">
         <view class="name-flex">
           <text class="word-name">我想静静</text>
-          <image class="icon" src="../assets/images/vip.png" />
-          <image class="icon" src="../assets/images/idcard.png" />
+          <image class="icon" src="../assets/images/fatevip.png" />
+          <image class="icon" src="../assets/images/fateid.png" />
         </view>
         <view class="button-flex">
           <button class="button">23岁</button>
@@ -113,8 +114,8 @@
       <view class="message-flex">
         <view class="name-flex">
           <text class="word-name">静静不想我</text>
-          <image class="icon" src="../assets/images/vip.png" />
-          <image class="icon" src="../assets/images/idcard.png" />
+          <image class="icon" src="../assets/images/fatevip.png" />
+          <image class="icon" src="../assets/images/fateid.png" />
         </view>
         <view class="button-flex">
           <button class="button">28岁</button>
@@ -126,13 +127,31 @@
     </view>
     <view class="single-flex">
       <view>
-        <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/428321/pexels-photo-428321.jpeg?auto=compress&cs=tinysrgb&h=350" />
+        <image class="picture" mode="widthFix" src="https://images.unsplash.com/photo-1512979797260-1a645592b48f?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=2fc2ca84d8c407bd48ab15ea27c87eaf&auto=format&fit=crop&w=500&q=60" />
       </view>
       <view class="message-flex">
         <view class="name-flex">
           <text class="word-name">童话</text>
-          <image class="icon" src="../assets/images/vip.png" />
-          <image class="icon" src="../assets/images/idcard.png" />
+          <image class="icon" src="../assets/images/fatevip.png" />
+          <image class="icon" src="../assets/images/fateid.png" />
+        </view>
+        <view class="button-flex">
+          <button class="button">23岁</button>
+          <button class="button">温州</button>
+          <button class="button">客户服务</button>
+        </view>
+        <text class="word-brief">我喜欢爱懂温暖的你，也喜欢爱我喜欢爱懂温暖的你，也喜欢爱你打游戏不回家，你信吗</text> 
+      </view>
+    </view>
+    <view class="single-flex">
+      <view>
+        <image class="picture" mode="widthFix" src="https://images.unsplash.com/photo-1513792859704-f49baf5c0b70?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=522c9283a0ad870843048349acb08736&auto=format&fit=crop&w=500&q=60" />
+      </view>
+      <view class="message-flex">
+        <view class="name-flex">
+          <text class="word-name">童话</text>
+          <image class="icon" src="../assets/images/fatevip.png" />
+          <image class="icon" src="../assets/images/fateid.png" />
         </view>
         <view class="button-flex">
           <button class="button">23岁</button>
@@ -149,26 +168,8 @@
       <view class="message-flex">
         <view class="name-flex">
           <text class="word-name">童话</text>
-          <image class="icon" src="../assets/images/vip.png" />
-          <image class="icon" src="../assets/images/idcard.png" />
-        </view>
-        <view class="button-flex">
-          <button class="button">23岁</button>
-          <button class="button">温州</button>
-          <button class="button">客户服务</button>
-        </view>
-        <text class="word-brief">我喜欢爱懂温暖的你，也喜欢爱我喜欢爱懂温暖的你，也喜欢爱你打游戏不回家，你信吗</text> 
-      </view>
-    </view>
-    <view class="single-flex">
-      <view>
-        <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/428321/pexels-photo-428321.jpeg?auto=compress&cs=tinysrgb&h=350" />
-      </view>
-      <view class="message-flex">
-        <view class="name-flex">
-          <text class="word-name">童话</text>
-          <image class="icon" src="../assets/images/vip.png" />
-          <image class="icon" src="../assets/images/idcard.png" />
+          <image class="icon" src="../assets/images/fatevip.png" />
+          <image class="icon" src="../assets/images/fateid.png" />
         </view>
         <view class="button-flex">
           <button class="button">23岁</button>
