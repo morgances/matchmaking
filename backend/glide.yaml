@@ -1,0 +1,11 @@
+package: github.com/morgances/matchmaking/backend
+import:
+- package: github.com/go-sql-driver/mysql
+  version: ^1.4.0
+- package: github.com/spf13/viper
+  version: ^1.2.1
+- package: github.com/hashicorp/hcl
+  version: ^1.0.0
+- package: github.com/TechCatsLab/storage
+- package: github.com/magiconair/properties
+  version: ^1.8.0
