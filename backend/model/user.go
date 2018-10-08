@@ -2,13 +2,16 @@
  * @Author: zhanghao
  * @Date: 2018-10-06 21:25:26
  * @Last Modified by: zhanghao
- * @Last Modified time: 2018-10-07 18:26:41
+ * @Last Modified time: 2018-10-08 19:52:09
  */
 
 package model
 
 import (
 	"database/sql"
+	"errors"
+	"fmt"
+	"strings"
 	"time"
 )
 
@@ -32,6 +35,7 @@ type (
 		SelfIntroduction string
 		SelecCriteria    string
 
+		OpenID        string
 		CreateAt      time.Time
 		Password      string
 		Album         string
@@ -44,36 +48,47 @@ type (
 	}
 )
 
-var UserService UserServPrvd
+var (
+	UserService UserServPrvd
+)
 
 func (UserServPrvd) Insert(u *User) error {
 	_, err := DB.Exec(
 		`INSERT INTO user(phone,wechat,nick_name,avatar,real_name,sex,birthday,height,location,job,faith,constellation,self_introduction,selec_criteria,
 			create_at,password,album,certified,vip,date_privilege,points,rose,charm)
-		VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?);`,
+			VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?);`,
 		u.Phone, u.Wechat, u.NickName, u.Avatar, u.RealName, u.Sex, u.Birthday, u.Height, u.Location, u.Job, u.Faith, u.Constellation, u.SelfIntroduction, u.SelecCriteria,
-		u.Password, u.Album, u.Certified, u.Vip, u.DatePrivilege, u.Points, u.Rose, u.Charm,
+		u.OpenID, u.Password, u.Album, u.Certified, u.Vip, u.DatePrivilege, u.Points, u.Rose, u.Charm,
 	)
-	return err
+
+	if err != nil {
+		if strings.Contains(err.Error(), "Duplicate entry") {
+			err = errors.New(fmt.Sprintf("duplicate entry phone:%s or wecaht:%s", u.Phone, u.Wechat))
+		}
+		return err
+	}
+	return nil
 }
 
-func (UserServPrvd) FindByPhone(p string) (u User, err error) {
+func (UserServPrvd) FindByOpenID(oid string) (u *User, err error) {
 	row := DB.QueryRow(
-		`SELECT * FROM user WHERE phone = ?`,
-		p,
+		`SELECT * FROM user WHERE open_id = ? LOCK IN SHARE MODE`,
+		oid,
 	)
-	err = row.Scan(
+	if err = row.Scan(
 		&u.Phone, &u.Wechat, &u.NickName, &u.Avatar, &u.RealName, &u.Sex, &u.Birthday, &u.Height,
 		&u.Location, &u.Job, &u.Faith, &u.Constellation, &u.SelfIntroduction, &u.SelecCriteria,
-		&u.CreateAt, &u.Password, &u.Album, &u.Certified, &u.Vip, &u.DatePrivilege, &u.Points, &u.Rose, &u.Charm,
-	)
+		&u.OpenID, &u.CreateAt, &u.Password, &u.Album, &u.Certified, &u.Vip, &u.DatePrivilege, &u.Points, &u.Rose, &u.Charm,
+	); err == sql.ErrNoRows {
+		err = NotFoundError{Err: err}
+	}
 	return
 }
 
-func (UserServPrvd) RecommendByCharm() (us []User, err error) {
+func (UserServPrvd) RecommendByCharm() (us []*User, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM user ORDER BY charm DESC`,
+		`SELECT * FROM user ORDER BY charm DESC LOCK IN SHARE MODE`,
 	)
 	if err != nil {
 		return nil, err
@@ -84,12 +99,12 @@ func (UserServPrvd) RecommendByCharm() (us []User, err error) {
 	if err != nil {
 		return nil, err
 	}
-	us = make([]User, len(cols))
+	us = make([]*User, len(cols))
 	for i := 0; rows.Next(); i++ {
 		err = rows.Scan(
 			&us[i].Phone, &us[i].Wechat, &us[i].NickName, &us[i].Avatar, &us[i].RealName, &us[i].Sex, &us[i].Birthday, &us[i].Height,
 			&us[i].Location, &us[i].Job, &us[i].Faith, &us[i].Constellation, &us[i].SelfIntroduction, &us[i].SelecCriteria,
-			&us[i].CreateAt, &us[i].Password, &us[i].Album, &us[i].Certified, &us[i].Vip, &us[i].DatePrivilege, &us[i].Points, &us[i].Rose, &us[i].Charm,
+			&us[i].OpenID, &us[i].CreateAt, &us[i].Password, &us[i].Album, &us[i].Certified, &us[i].Vip, &us[i].DatePrivilege, &us[i].Points, &us[i].Rose, &us[i].Charm,
 		)
 		if err != nil {
 			return nil, err
@@ -99,22 +114,26 @@ func (UserServPrvd) RecommendByCharm() (us []User, err error) {
 }
 
 func (UserServPrvd) Update(u *User) error {
-	_, err := DB.Exec(
+	_, err := UserService.FindByPhone(u.Phone)
+	if err != nil {
+		return err
+	}
+	_, err = DB.Exec(
 		`UPDATE user SET 
-		phone=?,wechat=?,nick_name=?,avatar=?,real_name=?,sex=?,birthday=?,height=?,location=?,job=?,faith=?,constellation=?,self_introduction=?,selec_criteria=?,
-		create_at=?,password=?,album=?,certified=?,vip=?,date_privilege=?,points=?,rose=?,charm=?
-		WHERE phone=?;`,
+			phone=?,wechat=?,nick_name=?,avatar=?,real_name=?,sex=?,birthday=?,height=?,location=?,job=?,faith=?,constellation=?,self_introduction=?,selec_criteria=?,
+			create_at=?,password=?,album=?,certified=?,vip=?,date_privilege=?,points=?,rose=?,charm=?
+			WHERE open_id=? LIMIT 1;`,
 		u.Phone, u.Wechat, u.NickName, u.Avatar, u.RealName, u.Sex, u.Birthday, u.Height, u.Location, u.Job, u.Faith, u.Constellation, u.SelfIntroduction, u.SelecCriteria,
-		u.CreateAt, u.Password, u.Album, u.Certified, u.Vip, u.DatePrivilege, u.Points, u.Rose, u.Charm,
-		u.Phone,
+		u.OpenID, u.CreateAt, u.Password, u.Album, u.Certified, u.Vip, u.DatePrivilege, u.Points, u.Rose, u.Charm,
+		u.OpenID,
 	)
 	return err
 }
 
-func (UserServPrvd) DeleteByPhone(p string) error {
+func (UserServPrvd) DeleteByOpenID(oid string) error {
 	_, err := DB.Exec(
-		`DELETE FROM user WHERE phone=?`,
-		p,
+		`DELETE FROM user WHERE phone=? LIMIT 1`,
+		oid,
 	)
 	return err
 }

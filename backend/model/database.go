@@ -1,3 +1,10 @@
+/*
+ * @Author: zhanghao
+ * @Date: 2018-10-08 11:30:13
+ * @Last Modified by: zhanghao
+ * @Last Modified time: 2018-10-08 19:54:09
+ */
+
 package model
 
 import (
@@ -9,7 +16,9 @@ import (
 	"github.com/morgances/matchmaking/backend/conf"
 )
 
-var DB *sql.DB
+var (
+	DB *sql.DB
+)
 
 func init() {
 	dsn := conf.MatchMakeConf.UserName + ":" + conf.MatchMakeConf.Password + "@" + conf.MatchMakeConf.Protocol +
@@ -54,6 +63,8 @@ func initTable() error {
 		constellation VARCHAR(10),
 		self_introduction VARCHAR(255),
 		selec_criteria VARCHAR(255),
+
+		open_id VARCHAR(255),
 		create_at DATE,
 		password VARCHAR(255),
 		album VARCHAR(255),
@@ -63,7 +74,7 @@ func initTable() error {
 		points INT,
 		rose INT,
 		charm INT,
-		PRIMARY KEY(phone)
+		PRIMARY KEY(open_id)
 	);`)
 	return err
 }
