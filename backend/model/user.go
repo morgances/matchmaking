@@ -2,7 +2,7 @@
  * @Author: zhanghao
  * @Date: 2018-10-06 21:25:26
  * @Last Modified by: zhanghao
- * @Last Modified time: 2018-10-08 19:52:09
+ * @Last Modified time: 2018-10-08 20:58:21
  */
 
 package model
@@ -16,7 +16,7 @@ import (
 )
 
 type (
-	UserServPrvd struct{}
+	userServPrvd struct{}
 
 	User struct {
 		// filled by member
@@ -49,28 +49,29 @@ type (
 )
 
 var (
-	UserService UserServPrvd
+	UserService userServPrvd
 )
 
-func (UserServPrvd) Insert(u *User) error {
+func (userServPrvd) Insert(u *User) error {
 	_, err := DB.Exec(
 		`INSERT INTO user(phone,wechat,nick_name,avatar,real_name,sex,birthday,height,location,job,faith,constellation,self_introduction,selec_criteria,
 			create_at,password,album,certified,vip,date_privilege,points,rose,charm)
-			VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?);`,
+			VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?)
+		`,
 		u.Phone, u.Wechat, u.NickName, u.Avatar, u.RealName, u.Sex, u.Birthday, u.Height, u.Location, u.Job, u.Faith, u.Constellation, u.SelfIntroduction, u.SelecCriteria,
 		u.OpenID, u.Password, u.Album, u.Certified, u.Vip, u.DatePrivilege, u.Points, u.Rose, u.Charm,
 	)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate entry") {
-			err = errors.New(fmt.Sprintf("duplicate entry phone:%s or wecaht:%s", u.Phone, u.Wechat))
+			err = errors.New(fmt.Sprintf("duplicate entry phone:%s, wechat:%s or openID:%s", u.Phone, u.Wechat, u.OpenID)) // need fix when struct field changed
 		}
 		return err
 	}
 	return nil
 }
 
-func (UserServPrvd) FindByOpenID(oid string) (u *User, err error) {
+func (userServPrvd) FindByOpenID(oid string) (u *User, err error) {
 	row := DB.QueryRow(
 		`SELECT * FROM user WHERE open_id = ? LOCK IN SHARE MODE`,
 		oid,
@@ -85,7 +86,7 @@ func (UserServPrvd) FindByOpenID(oid string) (u *User, err error) {
 	return
 }
 
-func (UserServPrvd) RecommendByCharm() (us []*User, err error) {
+func (userServPrvd) RecommendByCharm() (us []*User, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
 		`SELECT * FROM user ORDER BY charm DESC LOCK IN SHARE MODE`,
@@ -113,8 +114,8 @@ func (UserServPrvd) RecommendByCharm() (us []*User, err error) {
 	return us, nil
 }
 
-func (UserServPrvd) Update(u *User) error {
-	_, err := UserService.FindByPhone(u.Phone)
+func (userServPrvd) Update(u *User) error {
+	_, err := UserService.FindByOpenID(u.Phone)
 	if err != nil {
 		return err
 	}
@@ -122,7 +123,8 @@ func (UserServPrvd) Update(u *User) error {
 		`UPDATE user SET 
 			phone=?,wechat=?,nick_name=?,avatar=?,real_name=?,sex=?,birthday=?,height=?,location=?,job=?,faith=?,constellation=?,self_introduction=?,selec_criteria=?,
 			create_at=?,password=?,album=?,certified=?,vip=?,date_privilege=?,points=?,rose=?,charm=?
-			WHERE open_id=? LIMIT 1;`,
+			WHERE open_id=? LIMIT 1
+		`,
 		u.Phone, u.Wechat, u.NickName, u.Avatar, u.RealName, u.Sex, u.Birthday, u.Height, u.Location, u.Job, u.Faith, u.Constellation, u.SelfIntroduction, u.SelecCriteria,
 		u.OpenID, u.CreateAt, u.Password, u.Album, u.Certified, u.Vip, u.DatePrivilege, u.Points, u.Rose, u.Charm,
 		u.OpenID,
@@ -130,7 +132,7 @@ func (UserServPrvd) Update(u *User) error {
 	return err
 }
 
-func (UserServPrvd) DeleteByOpenID(oid string) error {
+func (userServPrvd) DeleteByOpenID(oid string) error {
 	_, err := DB.Exec(
 		`DELETE FROM user WHERE phone=? LIMIT 1`,
 		oid,
