@@ -2,7 +2,7 @@
  * @Author: zhanghao
  * @Date: 2018-10-06 21:25:26
  * @Last Modified by: zhanghao
- * @Last Modified time: 2018-10-08 20:58:21
+ * @Last Modified time: 2018-10-09 15:39:54
  */
 
 package model
@@ -81,9 +81,22 @@ func (userServPrvd) FindByOpenID(oid string) (u *User, err error) {
 		&u.Location, &u.Job, &u.Faith, &u.Constellation, &u.SelfIntroduction, &u.SelecCriteria,
 		&u.OpenID, &u.CreateAt, &u.Password, &u.Album, &u.Certified, &u.Vip, &u.DatePrivilege, &u.Points, &u.Rose, &u.Charm,
 	); err == sql.ErrNoRows {
-		err = NotFoundError{Err: err}
+		return nil, ErrNotFound
 	}
 	return
+}
+
+func (userServPrvd) UserExist(oid string) (bool, error) {
+	row := DB.QueryRow(
+		`SELECT COUNT(0) FROM user WHERE open_id = ? LOCK IN SHARE MODE`,
+		oid,
+	)
+	count := 0
+	var err error
+	if err = row.Scan(&count); err != nil {
+		return false, err
+	}
+	return count == 1, nil
 }
 
 func (userServPrvd) RecommendByCharm() (us []*User, err error) {

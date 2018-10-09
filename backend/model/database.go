@@ -2,7 +2,7 @@
  * @Author: zhanghao
  * @Date: 2018-10-08 11:30:13
  * @Last Modified by: zhanghao
- * @Last Modified time: 2018-10-08 21:33:39
+ * @Last Modified time: 2018-10-09 14:35:06
  */
 
 package model
@@ -10,9 +10,9 @@ package model
 import (
 	"database/sql"
 
-	"github.com/TechCatsLab/storage/mysql"
-
 	_ "github.com/go-sql-driver/mysql"
+
+	"github.com/TechCatsLab/storage/mysql"
 	"github.com/morgances/matchmaking/backend/conf"
 )
 
@@ -75,7 +75,7 @@ func initTable() error {
 			points INT,
 			rose INT,
 			charm INT,
-			PRIMARY KEY(open_id))
+			PRIMARY KEY(open_id))ENGINE=InnoDB DEFAULT CHARSET=utf8
 		`,
 	)
 	if err != nil {
@@ -91,7 +91,7 @@ func initTable() error {
 			content VARCHAR(255),
 			date_time DATETIME,
 			like INT,
-			PRIMARY KEY (id))
+			PRIMARY KEY (id))ENGINE=InnoDB DEFAULT CHARSET=utf8
 		`,
 	)
 	if err != nil {
@@ -102,7 +102,7 @@ func initTable() error {
 		`CREATE TABLE IF NOT EXISTS follow(
 			following VARCHAR(255),
 			followed VARCHAR(255),
-			PRIMARY KEY (following,followed))
+			PRIMARY KEY (following,followed))ENGINE=InnoDB DEFAULT CHARSET=utf8
 		`,
 	)
 	if err != nil {
@@ -113,7 +113,7 @@ func initTable() error {
 		`CREATE TABLE IF NOT EXISTS Sign_in_record(
 			open_id VARCHAR(255),
 			date DATE,
-			PRIMARY KEY (open_id, date))
+			PRIMARY KEY (open_id, date))ENGINE=InnoDB DEFAULT CHARSET=utf8
 		`,
 	)
 	if err != nil {
@@ -122,12 +122,12 @@ func initTable() error {
 
 	_, err = DB.Exec(
 		`CREATE TABLE IF NOT EXISTS goods(
-			id INT,
+			id INT AUTO_INCREMENT,
 			name VARCHAR(50),
 			price INT,
 			description VARCHAR(255),
 			image VARCHAR(255),
-			PRIMARY KEY (id))
+			PRIMARY KEY (id))ENGINE=InnoDB DEFAULT CHARSET=utf8
 		`,
 	)
 	if err != nil {
@@ -136,12 +136,12 @@ func initTable() error {
 
 	_, err = DB.Exec(
 		`CREATE TABLE IF NOT EXISTS trade(
-			id BIGINT,
+			id BIGINT AUTO_INCREMENT,
 			open_id VARCHAR(255),
 			goods_id INT,
 			data_time DATETIME,
 			cost INT,
-			PRIMARY KEY (id))
+			PRIMARY KEY (id))ENGINE=InnoDB DEFAULT CHARSET=utf8
 		`,
 	)
 	return err

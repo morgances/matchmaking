@@ -2,15 +2,13 @@
  * @Author: zhanghao
  * @Date: 2018-10-08 22:01:22
  * @Last Modified by: zhanghao
- * @Last Modified time: 2018-10-08 22:17:45
+ * @Last Modified time: 2018-10-09 15:30:38
  */
 
 package model
 
 import (
 	"database/sql"
-	"errors"
-	"fmt"
 	"strings"
 	"time"
 )
@@ -38,14 +36,14 @@ func (signInServPrvd) Insert(si *SignInRecord) error {
 
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate entry") {
-			err = errors.New(fmt.Sprintf("duplicate entry -> %s signIn at %s", si.OpenID, si.Date)) // need fix when struct field changed
+			return ErrDuplicateEntry
 		}
 		return err
 	}
 	return nil
 }
 
-func (signInServPrvd) FindByOpenID(oid string) (sis []*SignInRecord, err error) {
+func (signInServPrvd) FindByOpenID(oid string) (sis []SignInRecord, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
 		`SELECT * FROM sign_in_record WHERE open_id=? LOCK IN SHARE MODE`,
@@ -55,13 +53,9 @@ func (signInServPrvd) FindByOpenID(oid string) (sis []*SignInRecord, err error) 
 		return nil, err
 	}
 	defer rows.Close()
-	var cols []string
-	cols, err = rows.Columns()
-	if err != nil {
-		return nil, err
-	}
-	sis = make([]*SignInRecord, len(cols))
+
 	for i := 0; rows.Next(); i++ {
+		sis = append(sis, SignInRecord{})
 		err = rows.Scan(
 			&sis[i].OpenID, &sis[i].Date,
 		)
@@ -70,4 +64,12 @@ func (signInServPrvd) FindByOpenID(oid string) (sis []*SignInRecord, err error) 
 		}
 	}
 	return sis, nil
+}
+
+func (signInServPrvd) DeleteAllRecord(oid string) error {
+	_, err := DB.Exec(
+		`DELETE FROM sign_in_record WHERE oid=?`,
+		oid,
+	)
+	return err
 }

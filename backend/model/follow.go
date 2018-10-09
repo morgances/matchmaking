@@ -2,15 +2,13 @@
  * @Author: zhanghao
  * @Date: 2018-10-08 21:35:53
  * @Last Modified by: zhanghao
- * @Last Modified time: 2018-10-08 21:59:53
+ * @Last Modified time: 2018-10-09 15:36:07
  */
 
 package model
 
 import (
 	"database/sql"
-	"errors"
-	"fmt"
 	"strings"
 )
 
@@ -28,23 +26,36 @@ var (
 )
 
 func (followServPrvd) Insert(f *Follow) error {
-	_, err := DB.Exec(
+	exist, err := UserService.UserExist(f.Following)
+	if err != nil {
+		return err
+	}
+	if !exist {
+		return ErrUserNotExist
+	}
+	exist, err = UserService.UserExist(f.Followed)
+	if err != nil {
+		return err
+	}
+	if !exist {
+		return ErrUserNotExist
+	}
+	_, err = DB.Exec(
 		`INSERT INTO follow(following, followed)
 			VALUES(?,?)
 		`,
 		f.Following, f.Followed,
 	)
-
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate entry") {
-			err = errors.New(fmt.Sprintf("duplicate entry -> %s follow %s", f.Following, f.Followed)) // need fix when struct field changed
+			return ErrDuplicateEntry
 		}
 		return err
 	}
 	return nil
 }
 
-func (followServPrvd) FindFollowing(oid string) (fs []*Follow, err error) {
+func (followServPrvd) FindFollowing(oid string) (fs []Follow, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
 		`SELECT * FROM follow WHERE following=? LOCK IN SHARE MODE`,
@@ -54,24 +65,19 @@ func (followServPrvd) FindFollowing(oid string) (fs []*Follow, err error) {
 		return nil, err
 	}
 	defer rows.Close()
-	var cols []string
-	cols, err = rows.Columns()
-	if err != nil {
-		return nil, err
-	}
-	fs = make([]*Follow, len(cols))
+
 	for i := 0; rows.Next(); i++ {
-		err = rows.Scan(
+		fs = append(fs, Follow{})
+		if err = rows.Scan(
 			&fs[i].Following, &fs[i].Followed,
-		)
-		if err != nil {
+		); err != nil {
 			return nil, err
 		}
 	}
 	return fs, nil
 }
 
-func (followServPrvd) FindFollowers(oid string) (fs []*Follow, err error) {
+func (followServPrvd) FindFollowers(oid string) (fs []Follow, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
 		`SELECT * FROM follow WHERE followed=? LOCK IN SHARE MODE`,
@@ -81,26 +87,39 @@ func (followServPrvd) FindFollowers(oid string) (fs []*Follow, err error) {
 		return nil, err
 	}
 	defer rows.Close()
-	var cols []string
-	cols, err = rows.Columns()
-	if err != nil {
-		return nil, err
-	}
-	fs = make([]*Follow, len(cols))
+
 	for i := 0; rows.Next(); i++ {
-		err = rows.Scan(
+		fs = append(fs, Follow{})
+		if err = rows.Scan(
 			&fs[i].Following, &fs[i].Followed,
-		)
-		if err != nil {
+		); err != nil {
 			return nil, err
 		}
 	}
 	return fs, nil
 }
 
-func (followServPrvd) Unfollow(oid string) error {
+func (followServPrvd) Unfollow(following, followed string) error {
+	result, err := DB.Exec(
+		`DELETE FROM follow WHERE following=? AND followed=? LIMIT 1`,
+		following, followed,
+	)
+	if err != nil {
+		return err
+	}
+	var affected int64
+	if affected, err = result.RowsAffected(); err != nil {
+		return err
+	}
+	if affected == 0 {
+		return ErrUnfollowFailed
+	}
+	return nil
+}
+
+func (followServPrvd) DeleteAllRecord(oid string) error {
 	_, err := DB.Exec(
-		`DELETE FROM follow WHERE oid=? LIMIT 1`,
+		`DELETE FROM follow WHERE following=?`,
 		oid,
 	)
 	return err
