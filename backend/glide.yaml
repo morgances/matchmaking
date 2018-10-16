@@ -9,3 +9,8 @@ import:
 - package: github.com/TechCatsLab/storage
 - package: github.com/magiconair/properties
   version: ^1.8.0
+- package: github.com/TechCatsLab/apix
+- package: github.com/silenceper/wechat
+- package: github.com/dgrijalva/jwt-go
+  version: ^3.2.0
+- package: github.com/TechCatsLab/comment

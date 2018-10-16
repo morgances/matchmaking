@@ -1,8 +1,8 @@
 /*
  * @Author: zhanghao
- * @Date: 2018-10-06 21:25:26
+ * @DateTime: 2018-10-06 21:25:26
  * @Last Modified by: zhanghao
- * @Last Modified time: 2018-10-09 15:39:54
+ * @Last Modified time: 2018-10-10 22:19:50
  */
 
 package model
@@ -11,8 +11,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"strings"
 	"time"
+	"github.com/morgances/matchmaking/backend/util"
 )
 
 type (
@@ -25,20 +25,19 @@ type (
 		NickName         string
 		Avatar           string
 		RealName         string
-		Sex              bool
-		Birthday         time.Time
+		Sex              uint8
+		Birthday         string
 		Height           string
 		Location         string
 		Job              string
 		Faith            string
-		Constellation    string
 		SelfIntroduction string
 		SelecCriteria    string
 
 		OpenID        string
+		Age           uint8
 		CreateAt      time.Time
-		Password      string
-		Album         string
+		Constellation string
 		Certified     bool
 		Vip           bool
 		DatePrivilege int64
@@ -52,23 +51,46 @@ var (
 	UserService userServPrvd
 )
 
-func (userServPrvd) Insert(u *User) error {
-	_, err := DB.Exec(
-		`INSERT INTO user(phone,wechat,nick_name,avatar,real_name,sex,birthday,height,location,job,faith,constellation,self_introduction,selec_criteria,
-			create_at,password,album,certified,vip,date_privilege,points,rose,charm)
-			VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?)
-		`,
-		u.Phone, u.Wechat, u.NickName, u.Avatar, u.RealName, u.Sex, u.Birthday, u.Height, u.Location, u.Job, u.Faith, u.Constellation, u.SelfIntroduction, u.SelecCriteria,
-		u.OpenID, u.Password, u.Album, u.Certified, u.Vip, u.DatePrivilege, u.Points, u.Rose, u.Charm,
-	)
-
+func (userServPrvd) WeChatLogin(oid, nickName, avatar, loc string, sex uint8) error {
+	exist, err := UserService.userExist(oid)
 	if err != nil {
-		if strings.Contains(err.Error(), "Duplicate entry") {
-			err = errors.New(fmt.Sprintf("duplicate entry phone:%s, wechat:%s or openID:%s", u.Phone, u.Wechat, u.OpenID)) // need fix when struct field changed
-		}
 		return err
 	}
-	return nil
+	if exist {
+		return nil
+	}
+	return UserService.insert(&User{
+		OpenID:   oid,
+		NickName: nickName,
+		Avatar:   avatar,
+		Sex:      sex,
+		Location: loc,
+		CreateAt: time.Now(),
+	})
+}
+
+func (userServPrvd) insert(u *User) error {
+	_, err := DB.Exec(
+		`INSERT INTO user(open_id, nick_name, avatar, sex, location,create_at)
+					VALUES(?,?,?,?,?,?,NOW())`,
+		u.OpenID, u.NickName, u.Avatar, u.Sex, u.Location,
+	)
+	return err
+}
+
+func (userServPrvd) userExist(oid string) (bool, error) {
+	row := DB.QueryRow(
+		`SELECT COUNT(0) FROM user WHERE open_id = ? LOCK IN SHARE MODE`,
+		oid,
+	)
+	var (
+		err   error
+		exist int32
+	)
+	if err = row.Scan(&exist); err != nil {
+		return false, err
+	}
+	return exist == 1, nil
 }
 
 func (userServPrvd) FindByOpenID(oid string) (u *User, err error) {
@@ -76,49 +98,35 @@ func (userServPrvd) FindByOpenID(oid string) (u *User, err error) {
 		`SELECT * FROM user WHERE open_id = ? LOCK IN SHARE MODE`,
 		oid,
 	)
+
+	u = &User{}
 	if err = row.Scan(
 		&u.Phone, &u.Wechat, &u.NickName, &u.Avatar, &u.RealName, &u.Sex, &u.Birthday, &u.Height,
 		&u.Location, &u.Job, &u.Faith, &u.Constellation, &u.SelfIntroduction, &u.SelecCriteria,
-		&u.OpenID, &u.CreateAt, &u.Password, &u.Album, &u.Certified, &u.Vip, &u.DatePrivilege, &u.Points, &u.Rose, &u.Charm,
-	); err == sql.ErrNoRows {
-		return nil, ErrNotFound
+		&u.OpenID, &u.CreateAt, &u.Certified, &u.Vip, &u.DatePrivilege, &u.Points, &u.Rose, &u.Charm,
+	); err != nil {
+		return nil, err
 	}
-	return
+	return u, nil
 }
 
-func (userServPrvd) UserExist(oid string) (bool, error) {
-	row := DB.QueryRow(
-		`SELECT COUNT(0) FROM user WHERE open_id = ? LOCK IN SHARE MODE`,
-		oid,
-	)
-	count := 0
-	var err error
-	if err = row.Scan(&count); err != nil {
-		return false, err
-	}
-	return count == 1, nil
-}
-
-func (userServPrvd) RecommendByCharm() (us []*User, err error) {
+func (userServPrvd) RecommendByCharm(sex uint8) (us []User, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM user ORDER BY charm DESC LOCK IN SHARE MODE`,
+		`SELECT * FROM user WHERE  sex=? ORDER BY charm DESC LOCK IN SHARE MODE`,
+		sex,
 	)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var cols []string
-	cols, err = rows.Columns()
-	if err != nil {
-		return nil, err
-	}
-	us = make([]*User, len(cols))
+
 	for i := 0; rows.Next(); i++ {
+		us = append(us, User{})
 		err = rows.Scan(
 			&us[i].Phone, &us[i].Wechat, &us[i].NickName, &us[i].Avatar, &us[i].RealName, &us[i].Sex, &us[i].Birthday, &us[i].Height,
 			&us[i].Location, &us[i].Job, &us[i].Faith, &us[i].Constellation, &us[i].SelfIntroduction, &us[i].SelecCriteria,
-			&us[i].OpenID, &us[i].CreateAt, &us[i].Password, &us[i].Album, &us[i].Certified, &us[i].Vip, &us[i].DatePrivilege, &us[i].Points, &us[i].Rose, &us[i].Charm,
+			&us[i].OpenID, &us[i].CreateAt, &us[i].Certified, &us[i].Vip, &us[i].DatePrivilege, &us[i].Points, &us[i].Rose, &us[i].Charm,
 		)
 		if err != nil {
 			return nil, err
@@ -127,28 +135,118 @@ func (userServPrvd) RecommendByCharm() (us []*User, err error) {
 	return us, nil
 }
 
-func (userServPrvd) Update(u *User) error {
-	_, err := UserService.FindByOpenID(u.Phone)
+func (userServPrvd) GetContact(oid string) (phone, wechat string, err error) {
+	row := DB.QueryRow(`SELECT phone, wechat FROM user WHERE open_id=? LOCK IN SHARE MODE`, oid)
+	if err = row.Scan(&phone, &wechat); err != nil {
+		return "", "", err
+	}
+	return
+}
+
+func (userServPrvd) Certify(oid string) error {
+	rslt, err := DB.Exec(`UPDATE user SET certified=1 WHERE open_id=? LIMIT 1`, oid)
 	if err != nil {
 		return err
 	}
-	_, err = DB.Exec(
-		`UPDATE user SET 
-			phone=?,wechat=?,nick_name=?,avatar=?,real_name=?,sex=?,birthday=?,height=?,location=?,job=?,faith=?,constellation=?,self_introduction=?,selec_criteria=?,
-			create_at=?,password=?,album=?,certified=?,vip=?,date_privilege=?,points=?,rose=?,charm=?
-			WHERE open_id=? LIMIT 1
-		`,
-		u.Phone, u.Wechat, u.NickName, u.Avatar, u.RealName, u.Sex, u.Birthday, u.Height, u.Location, u.Job, u.Faith, u.Constellation, u.SelfIntroduction, u.SelecCriteria,
-		u.OpenID, u.CreateAt, u.Password, u.Album, u.Certified, u.Vip, u.DatePrivilege, u.Points, u.Rose, u.Charm,
-		u.OpenID,
-	)
+	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
+		return errors.New(fmt.Sprintf("failed to certify user(id): %s", oid))
+	}
 	return err
 }
 
-func (userServPrvd) DeleteByOpenID(oid string) error {
-	_, err := DB.Exec(
-		`DELETE FROM user WHERE phone=? LIMIT 1`,
-		oid,
-	)
+func (userServPrvd) DatePrivilegeReduce(oid string) error {
+	rslt, err := DB.Exec(`UPDATE user SET date_privilege=date_privilege-1 WHERE open_id=? LIMIT 1`, oid)
+	if err != nil {
+		return err
+	}
+	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
+		return errors.New(fmt.Sprintf("failed to reduce dataPrivilege of user(id): %s", oid))
+	}
 	return err
 }
+
+func (userServPrvd) DatePrivilegeAdd(oid string, num int64) error {
+	rslt, err := DB.Exec(`UPDATE user SET date_privilege=date_privilege+? WHERE open_id=? LIMIT 1`,
+		num, oid,
+	)
+	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
+		return errors.New(fmt.Sprintf("failed to add dataPrivilege of user(id): %s", oid))
+	}
+	return err
+}
+
+func (userServPrvd) Update(u *User) error {
+	var err error
+	u.Constellation, err = util.GetConstellation(u.Birthday)
+	if err != nil {
+		return err
+	}
+	rslt, err := DB.Exec(
+		`UPDATE user 
+				  SET phone=?,wechat=?,nick_name=?,avatar=?,real_name=?,sex=?,birthday=?,height=?,location=?,job=?,faith=?,constellation=?,self_introduction=?,selec_criteria=?,
+				  certified=?,vip=?,date_privilege=?,points=?,rose=?,charm=?
+				  WHERE open_id=? LIMIT 1`,
+		u.Phone, u.Wechat, u.NickName, u.Avatar, u.RealName, u.Sex, u.Birthday, u.Height, u.Location, u.Job, u.Faith, u.Constellation, u.SelfIntroduction, u.SelecCriteria,
+		u.Certified, u.Vip, u.DatePrivilege, u.Points, u.Rose, u.Charm,
+		u.OpenID,
+	)
+	if affected, err := rslt.RowsAffected(); err == nil && affected != 1 {
+		return errors.New(fmt.Sprintf("failed to update information of user %s id: %d", u.RealName, u.OpenID))
+	}
+	return err
+}
+
+func (userServPrvd) SendRose(sender, recer string, num int) error {
+	var (
+		err         error
+		errSendRose = errors.New("failed to send rose")
+		tx          *sql.Tx
+		rslt        sql.Result
+	)
+	tx, err = DB.Begin()
+	if err != nil {
+		return err
+	}
+	rslt, err = tx.Exec(
+		`UPDATE user SET rose=rose-? WHERE open_id=? LIMIT 1`,
+		num, sender,
+	)
+	if err != nil {
+		tx.Rollback()
+		return errSendRose
+	}
+	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
+		tx.Rollback()
+		return errSendRose
+	}
+	rslt, err = tx.Exec(
+		`UPDATE user SET rose=rose+?, charm=charm+? WHERE open_id=? LIMIT 1`,
+		num, recer, num,
+	)
+	if err != nil {
+		tx.Rollback()
+		return errSendRose
+	}
+	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
+		tx.Rollback()
+		return errSendRose
+	}
+	return tx.Commit()
+}
+
+//func (userServPrvd) BecomeVIP(oid string) error {
+//	_, err := DB.Exec(
+//		`UPDATE user SET vip=1,points=points+520,rose=rose+520,date_privilege=date_privilege+1 WHERE open_id=? LIMIT 1`,
+//		oid,
+//	)
+//	return err
+//}
+
+//func (userServPrvd) Recharge (oid string, rose int64) error {
+//	addPoints := rose*10
+//	_, err := DB.Exec(
+//		`UPDATE user SET points=points+?,rose=rose+? WHERE open_id=? LIMIT 1`,
+//		addPoints,rose,oid,
+//	)
+//	return err
+//}

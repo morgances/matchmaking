@@ -1,6 +1,6 @@
 /*
  * @Author: zhanghao
- * @Date: 2018-10-08 22:46:12
+ * @DateTime: 2018-10-08 22:46:12
  * @Last Modified by: zhanghao
  * @Last Modified time: 2018-10-09 15:38:07
  */
@@ -11,7 +11,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"strings"
 )
 
 type (
@@ -19,10 +18,9 @@ type (
 
 	Goods struct {
 		ID          int64
-		Name        string
+		Title       string
 		Price       int64
 		Description string
-		Image       string
 	}
 )
 
@@ -30,21 +28,21 @@ var (
 	GoodsService goodsServPrvd
 )
 
-func (goodsServPrvd) Insert(g *Goods) error {
-	_, err := DB.Exec(
-		`INSERT INTO goods(id,name,price,description,image)
-			VALUES(?,?,?,?,?)
-		`,
-		g.ID, g.Name, g.Price, g.Description, g.Image,
+func (goodsServPrvd) Insert(g *Goods) (int64, error) {
+	result, err := DB.Exec(
+		`INSERT INTO goods(title,price,description)
+					VALUES(?,?,?)`,
+		g.Title, g.Price, g.Description,
 	)
-
 	if err != nil {
-		if strings.Contains(err.Error(), "Duplicate entry") {
-			err = errors.New(fmt.Sprintf("duplicate entry id:%s", g.ID)) // need fix when struct field changed
-		}
-		return err
+		return 0, err
 	}
-	return nil
+	var lastId int64
+	lastId, err = result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	return lastId, err
 }
 
 func (goodsServPrvd) FindByID(id int64) (g *Goods, err error) {
@@ -52,15 +50,16 @@ func (goodsServPrvd) FindByID(id int64) (g *Goods, err error) {
 		`SELECT * FROM goods WHERE id=? LOCK IN SHARE MODE`,
 		id,
 	)
+	g = &Goods{}
 	if err = row.Scan(
-		&g.ID, &g.Name, &g.Price, &g.Description, &g.Image,
-	); err == sql.ErrNoRows {
-		return nil, ErrNotFound
+		&g.ID, &g.Title, &g.Price, &g.Description,
+	); err != nil {
+		return nil, err
 	}
-	return nil, err
+	return g, nil
 }
 
-func (goodsServPrvd) FindByTime() (gs []Goods, err error) {
+func (goodsServPrvd) FindByPrice() (gs []Goods, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
 		`SELECT * FROM goods ORDER BY price DESC LOCK IN SHARE MODE`,
@@ -73,7 +72,7 @@ func (goodsServPrvd) FindByTime() (gs []Goods, err error) {
 	for i := 0; rows.Next(); i++ {
 		gs = append(gs, Goods{})
 		err = rows.Scan(
-			&gs[i].ID, &gs[i].Name, &gs[i].Price, &gs[i].Description, &gs[i].Image,
+			&gs[i].ID, &gs[i].Title, &gs[i].Price, &gs[i].Description,
 		)
 		if err != nil {
 			return nil, err
@@ -83,25 +82,27 @@ func (goodsServPrvd) FindByTime() (gs []Goods, err error) {
 }
 
 func (goodsServPrvd) Update(g *Goods) error {
-	_, err := GoodsService.FindByID(g.ID)
-	if err != nil {
-		return err
-	}
-	_, err = DB.Exec(
-		`UPDATE goods SET
-			id=?,name=?,price=?,description=?,image=?
-			WHERE id=? LIMIT 1
-		`,
-		g.ID, g.Name, g.Price, g.Description, g.Image,
+	_, err := DB.Exec(
+		`UPDATE goods 
+					SET title=?,price=?,description=?,image=?
+					WHERE id=? LIMIT 1`,
+		g.Title, g.Price, g.Description,
 		g.ID,
 	)
 	return err
 }
 
 func (goodsServPrvd) DeleteByID(id int64) error {
-	_, err := DB.Exec(
+	var rslt sql.Result
+	rslt, err := DB.Exec(
 		`DELETE FROM goods WHERE id=? LIMIT 1`,
 		id,
 	)
+	if err != nil {
+		return err
+	}
+	if affected, err := rslt.RowsAffected(); err == nil && affected != 1 {
+		return errors.New(fmt.Sprintf("failed to delete good: %d", id))
+	}
 	return err
 }

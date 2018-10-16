@@ -1,10 +1,25 @@
 {
-    "user_name": "root",
-    "password": "123456",
-    "protocol": "tcp",
+    "mysql": {
+        "user_name": "root",
+        "password": "123456",
+        "protocol": "tcp",
+        "host": {
+            "address": "127.0.0.1",
+            "port": "3306"
+        },
+        "database": "match_making"
+    },
     "host": {
         "address": "127.0.0.1",
-        "port": "3306"
+        "port": "3000"
     },
-    "database": "match_making"
+    "private_token_key": "zhanghao",
+    "app_id": "",
+    "app_secret": "",
+    "admin": {
+        "account": "",
+        "password": ""
+    },
+    "pre_album_dir": "~/Documents/album",
+    "album_sha1_secret": "zhanghao"
 }

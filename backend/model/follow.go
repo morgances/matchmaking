@@ -1,6 +1,6 @@
 /*
  * @Author: zhanghao
- * @Date: 2018-10-08 21:35:53
+ * @DateTime: 2018-10-08 21:35:53
  * @Last Modified by: zhanghao
  * @Last Modified time: 2018-10-09 15:36:07
  */
@@ -14,37 +14,17 @@ import (
 
 type (
 	followServPrvd struct{}
-
-	Follow struct {
-		Following string
-		Followed  string
-	}
 )
 
 var (
 	FollowService followServPrvd
 )
 
-func (followServPrvd) Insert(f *Follow) error {
-	exist, err := UserService.UserExist(f.Following)
-	if err != nil {
-		return err
-	}
-	if !exist {
-		return ErrUserNotExist
-	}
-	exist, err = UserService.UserExist(f.Followed)
-	if err != nil {
-		return err
-	}
-	if !exist {
-		return ErrUserNotExist
-	}
-	_, err = DB.Exec(
-		`INSERT INTO follow(following, followed)
-			VALUES(?,?)
-		`,
-		f.Following, f.Followed,
+func (followServPrvd) Insert(fan, idol string) error {
+	_, err := DB.Exec(
+		`INSERT INTO follow(fan, idol)
+					VALUES(?,?)`,
+		fan, idol,
 	)
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate entry") {
@@ -55,10 +35,12 @@ func (followServPrvd) Insert(f *Follow) error {
 	return nil
 }
 
-func (followServPrvd) FindFollowing(oid string) (fs []Follow, err error) {
+func (followServPrvd) FindFollowing(oid string) (us []User, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM follow WHERE following=? LOCK IN SHARE MODE`,
+		`SELECT u.open_id,u.nick_name,u.avatar
+			  		FROM follow f JOIN user u ON f.idol=u.open_id 
+			  		WHERE f.fan=? LOCK IN SHARE MODE`,
 		oid,
 	)
 	if err != nil {
@@ -67,20 +49,21 @@ func (followServPrvd) FindFollowing(oid string) (fs []Follow, err error) {
 	defer rows.Close()
 
 	for i := 0; rows.Next(); i++ {
-		fs = append(fs, Follow{})
-		if err = rows.Scan(
-			&fs[i].Following, &fs[i].Followed,
-		); err != nil {
+		var user User
+		if err = rows.Scan(&user.OpenID, &user.NickName, &user.Avatar); err != nil {
 			return nil, err
 		}
+		us = append(us, user)
 	}
-	return fs, nil
+	return us, nil
 }
 
-func (followServPrvd) FindFollowers(oid string) (fs []Follow, err error) {
+func (followServPrvd) FindFollower(oid string) (us []User, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM follow WHERE followed=? LOCK IN SHARE MODE`,
+		`SELECT u.open_id,u.nick_name,u.avatar
+			  		FROM follow f JOIN user u ON f.fan=u.open_id 
+			  		WHERE f.idol=? LOCK IN SHARE MODE`,
 		oid,
 	)
 	if err != nil {
@@ -89,38 +72,31 @@ func (followServPrvd) FindFollowers(oid string) (fs []Follow, err error) {
 	defer rows.Close()
 
 	for i := 0; rows.Next(); i++ {
-		fs = append(fs, Follow{})
-		if err = rows.Scan(
-			&fs[i].Following, &fs[i].Followed,
-		); err != nil {
+		var user User
+		if err = rows.Scan(&user.OpenID, &user.NickName, &user.Avatar); err != nil {
 			return nil, err
 		}
+		us = append(us, user)
 	}
-	return fs, nil
+	return us, nil
 }
 
-func (followServPrvd) Unfollow(following, followed string) error {
-	result, err := DB.Exec(
-		`DELETE FROM follow WHERE following=? AND followed=? LIMIT 1`,
-		following, followed,
-	)
-	if err != nil {
-		return err
-	}
-	var affected int64
-	if affected, err = result.RowsAffected(); err != nil {
-		return err
-	}
-	if affected == 0 {
-		return ErrUnfollowFailed
-	}
-	return nil
-}
-
-func (followServPrvd) DeleteAllRecord(oid string) error {
+func (followServPrvd) Delete(fan, idol string) error {
 	_, err := DB.Exec(
-		`DELETE FROM follow WHERE following=?`,
-		oid,
+		`DELETE FROM follow WHERE fan=? AND idol=? LIMIT 1`,
+		fan, idol,
 	)
 	return err
+}
+
+func (followServPrvd) FollowExist(fan, idol string) (bool, error) {
+	row := DB.QueryRow(
+		`SELECT COUNT(0) FROM follow WHERE fan=? AND idol=? LOCK IN SHARE MODE`,
+		fan, idol,
+	)
+	var exist int32
+	if err := row.Scan(&exist); err != nil {
+		return false, err
+	}
+	return exist != 0, nil
 }

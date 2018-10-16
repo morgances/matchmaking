@@ -1,10 +1,33 @@
-hash: b8fe005119f33933934982e0cfa22a83ca42b602c9330dcfa86140f5f0a0c826
-updated: 2018-10-08T01:23:30.332223+08:00
+hash: d841218ff6dda49039ede9e7dc3f2e83f3b23b3f7ecab1e9a07c47ee8ba0189f
+updated: 2018-10-12T14:27:12.290943+08:00
 imports:
+- name: github.com/auth0/go-jwt-middleware
+  version: 5493cabe49f7bfa6e2ec444a09d334d90cd4e2bd
+- name: github.com/bradfitz/gomemcache
+  version: bc664df9673713a0ccf26e3b55a673ec7301088b
+  subpackages:
+  - memcache
+- name: github.com/dgrijalva/jwt-go
+  version: 06ea1031745cb8b3dab3f6a236daf2b0aa468b7e
 - name: github.com/fsnotify/fsnotify
   version: c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9
+- name: github.com/go-playground/locales
+  version: f63010822830b6fe52288ee52d5a1151088ce039
+  subpackages:
+  - currency
+- name: github.com/go-playground/universal-translator
+  version: b32fa301c9fe55953584134cb6853a13c87ec0a1
 - name: github.com/go-sql-driver/mysql
   version: d523deb1b23d913de5bdada721a6071e71283618
+- name: github.com/gomodule/redigo
+  version: 2cd21d9966bf7ff9ae091419744f0b3fb0fecace
+  subpackages:
+  - internal
+  - redis
+- name: github.com/gorilla/context
+  version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
+- name: github.com/gorilla/mux
+  version: 7f08801859139f86dfafd1c296e2cba9a80d292e
 - name: github.com/hashicorp/hcl
   version: 8cb6e5b959231cc1119e43259c4a608f9c51a241
   subpackages:
@@ -17,12 +40,27 @@ imports:
   - json/parser
   - json/scanner
   - json/token
+- name: github.com/json-iterator/go
+  version: ca39e5af3ece67bbcda3d0f4f56a8e24d9f2dad4
 - name: github.com/magiconair/properties
   version: c2353362d570a7bfa228149c62842019201cfb71
 - name: github.com/mitchellh/mapstructure
   version: bb74f1db0675b241733089d5a1faa5dd8b0ef57b
+- name: github.com/modern-go/concurrent
+  version: bacd9c7ef1dd9b15be4a9909b8ac7a4e313eec94
+- name: github.com/modern-go/reflect2
+  version: 94122c33edd36123c84d5368cfb2b69df93a0ec8
 - name: github.com/pelletier/go-toml
   version: 66540cf1fcd2c3aee6f6787dfa32a6ae9a870f12
+- name: github.com/rs/cors
+  version: ca016a06a5753f8ba03029c0aa5e54afb1bf713f
+- name: github.com/silenceper/wechat
+  version: 90aabb3dd638f070d0e1cec93192df238c15a393
+  subpackages:
+  - cache
+  - context
+  - oauth
+  - util
 - name: github.com/spf13/afero
   version: 63644898a8da0bc22138abf860edaf5277b6102e
   subpackages:
@@ -35,10 +73,19 @@ imports:
   version: 583c0c0531f06d5278b7d917446061adc344b5cd
 - name: github.com/spf13/viper
   version: 2c12c60302a5a0e62ee102ca9bc996277c2f64f5
+- name: github.com/TechCatsLab/apix
+  version: cefe5e767912fb4369fb9aa1405e0401334da214
+  subpackages:
+  - http/server
+  - http/server/middleware
+- name: github.com/TechCatsLab/comment
+  version: 08abe3f2d22fcfc7c817fe2130d6426b342c9407
 - name: github.com/TechCatsLab/storage
   version: 6940f43f48978f575829a59b87e72ad755dd81e0
   subpackages:
   - mysql
+- name: github.com/urfave/negroni
+  version: 5dbbc83f748fc3ad38585842b0aedab546d0ea1e
 - name: golang.org/x/sys
   version: 43e60d72a8e2bd92ee98319ba9a384a0e9837c08
   subpackages:
@@ -52,6 +99,8 @@ imports:
   version: d9a072cfa7b9736e44311ef77b3e09d804bfa599
   subpackages:
   - cloudsql
+- name: gopkg.in/go-playground/validator.v9
+  version: b1f51f36f1c98cc97f777d6fc9d4b05eaa0cabb5
 - name: gopkg.in/yaml.v2
   version: 5420a8b6744d3b0345ab293f6fcba19c978f1183
 testImports: []
