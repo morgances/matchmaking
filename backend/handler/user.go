@@ -130,11 +130,12 @@ func WechatLogin(this *server.Context) error {
 		return this.WriteHeader(constant.ErrWechatAuth)
 	}
 
-	err = model.UserService.WeChatLogin(userData.OpenID, userData.Nickname, userData.HeadImgURL, userData.City, uint8(userData.Sex))
+	err = model.UserService.WeChatLogin(userData.OpenID, userData.Nickname, userData.City, uint8(userData.Sex))
 	if err != nil {
 		log.Println("Wechat login failed.")
 		return this.WriteHeader(constant.ErrMysql)
 	}
+	util.SaveWechatAvatar(userData.OpenID, userData.HeadImgURL)
 
 	resp.Token, err = util.NewToken(wechatData.OpenID, wechatData.AccessToken, uint8(userData.Sex), false)
 	if err != nil {
@@ -242,8 +243,8 @@ func UserChangeInfo(this *server.Context) error {
 
 func GetUserDetail(this *server.Context) error {
 	var (
-		err error
-		req targetOpenID
+		err   error
+		req   targetOpenID
 		userp *model.User
 		resp  detailUserInfo
 	)
@@ -339,8 +340,8 @@ func GetAlbum(this *server.Context) error {
 		err          error
 		oid          string
 		isAbleToLook bool
-		req	targetOpenID
-		resp struct {
+		req          targetOpenID
+		resp         struct {
 			album []string `json:"album"`
 		}
 	)
@@ -466,9 +467,9 @@ func ChangeAvatar(this *server.Context) error {
 
 func SendRose(this *server.Context) error {
 	var (
-		req struct{
+		req struct {
 			Reciever string `json:"reciever" validate:"required,len=28"`
-			RoseNum int `json:"rose_num" validate:"required,numeric,gte=1"`
+			RoseNum  int    `json:"rose_num" validate:"required,numeric,gte=1"`
 		}
 	)
 	authorization := this.GetHeader("Authorization")

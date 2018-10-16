@@ -18,7 +18,6 @@ type (
 	shortUserInfo struct {
 		OpenID   string `json:"open_id"`
 		NickName string `json:"nick_name"`
-		Avatar   string `json:"avatar"`
 	}
 )
 
@@ -103,7 +102,6 @@ func GetFollowing(this *server.Context) error {
 		var shortUserInfo shortUserInfo
 		shortUserInfo.OpenID = user.OpenID
 		shortUserInfo.NickName = user.NickName
-		shortUserInfo.Avatar = user.Avatar
 		resp.Following = append(resp.Following, shortUserInfo)
 	}
 	if err = this.ServeJSON(&resp); err != nil {
@@ -138,7 +136,6 @@ func GetFollower(this *server.Context) error {
 		var shortUserInfo shortUserInfo
 		shortUserInfo.OpenID = user.OpenID
 		shortUserInfo.NickName = user.NickName
-		shortUserInfo.Avatar = user.Avatar
 		resp.Follower = append(resp.Follower, shortUserInfo)
 	}
 	if err = this.ServeJSON(&resp); err != nil {

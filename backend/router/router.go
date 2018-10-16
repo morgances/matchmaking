@@ -44,7 +44,7 @@ func init() {
 	Router.Get("/matchmaking/follow/GetFollowing", handler.GetFollowing)
 	Router.Get("/matchmaking/follow/GetFollower", handler.GetFollower)
 
-	Router.Get("/matchmaking/goods/getgoodsbyid", handler.GetGoodsByID)	// both user and admin
+	Router.Get("/matchmaking/goods/getgoodsbyid", handler.GetGoodsByID) // both user and admin
 	Router.Get("/matchmaking/goods/getgoodsbyprice", handler.GetGoodsByPrice)
 
 	Router.Post("/matchmaking/post/createpost", handler.CreatePost)

@@ -299,8 +299,8 @@ func GetUnfinishedTrade(this *server.Context) error {
 		err     error
 		isAdmin bool
 		resp    struct {
-					Trades []tradeForResp `json:"trades"`
-				}
+			Trades []tradeForResp `json:"trades"`
+		}
 	)
 	authorization := this.GetHeader("Authorization")
 	_, _, _, isAdmin, err = util.ParseToken(authorization)
@@ -339,10 +339,10 @@ func CancelTrade(this *server.Context) error {
 		err     error
 		isAdmin bool
 		req     struct {
-					ID     int64  `json:"id" validate:"required, numeric, gte=1"`
-					OpenID string `json:"open_id" validate:"required, len=28"`
-					Cost   int64  `json:"cost" validate:"required, numeric, gte=0"`
-				}
+			ID     int64  `json:"id" validate:"required, numeric, gte=1"`
+			OpenID string `json:"open_id" validate:"required, len=28"`
+			Cost   int64  `json:"cost" validate:"required, numeric, gte=0"`
+		}
 	)
 	authorization := this.GetHeader("Authorization")
 	_, _, _, isAdmin, err = util.ParseToken(authorization)

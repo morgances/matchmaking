@@ -11,8 +11,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"time"
 	"github.com/morgances/matchmaking/backend/util"
+	"time"
 )
 
 type (

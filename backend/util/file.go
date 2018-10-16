@@ -21,6 +21,7 @@ import (
 // SaveImage cover image if it already exist
 func SaveImage(name string, image multipart.File) error {
 	localImage, err := os.Create(name)
+	defer localImage.Close()
 	if err != nil {
 		if os.IsNotExist(err) {
 			lastSlash := strings.LastIndex(name, "/")
@@ -50,6 +51,7 @@ func SaveImages(num int, dir string, r *http.Request) error {
 		// todo: make images will not be created with the same name when one user upload photos twice in a second
 		// todo: should i return err when one of images failed to save ?
 		SaveImage(dir+fmt.Sprintf("%d-%d.jpg", timeUnix, i), image)
+		image.Close()
 	}
 	return nil
 }
@@ -66,6 +68,28 @@ func ChangeAvatar(oid string, avatar multipart.File) error {
 	return SaveImage("./avatar/"+oid+".jpg", avatar)
 }
 
+func SaveWechatAvatar(oid, url string) error {
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	file, err := os.Create("./avatar/" + oid + ".jpg")
+	if err != nil {
+		if os.IsNotExist(err) {
+			if err := os.Mkdir("./avatar", 0755); err != nil {
+				return err
+			}
+		} else {
+			return err
+		}
+	}
+	defer file.Close()
+	_, err = io.Copy(file, resp.Body)
+	return err
+}
+
+// RemoveImageIfExist todo: need update images of post ?
 func RemoveImageIfExist(name string) error {
 	err := os.Remove(name)
 	if os.IsNotExist(err) || err == nil {

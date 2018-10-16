@@ -38,7 +38,7 @@ func (followServPrvd) Insert(fan, idol string) error {
 func (followServPrvd) FindFollowing(oid string) (us []User, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT u.open_id,u.nick_name,u.avatar
+		`SELECT u.open_id,u.nick_name
 			  		FROM follow f JOIN user u ON f.idol=u.open_id 
 			  		WHERE f.fan=? LOCK IN SHARE MODE`,
 		oid,
@@ -50,7 +50,7 @@ func (followServPrvd) FindFollowing(oid string) (us []User, err error) {
 
 	for i := 0; rows.Next(); i++ {
 		var user User
-		if err = rows.Scan(&user.OpenID, &user.NickName, &user.Avatar); err != nil {
+		if err = rows.Scan(&user.OpenID, &user.NickName); err != nil {
 			return nil, err
 		}
 		us = append(us, user)
@@ -61,7 +61,7 @@ func (followServPrvd) FindFollowing(oid string) (us []User, err error) {
 func (followServPrvd) FindFollower(oid string) (us []User, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT u.open_id,u.nick_name,u.avatar
+		`SELECT u.open_id,u.nick_name
 			  		FROM follow f JOIN user u ON f.fan=u.open_id 
 			  		WHERE f.idol=? LOCK IN SHARE MODE`,
 		oid,
@@ -73,7 +73,7 @@ func (followServPrvd) FindFollower(oid string) (us []User, err error) {
 
 	for i := 0; rows.Next(); i++ {
 		var user User
-		if err = rows.Scan(&user.OpenID, &user.NickName, &user.Avatar); err != nil {
+		if err = rows.Scan(&user.OpenID, &user.NickName); err != nil {
 			return nil, err
 		}
 		us = append(us, user)

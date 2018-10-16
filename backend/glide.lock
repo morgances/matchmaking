@@ -1,5 +1,5 @@
-hash: d841218ff6dda49039ede9e7dc3f2e83f3b23b3f7ecab1e9a07c47ee8ba0189f
-updated: 2018-10-12T14:27:12.290943+08:00
+hash: b80085a10e1dbd0436144ef053ddbab393c83bd70976344c2b0e55880a9a09d7
+updated: 2018-10-17T02:11:57.008802+08:00
 imports:
 - name: github.com/auth0/go-jwt-middleware
   version: 5493cabe49f7bfa6e2ec444a09d334d90cd4e2bd
@@ -61,6 +61,8 @@ imports:
   - context
   - oauth
   - util
+- name: github.com/sirupsen/logrus
+  version: 3e01752db0189b9157070a0e1668a620f9a85da2
 - name: github.com/spf13/afero
   version: 63644898a8da0bc22138abf860edaf5277b6102e
   subpackages:
@@ -80,16 +82,33 @@ imports:
   - http/server/middleware
 - name: github.com/TechCatsLab/comment
   version: 08abe3f2d22fcfc7c817fe2130d6426b342c9407
+  subpackages:
+  - config
+  - constants
+  - controller
+  - model/mysql
+  - response
+  - services
+- name: github.com/TechCatsLab/logging
+  version: 21d681a67b643a353ab3547881fa99dc73624c51
+  subpackages:
+  - logrus
+  - logrus/hooks
 - name: github.com/TechCatsLab/storage
   version: 6940f43f48978f575829a59b87e72ad755dd81e0
   subpackages:
   - mysql
 - name: github.com/urfave/negroni
   version: 5dbbc83f748fc3ad38585842b0aedab546d0ea1e
+- name: golang.org/x/crypto
+  version: 0c41d7ab0a0ee717d4590a44bcb987dfd9e183eb
+  subpackages:
+  - ssh/terminal
 - name: golang.org/x/sys
   version: 43e60d72a8e2bd92ee98319ba9a384a0e9837c08
   subpackages:
   - unix
+  - windows
 - name: golang.org/x/text
   version: 5c1cf69b5978e5a34c5f9ba09a83e56acc4b7877
   subpackages:

@@ -14,3 +14,7 @@ import:
 - package: github.com/dgrijalva/jwt-go
   version: ^3.2.0
 - package: github.com/TechCatsLab/comment
+- package: github.com/sirupsen/logrus
+- package: github.com/TechCatsLab/logging
+  subpackages:
+  - logrus

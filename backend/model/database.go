@@ -134,7 +134,7 @@ func initTable() error {
 		`CREATE TABLE IF NOT EXISTS Signinin_record(
 			open_id VARCHAR(255),
 			signin_date DATE,
-			PRIMARY KEY (open_id, date))ENGINE=InnoDB DEFAULT CHARSET=utf8
+			PRIMARY KEY (open_id, signin_date))ENGINE=InnoDB DEFAULT CHARSET=utf8
 		`,
 	)
 	if err != nil {
@@ -145,7 +145,7 @@ func initTable() error {
 		`CREATE TABLE IF NOT EXISTS goods(
 			id INT AUTO_INCREMENT,
 			title VARCHAR(50) UNIQUE,
-			price UNSIGNED INT,
+			price INT UNSIGNED,
 			description VARCHAR(255) DEFAULT 'NULL',
 			PRIMARY KEY (id))ENGINE=InnoDB DEFAULT CHARSET=utf8
 		`,
