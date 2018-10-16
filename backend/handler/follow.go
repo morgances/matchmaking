@@ -34,11 +34,11 @@ func Follow(this *server.Context) error {
 		log.Println(err)
 		return this.WriteHeader(constant.ErrInvalidParam)
 	}
-	if err = this.JSONBody(req); err != nil {
+	if err = this.JSONBody(&req); err != nil {
 		log.Println(err)
 		return this.WriteHeader(constant.ErrInvalidParam)
 	}
-	if err = this.Validate(req); err != nil {
+	if err = this.Validate(&req); err != nil {
 		log.Println(err)
 		return this.WriteHeader(constant.ErrInvalidParam)
 	}
@@ -62,11 +62,11 @@ func Unfollow(this *server.Context) error {
 		log.Println(err)
 		return this.WriteHeader(constant.ErrInvalidParam)
 	}
-	if err = this.JSONBody(req); err != nil {
+	if err = this.JSONBody(&req); err != nil {
 		log.Println(err)
 		return this.WriteHeader(constant.ErrInvalidParam)
 	}
-	if err = this.Validate(req); err != nil {
+	if err = this.Validate(&req); err != nil {
 		log.Println(err)
 		return this.WriteHeader(constant.ErrInvalidParam)
 	}

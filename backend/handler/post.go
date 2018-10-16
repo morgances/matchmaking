@@ -34,9 +34,9 @@ func CreatePost(this *server.Context) error {
 		openid string
 		postId int64
 		req    struct {
-			Title    string `json:"title"`
+			Title    string `json:"title" validate:"required"`
 			Content  string `json:"content"`
-			ImageNum int    `json:"image_num"`
+			ImageNum int    `json:"image_num" validate:"required, numeric, gte=0"`
 		}
 	)
 	authorization := this.GetHeader("Authorization")

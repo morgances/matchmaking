@@ -24,9 +24,6 @@ type matchMakeConfig struct {
 	// admin config
 	AdmAccount  string
 	AdmPassword string
-
-	PreAlbumDir string
-	AlbumSha1   string
 }
 
 var MatchMakeConf *matchMakeConfig
@@ -52,7 +49,5 @@ func init() {
 		AppSecret:       viper.GetString("app_secret"),
 		AdmAccount:      viper.GetString("admin.account"),
 		AdmPassword:     viper.GetString("admin.password"),
-		PreAlbumDir:     viper.GetString("pre_album_dir"),
-		AlbumSha1:       viper.GetString("album_sha1_secret"),
 	}
 }

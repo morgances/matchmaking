@@ -21,13 +21,13 @@ type (
 	}
 
 	targetID struct {
-		TargetID int64 `json:"target_id"`
+		TargetID int64 `json:"target_id" validate:"required, numeric, gte=1"`
 	}
 )
 
 func Login(this *server.Context) error {
 	var (
-		token token
+		resp token
 	)
 	authorization := this.GetHeader("Authorization")
 	acc, pass, err := util.ParseBase64(authorization)
@@ -39,11 +39,11 @@ func Login(this *server.Context) error {
 		log.Println(err)
 		return this.WriteHeader(constant.ErrAccountOrPasswordWrong)
 	}
-	if token.Token, err = util.NewToken("admin", "admin", 1, true); err != nil {
+	if resp.Token, err = util.NewToken("admin", "admin", 1, true); err != nil {
 		log.Println(err)
 		return this.WriteHeader(constant.ErrInvalidParam)
 	}
-	if err = this.ServeJSON(&token); err != nil {
+	if err = this.ServeJSON(&resp); err != nil {
 		log.Println(err)
 		return this.WriteHeader(constant.ErrInvalidParam)
 	}
@@ -339,9 +339,9 @@ func CancelTrade(this *server.Context) error {
 		err     error
 		isAdmin bool
 		req     struct {
-					ID     int64  `json:"id"`
-					OpenID string `json:"open_id"`
-					Cost   int64  `json:"cost"`
+					ID     int64  `json:"id" validate:"required, numeric, gte=1"`
+					OpenID string `json:"open_id" validate:"required, len=28"`
+					Cost   int64  `json:"cost" validate:"required, numeric, gte=0"`
 				}
 	)
 	authorization := this.GetHeader("Authorization")

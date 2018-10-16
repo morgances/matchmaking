@@ -29,8 +29,8 @@ func CreateGoods(this *server.Context) error {
 		err     error
 		isAdmin bool
 		req     struct {
-			Title       string `json:"title"`
-			Price       int64  `json:"price"`
+			Title       string `json:"title" validate:"required"`
+			Price       int64  `json:"price" validate:"required, numeric, gte=0"`
 			Description string `json:"description"`
 		}
 		lastId int64
@@ -74,21 +74,21 @@ func CreateGoods(this *server.Context) error {
 
 func GetGoodsByID(this *server.Context) error {
 	var (
-		err    error
-		target targetID
-		goods  *model.Goods
-		resp   goodsResp
+		err   error
+		req   targetID
+		goods *model.Goods
+		resp  goodsResp
 	)
-	if err = this.JSONBody(&target); err != nil {
+	if err = this.JSONBody(&req); err != nil {
 		log.Println(err)
 		return this.WriteHeader(constant.ErrInvalidParam)
 	}
-	if err = this.Validate(&target); err != nil {
+	if err = this.Validate(&req); err != nil {
 		log.Println(err)
 		return this.WriteHeader(constant.ErrInvalidParam)
 	}
 
-	goods, err = model.GoodsService.FindByID(target.TargetID)
+	goods, err = model.GoodsService.FindByID(req.TargetID)
 	if err != nil {
 		log.Println(err)
 		return this.WriteHeader(constant.ErrMysql)
@@ -138,9 +138,9 @@ func UpdateGoods(this *server.Context) error {
 		err     error
 		isAdmin bool
 		req     struct {
-			ID          int64  `json:"id"` // todo: validate
-			Title       string `json:"title"`
-			Price       int64  `json:"price"`
+			ID          int64  `json:"id" validate:"required, numeric, gte=1"`
+			Title       string `json:"title" validate:"required"`
+			Price       int64  `json:"price" validate:"required, numeric, gte=1"`
 			Description string `json:"description"`
 		}
 		goods model.Goods

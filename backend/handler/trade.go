@@ -33,10 +33,10 @@ func CreateTrade(this *server.Context) error {
 		err error
 		oid string
 		req struct {
-			GoodsID   int64  `json:"goods_id" validate:"required"`
+			GoodsID   int64  `json:"goods_id" validate:"required,numeric,gte=1"`
 			BuyerName string `json:"buyer_name" validate:"required"`
 			GoodsName string `json:"goods_name" validate:"required"`
-			Cost      int64  `json:"cost" validate:"required"`
+			Cost      int64  `json:"cost" validate:"required,numeric,gte=0"`
 		}
 	)
 	authorization := this.GetHeader("Authorization")

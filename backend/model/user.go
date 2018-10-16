@@ -23,7 +23,6 @@ type (
 		Phone            string
 		Wechat           string
 		NickName         string
-		Avatar           string
 		RealName         string
 		Sex              uint8
 		Birthday         string
@@ -51,7 +50,7 @@ var (
 	UserService userServPrvd
 )
 
-func (userServPrvd) WeChatLogin(oid, nickName, avatar, loc string, sex uint8) error {
+func (userServPrvd) WeChatLogin(oid, nickName, loc string, sex uint8) error {
 	exist, err := UserService.userExist(oid)
 	if err != nil {
 		return err
@@ -62,7 +61,6 @@ func (userServPrvd) WeChatLogin(oid, nickName, avatar, loc string, sex uint8) er
 	return UserService.insert(&User{
 		OpenID:   oid,
 		NickName: nickName,
-		Avatar:   avatar,
 		Sex:      sex,
 		Location: loc,
 		CreateAt: time.Now(),
@@ -71,9 +69,9 @@ func (userServPrvd) WeChatLogin(oid, nickName, avatar, loc string, sex uint8) er
 
 func (userServPrvd) insert(u *User) error {
 	_, err := DB.Exec(
-		`INSERT INTO user(open_id, nick_name, avatar, sex, location,create_at)
-					VALUES(?,?,?,?,?,?,NOW())`,
-		u.OpenID, u.NickName, u.Avatar, u.Sex, u.Location,
+		`INSERT INTO user(open_id, nick_name, sex, location,create_at)
+					VALUES(?,?,?,?,?,NOW())`,
+		u.OpenID, u.NickName, u.Sex, u.Location,
 	)
 	return err
 }
@@ -101,7 +99,7 @@ func (userServPrvd) FindByOpenID(oid string) (u *User, err error) {
 
 	u = &User{}
 	if err = row.Scan(
-		&u.Phone, &u.Wechat, &u.NickName, &u.Avatar, &u.RealName, &u.Sex, &u.Birthday, &u.Height,
+		&u.Phone, &u.Wechat, &u.NickName, &u.RealName, &u.Sex, &u.Birthday, &u.Height,
 		&u.Location, &u.Job, &u.Faith, &u.Constellation, &u.SelfIntroduction, &u.SelecCriteria,
 		&u.OpenID, &u.CreateAt, &u.Certified, &u.Vip, &u.DatePrivilege, &u.Points, &u.Rose, &u.Charm,
 	); err != nil {
@@ -124,7 +122,7 @@ func (userServPrvd) RecommendByCharm(sex uint8) (us []User, err error) {
 	for i := 0; rows.Next(); i++ {
 		us = append(us, User{})
 		err = rows.Scan(
-			&us[i].Phone, &us[i].Wechat, &us[i].NickName, &us[i].Avatar, &us[i].RealName, &us[i].Sex, &us[i].Birthday, &us[i].Height,
+			&us[i].Phone, &us[i].Wechat, &us[i].NickName, &us[i].RealName, &us[i].Sex, &us[i].Birthday, &us[i].Height,
 			&us[i].Location, &us[i].Job, &us[i].Faith, &us[i].Constellation, &us[i].SelfIntroduction, &us[i].SelecCriteria,
 			&us[i].OpenID, &us[i].CreateAt, &us[i].Certified, &us[i].Vip, &us[i].DatePrivilege, &us[i].Points, &us[i].Rose, &us[i].Charm,
 		)
@@ -183,10 +181,10 @@ func (userServPrvd) Update(u *User) error {
 	}
 	rslt, err := DB.Exec(
 		`UPDATE user 
-				  SET phone=?,wechat=?,nick_name=?,avatar=?,real_name=?,sex=?,birthday=?,height=?,location=?,job=?,faith=?,constellation=?,self_introduction=?,selec_criteria=?,
+				  SET phone=?,wechat=?,nick_name=?,real_name=?,sex=?,birthday=?,height=?,location=?,job=?,faith=?,constellation=?,self_introduction=?,selec_criteria=?,
 				  certified=?,vip=?,date_privilege=?,points=?,rose=?,charm=?
 				  WHERE open_id=? LIMIT 1`,
-		u.Phone, u.Wechat, u.NickName, u.Avatar, u.RealName, u.Sex, u.Birthday, u.Height, u.Location, u.Job, u.Faith, u.Constellation, u.SelfIntroduction, u.SelecCriteria,
+		u.Phone, u.Wechat, u.NickName, u.RealName, u.Sex, u.Birthday, u.Height, u.Location, u.Job, u.Faith, u.Constellation, u.SelfIntroduction, u.SelecCriteria,
 		u.Certified, u.Vip, u.DatePrivilege, u.Points, u.Rose, u.Charm,
 		u.OpenID,
 	)

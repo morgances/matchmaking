@@ -17,9 +17,7 @@
     "app_id": "",
     "app_secret": "",
     "admin": {
-        "account": "",
-        "password": ""
-    },
-    "pre_album_dir": "~/Documents/album",
-    "album_sha1_secret": "zhanghao"
+        "account": "zhanghao",
+        "password": "123456"
+    }
 }

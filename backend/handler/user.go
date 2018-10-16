@@ -26,7 +26,6 @@ type (
 	userInfo struct {
 		OpenID           string `json: "open_id"`
 		NickName         string `json:"nick_name"`
-		Avatar           string `json:"avatar"`
 		Sex              uint8  `json:"sex"`
 		Age              uint8  `json:"age"`
 		Height           string `json:"height"`
@@ -40,7 +39,6 @@ type (
 	detailUserInfo struct {
 		OpenID           string `json:"open_id"`
 		NickName         string `json:"nick_name"`
-		Avatar           string `json:"avatar"`
 		RealName         string `json:"real_name"`
 		Sex              uint8  `json:"sex"`
 		Age              uint8  `json:"age"` // todo: turn birthday to age before feedback
@@ -59,10 +57,10 @@ type (
 	}
 
 	fillInfo struct {
-		Phone            string `json:"phone" validate:"required"` // todo:regexp check phone ?
+		Phone            string `json:"phone" validate:"required, numeric, len=11"`
 		Wechat           string `json:"wechat" validate:"required"`
 		RealName         string `json:"real_name" validate:"required"`
-		Birthday         string `json:"birthday" validate:"required"` // todo: validate xxxx-xx-xx format
+		Birthday         string `json:"birthday" validate:"required,len=10,contains=-"` // todo: validate xxxx-xx-xx format
 		Height           string `json:"height" validate:"required"`
 		Job              string `json:"job" validate:"required"`
 		Faith            string `json:"faith" validate:"required"`
@@ -72,11 +70,10 @@ type (
 
 	changeInfo struct {
 		NickName         string `json:"nick_name" validate:"required"`
-		Avatar           string `json:"avatar" validate:"required"`
 		Faith            string `json:"faith" validate:"required"`
 		SelfIntroduction string `json:"self_introduction" validate:"required"`
 		SelecCriteria    string `json:"selec_criteria" validate:"required"`
-		Phone            string `json:"phone" validate:"required"`
+		Phone            string `json:"phone" validate:"required, numeric, len=11"`
 		Wechat           string `json:"wechat" validate:"required"`
 	}
 
@@ -90,7 +87,7 @@ type (
 	}
 
 	targetOpenID struct {
-		TargetOpenID string `json:"target_open_id" validate:"required"`
+		TargetOpenID string `json:"target_open_id" validate:"required, len=28"`
 	}
 )
 
@@ -230,7 +227,6 @@ func UserChangeInfo(this *server.Context) error {
 		return this.WriteHeader(constant.ErrMysql)
 	}
 	userp.NickName = req.NickName
-	userp.Avatar = req.Avatar
 	userp.Faith = req.Faith
 	userp.SelfIntroduction = req.SelfIntroduction
 	userp.SelecCriteria = req.SelecCriteria
@@ -247,9 +243,7 @@ func UserChangeInfo(this *server.Context) error {
 func GetUserDetail(this *server.Context) error {
 	var (
 		err error
-		req struct {
-			OpenID string `json:"open_id" validate:"required"`
-		}
+		req targetOpenID
 		userp *model.User
 		resp  detailUserInfo
 	)
@@ -262,7 +256,7 @@ func GetUserDetail(this *server.Context) error {
 		return this.WriteHeader(constant.ErrInvalidParam)
 	}
 
-	userp, err = model.UserService.FindByOpenID(req.OpenID)
+	userp, err = model.UserService.FindByOpenID(req.TargetOpenID)
 	if err != nil {
 		log.Println(err)
 		return this.WriteHeader(constant.ErrMysql)
@@ -272,7 +266,6 @@ func GetUserDetail(this *server.Context) error {
 	resp.RealName = userp.RealName
 	resp.Job = userp.Job
 	resp.Height = userp.Height
-	resp.Avatar = userp.Avatar
 	resp.SelecCriteria = userp.SelecCriteria
 	resp.SelfIntroduction = userp.SelfIntroduction
 	resp.Age = userp.Age
@@ -325,7 +318,6 @@ func GetRecommendUsers(this *server.Context) error {
 	for i, user := range userSlice {
 		resp.UserInformation[i].OpenID = user.OpenID
 		resp.UserInformation[i].NickName = user.NickName
-		resp.UserInformation[i].Avatar = user.Avatar
 		resp.UserInformation[i].Sex = user.Sex
 		resp.UserInformation[i].Age = user.Age
 		resp.UserInformation[i].Height = user.Height
@@ -347,9 +339,7 @@ func GetAlbum(this *server.Context) error {
 		err          error
 		oid          string
 		isAbleToLook bool
-		req          struct {
-			OpenID string `json:"open_id" validate:"required"`
-		}
+		req	targetOpenID
 		resp struct {
 			album []string `json:"album"`
 		}
@@ -368,8 +358,8 @@ func GetAlbum(this *server.Context) error {
 		log.Println(err)
 		return this.WriteHeader(constant.ErrInvalidParam)
 	}
-	if oid != req.OpenID {
-		isAbleToLook, err = model.FollowService.FollowExist(oid, req.OpenID)
+	if oid != req.TargetOpenID {
+		isAbleToLook, err = model.FollowService.FollowExist(oid, req.TargetOpenID)
 		if err != nil {
 			log.Println(err)
 			return this.WriteHeader(constant.ErrMysql)
@@ -399,7 +389,7 @@ func UploadPhotos(this *server.Context) error {
 		err error
 		oid string
 		req struct {
-			ImageNum int `json:"image_num" validate:"required"`
+			ImageNum int `json:"image_num" validate:"required, numeric, gte=1"`
 		}
 	)
 	authorization := this.GetHeader("Authorization")
@@ -428,7 +418,7 @@ func RemovePhotos(this *server.Context) error {
 		err error
 		oid string
 		req struct {
-			Images []string `json:"images" validate:"required"`
+			Images []string `json:"images" validate:"required,dive,required"`
 		}
 	)
 	authorization := this.GetHeader("Authorization")
@@ -477,8 +467,8 @@ func ChangeAvatar(this *server.Context) error {
 func SendRose(this *server.Context) error {
 	var (
 		req struct{
-			Reciever string `json:"reciever" validate:"required"`
-			RoseNum int `json:"rose_num"`
+			Reciever string `json:"reciever" validate:"required,len=28"`
+			RoseNum int `json:"rose_num" validate:"required,numeric,gte=1"`
 		}
 	)
 	authorization := this.GetHeader("Authorization")
