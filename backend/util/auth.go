@@ -47,9 +47,14 @@ func NewToken(oid, acid string, sex uint8, isAdm bool) (string, error) {
 
 func ParseToken(tokenString string) (oid, acid string, sex uint8, isAdm bool, err error) {
 	var sexFloat64 float64
-	if strings.HasPrefix(tokenString, "Bearer ") {
-		strings.TrimPrefix(tokenString, "Bearer ")
+
+	kv := strings.Split(tokenString, " ")
+	if len(kv) != 2 || kv[0] != "Bearer" {
+		err = errors.New("invalid token authorization string")
+		return "", "", 0, false, err
 	}
+	tokenString = kv[1]
+
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errParseToken

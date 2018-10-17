@@ -9,7 +9,7 @@ package model
 
 import (
 	"database/sql"
-	"strings"
+	"errors"
 )
 
 type (
@@ -21,18 +21,33 @@ var (
 )
 
 func (followServPrvd) Insert(fan, idol string) error {
-	_, err := DB.Exec(
-		`INSERT INTO follow(fan, idol)
-					VALUES(?,?)`,
+	tx, err := DB.Begin()
+	if err != nil {
+		return err
+	}
+	rslt, err := tx.Exec(`UPDATE user SET rose=rose-1 WHERE open_id=? LIMIT 1`, fan)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
+		tx.Rollback()
+		return errors.New(fan + "failed to start to follow " + idol)
+	}
+	rslt, err = tx.Exec(
+		`INSERT INTO follow(fan, idol) VALUES(?,?)`,
 		fan, idol,
 	)
 	if err != nil {
-		if strings.Contains(err.Error(), "Duplicate entry") {
-			return ErrDuplicateEntry
-		}
+		tx.Rollback()
 		return err
 	}
-	return nil
+	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
+		tx.Rollback()
+		return errors.New(fan + "failed to start to follow " + idol)
+	}
+
+	return tx.Commit()
 }
 
 func (followServPrvd) FindFollowing(oid string) (us []User, err error) {

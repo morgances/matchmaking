@@ -51,20 +51,19 @@ func initDatabase() error {
 func initTable() error {
 	_, err := DB.Exec(
 		`CREATE TABLE IF NOT EXISTS user(
-			phone VARCHAR(20) DEFAULT 'NULL',
-			wechat VARCHAR(20) DEFAULT 'NULL',
+			phone VARCHAR(20) DEFAULT 'null',
+			wechat VARCHAR(20) DEFAULT 'null',
 			nick_name VARCHAR(10),
-			avatar VARCHAR(100),
-			real_name VARCHAR(10) DEFAULT 'NULL',
-			sex	TINYINT(1),
-			birthday DATE DEFAULT '2018-1-1',
-			height VARCHAR(10) DEFAULT 'NULL',
-			location VARCHAR(10) DEFAULT 'NULL',
-			job VARCHAR(20) DEFAULT 'NULL',
-			faith VARCHAR(20) DEFAULT 'NULL',
-			constellation VARCHAR(10) DEFAULT 'NULL',
-			self_introduction VARCHAR(255) DEFAULT 'NULL',
-			selec_criteria VARCHAR(255) DEFAULT 'NULL',
+			real_name VARCHAR(10) DEFAULT 'null',
+			sex	TINYINT(1) UNSIGNED NOT NULL,
+			birthday DATE DEFAULT '2018-01-01',
+			height VARCHAR(10) DEFAULT 'null',
+			location VARCHAR(10) DEFAULT 'null',
+			job VARCHAR(20) DEFAULT 'null',
+			faith VARCHAR(20) DEFAULT 'null',
+			constellation VARCHAR(10) DEFAULT 'null',
+			self_introduction VARCHAR(255) DEFAULT 'null',
+			selec_criteria VARCHAR(255) DEFAULT 'null',
 
 			open_id VARCHAR(255),
 			age TINYINT UNSIGNED DEFAULT 0,
@@ -106,12 +105,12 @@ func initTable() error {
 	_, err = DB.Exec(
 		`CREATE TABLE IF NOT EXISTS post(
 			id BIGINT AUTO_INCREMENT,
-			open_id VARCHAR(255),
-			title VARCHAR(50),
-			content VARCHAR(255) DEFAULT 'NULL',
-			date_time DATETIME,
+			open_id VARCHAR(255) NOT NULL,
+			title VARCHAR(50) NOT NULL,
+			content VARCHAR(255) DEFAULT 'null',
+			date_time DATETIME NOT NULL,
 			commend INT UNSIGNED DEFAULT 0,
-			reviewed TINYINT DEFAULT 0,
+			reviewed TINYINT UNSIGNED DEFAULT 0,
 			PRIMARY KEY (id))ENGINE=InnoDB DEFAULT CHARSET=utf8
 		`,
 	)
@@ -145,8 +144,8 @@ func initTable() error {
 		`CREATE TABLE IF NOT EXISTS goods(
 			id INT AUTO_INCREMENT,
 			title VARCHAR(50) UNIQUE,
-			price INT UNSIGNED,
-			description VARCHAR(255) DEFAULT 'NULL',
+			price INT UNSIGNED NOT NULL,
+			description VARCHAR(255) DEFAULT 'null',
 			PRIMARY KEY (id))ENGINE=InnoDB DEFAULT CHARSET=utf8
 		`,
 	)
@@ -157,13 +156,13 @@ func initTable() error {
 	_, err = DB.Exec(
 		`CREATE TABLE IF NOT EXISTS trade(
 			id BIGINT AUTO_INCREMENT,
-			open_id VARCHAR(255),
-			goods_id INT UNSIGNED,
-			buyer_name VARCHAR(10),
-			goods_title VARCHAR(50),
-			date_time DATETIME,
-			cost INT UNSIGNED,
-			finished TINYINT DEFAULT 0,
+			open_id VARCHAR(255) NOT NULL,
+			goods_id INT UNSIGNED NOT NULL,
+			buyer_name VARCHAR(10) NOT NULL,
+			goods_title VARCHAR(50) NOT NULL,
+			date_time DATETIME NOT NULL,
+			cost INT UNSIGNED NOT NULL,
+			finished TINYINT UNSIGNED DEFAULT 0,
 			PRIMARY KEY (id))ENGINE=InnoDB DEFAULT CHARSET=utf8
 		`,
 	)

@@ -46,5 +46,5 @@ func skipper(path string) bool {
 
 func jwtErrHandler(w http.ResponseWriter, r *http.Request, err string) {
 	log.Println(err)
-	http.Error(w, err, constant.ErrBadJWT)
+	http.Error(w, err, constant.ErrToken)
 }

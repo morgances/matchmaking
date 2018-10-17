@@ -7,11 +7,11 @@ package handler
 
 import (
 	"github.com/TechCatsLab/apix/http/server"
+	"github.com/TechCatsLab/comment/response"
+	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
-	"log"
-	"net/http"
 )
 
 func Signin(this *server.Context) error {
@@ -22,15 +22,15 @@ func Signin(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 
 	if err = model.SigninService.Insert(oid); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func GetSigninRecord(this *server.Context) error {
@@ -44,18 +44,14 @@ func GetSigninRecord(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 
 	resp.SigninRecord, err = model.SigninService.FindByOpenID(oid)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	if err = this.ServeJSON(&resp); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrServer)
-	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }

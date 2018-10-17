@@ -7,11 +7,11 @@ package handler
 
 import (
 	"github.com/TechCatsLab/apix/http/server"
+	"github.com/TechCatsLab/comment/response"
+	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
-	"log"
-	"net/http"
 )
 
 type (
@@ -30,25 +30,30 @@ func Follow(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
+	}
+	if oid == req.TargetOpenID {
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	if err = model.FollowService.Insert(oid, req.TargetOpenID); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
+// Unfollow if exist
 func Unfollow(this *server.Context) error {
 	var (
 		err error
@@ -58,23 +63,23 @@ func Unfollow(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	if err = model.FollowService.Delete(oid, req.TargetOpenID); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func GetFollowing(this *server.Context) error {
@@ -89,14 +94,14 @@ func GetFollowing(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 
 	users, err = model.FollowService.FindFollowing(oid)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 	for _, user := range users {
 		var shortUserInfo shortUserInfo
@@ -104,11 +109,7 @@ func GetFollowing(this *server.Context) error {
 		shortUserInfo.NickName = user.NickName
 		resp.Following = append(resp.Following, shortUserInfo)
 	}
-	if err = this.ServeJSON(&resp); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
-	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func GetFollower(this *server.Context) error {
@@ -123,14 +124,14 @@ func GetFollower(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 
 	users, err = model.FollowService.FindFollower(oid)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 	for _, user := range users {
 		var shortUserInfo shortUserInfo
@@ -138,9 +139,6 @@ func GetFollower(this *server.Context) error {
 		shortUserInfo.NickName = user.NickName
 		resp.Follower = append(resp.Follower, shortUserInfo)
 	}
-	if err = this.ServeJSON(&resp); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
-	}
-	return this.WriteHeader(http.StatusOK)
+	log.Error(err)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }

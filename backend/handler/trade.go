@@ -7,11 +7,11 @@ package handler
 
 import (
 	"github.com/TechCatsLab/apix/http/server"
+	"github.com/TechCatsLab/comment/response"
+	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
-	"log"
-	"net/http"
 	"time"
 )
 
@@ -33,25 +33,25 @@ func CreateTrade(this *server.Context) error {
 		err error
 		oid string
 		req struct {
-			GoodsID   int64  `json:"goods_id" validate:"required,numeric,gte=1"`
+			GoodsID   int64  `json:"goods_id" validate:"required,gte=1"`
 			BuyerName string `json:"buyer_name" validate:"required"`
 			GoodsName string `json:"goods_name" validate:"required"`
-			Cost      int64  `json:"cost" validate:"required,numeric,gte=0"`
+			Cost      int64  `json:"cost" validate:"required,gte=0"`
 		}
 	)
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	trade := model.Trade{
@@ -62,10 +62,10 @@ func CreateTrade(this *server.Context) error {
 		Cost:      req.Cost,
 	}
 	if err = model.TradeService.Insert(&trade); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func GetMyTrades(this *server.Context) error {
@@ -80,14 +80,14 @@ func GetMyTrades(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 
 	rawTrades, err = model.TradeService.FindByOpenID(oid)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 	for _, rawTrade := range rawTrades {
 		var tradeForFeed tradeForResp
@@ -101,9 +101,5 @@ func GetMyTrades(this *server.Context) error {
 		tradeForFeed.Finished = rawTrade.Finished
 		resp.Trades = append(resp.Trades, tradeForFeed)
 	}
-	if err = this.ServeJSON(&resp); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrServer)
-	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }

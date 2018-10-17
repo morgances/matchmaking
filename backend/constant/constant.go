@@ -8,16 +8,17 @@
 package constant
 
 const (
-	ErrInvalidParam = iota
-	ErrWechatAuth
-	ErrMysql
-	ErrNewToken
-	ErrBadJWT
-	ErrNeedFollow
-	ErrPermissionDenied
-	ErrServer
-	ErrLoadImage
-	ErrSaveImage
+	StatusInvalidParam     = 600
+	StatusRedirectFailed   = 610
+	StatusUserHasNoAlbum   = 620
+	StatusRoseNotEnough    = 621
+	StatusWechatAuthFailed = 630
+	StatusAdminLoginFailed = 631
+	StatusNeedFollow       = 640
+	StatusPermissionDenied = 641 // need admin permission
 
-	ErrAccountOrPasswordWrong
+	StatusServerWrong    = 700
+	StatusDatabaseWrong  = 701
+	StatusLoadImageWrong = 702
+	StatusSaveImage      = 703
 )

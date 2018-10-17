@@ -101,9 +101,12 @@ func (userServPrvd) FindByOpenID(oid string) (u *User, err error) {
 	if err = row.Scan(
 		&u.Phone, &u.Wechat, &u.NickName, &u.RealName, &u.Sex, &u.Birthday, &u.Height,
 		&u.Location, &u.Job, &u.Faith, &u.Constellation, &u.SelfIntroduction, &u.SelecCriteria,
-		&u.OpenID, &u.CreateAt, &u.Certified, &u.Vip, &u.DatePrivilege, &u.Points, &u.Rose, &u.Charm,
+		&u.OpenID, &u.Age, &u.CreateAt, &u.Certified, &u.Vip, &u.DatePrivilege, &u.Points, &u.Rose, &u.Charm,
 	); err != nil {
 		return nil, err
+	}
+	if len(u.Birthday) > 10 {
+		u.Birthday = u.Birthday[:10]
 	}
 	return u, nil
 }
@@ -124,7 +127,7 @@ func (userServPrvd) RecommendByCharm(sex uint8) (us []User, err error) {
 		err = rows.Scan(
 			&us[i].Phone, &us[i].Wechat, &us[i].NickName, &us[i].RealName, &us[i].Sex, &us[i].Birthday, &us[i].Height,
 			&us[i].Location, &us[i].Job, &us[i].Faith, &us[i].Constellation, &us[i].SelfIntroduction, &us[i].SelecCriteria,
-			&us[i].OpenID, &us[i].CreateAt, &us[i].Certified, &us[i].Vip, &us[i].DatePrivilege, &us[i].Points, &us[i].Rose, &us[i].Charm,
+			&us[i].OpenID, &us[i].Age, &us[i].CreateAt, &us[i].Certified, &us[i].Vip, &us[i].DatePrivilege, &us[i].Points, &us[i].Rose, &us[i].Charm,
 		)
 		if err != nil {
 			return nil, err
@@ -175,19 +178,23 @@ func (userServPrvd) DatePrivilegeAdd(oid string, num int64) error {
 
 func (userServPrvd) Update(u *User) error {
 	var err error
-	u.Constellation, err = util.GetConstellation(u.Birthday)
+	u.Age, u.Constellation, err = util.GetAgeAndConstell(u.Birthday)
 	if err != nil {
 		return err
 	}
 	rslt, err := DB.Exec(
 		`UPDATE user 
 				  SET phone=?,wechat=?,nick_name=?,real_name=?,sex=?,birthday=?,height=?,location=?,job=?,faith=?,constellation=?,self_introduction=?,selec_criteria=?,
-				  certified=?,vip=?,date_privilege=?,points=?,rose=?,charm=?
+				  certified=?,vip=?,date_privilege=?,points=?,rose=?,charm=?,age=?
 				  WHERE open_id=? LIMIT 1`,
 		u.Phone, u.Wechat, u.NickName, u.RealName, u.Sex, u.Birthday, u.Height, u.Location, u.Job, u.Faith, u.Constellation, u.SelfIntroduction, u.SelecCriteria,
-		u.Certified, u.Vip, u.DatePrivilege, u.Points, u.Rose, u.Charm,
+		u.Certified, u.Vip, u.DatePrivilege, u.Points, u.Rose, u.Charm, u.Age,
 		u.OpenID,
 	)
+	if err != nil {
+		return err
+	}
+	// user not exist or no change happened
 	if affected, err := rslt.RowsAffected(); err == nil && affected != 1 {
 		return errors.New(fmt.Sprintf("failed to update information of user %s id: %d", u.RealName, u.OpenID))
 	}
@@ -197,7 +204,7 @@ func (userServPrvd) Update(u *User) error {
 func (userServPrvd) SendRose(sender, recer string, num int) error {
 	var (
 		err         error
-		errSendRose = errors.New("failed to send rose")
+		errSendRose = errors.New("SendRose: failed to send rose")
 		tx          *sql.Tx
 		rslt        sql.Result
 	)
@@ -211,7 +218,7 @@ func (userServPrvd) SendRose(sender, recer string, num int) error {
 	)
 	if err != nil {
 		tx.Rollback()
-		return errSendRose
+		return errors.New("SendRose: rose not enough for (id): " + sender + " :" + err.Error())
 	}
 	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
 		tx.Rollback()
@@ -219,11 +226,11 @@ func (userServPrvd) SendRose(sender, recer string, num int) error {
 	}
 	rslt, err = tx.Exec(
 		`UPDATE user SET rose=rose+?, charm=charm+? WHERE open_id=? LIMIT 1`,
-		num, recer, num,
+		num, num, recer,
 	)
 	if err != nil {
 		tx.Rollback()
-		return errSendRose
+		return errors.New("SendRose: receiver error (id): " + sender + " :" + err.Error())
 	}
 	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
 		tx.Rollback()

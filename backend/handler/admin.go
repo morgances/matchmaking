@@ -7,11 +7,11 @@ package handler
 
 import (
 	"github.com/TechCatsLab/apix/http/server"
+	"github.com/TechCatsLab/comment/response"
+	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
-	"log"
-	"net/http"
 	"strconv"
 )
 
@@ -21,7 +21,7 @@ type (
 	}
 
 	targetID struct {
-		TargetID int64 `json:"target_id" validate:"required, numeric, gte=1"`
+		TargetID int64 `json:"target_id" validate:"required,gte=1"`
 	}
 )
 
@@ -32,22 +32,18 @@ func Login(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	acc, pass, err := util.ParseBase64(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = model.AdminService.Login(acc, pass); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrAccountOrPasswordWrong)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if resp.Token, err = util.NewToken("admin", "admin", 1, true); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	if err = this.ServeJSON(&resp); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
-	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func Certify(this *server.Context) error {
@@ -59,27 +55,26 @@ func Certify(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	_, _, _, isAdmin, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = model.UserService.Certify(req.TargetOpenID); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	err = this.WriteHeader(http.StatusOK)
-	return err
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func DatePrivilegeReduce(this *server.Context) error {
@@ -91,27 +86,27 @@ func DatePrivilegeReduce(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	_, _, _, isAdmin, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	if err = model.UserService.DatePrivilegeReduce(req.TargetOpenID); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func DatePrivilegeAdd(this *server.Context) error {
@@ -123,28 +118,28 @@ func DatePrivilegeAdd(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	_, _, _, isAdmin, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	err = model.UserService.DatePrivilegeAdd(req.TargetOpenID, 1)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func GetContact(this *server.Context) error {
@@ -160,32 +155,28 @@ func GetContact(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	_, _, _, isAdmin, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	resp.Phone, resp.Wechat, err = model.UserService.GetContact(req.TargetOpenID)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	if err = this.ServeJSON(resp); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
-	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func GetUnreviewedPost(this *server.Context) error {
@@ -199,18 +190,18 @@ func GetUnreviewedPost(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	_, _, _, isAdmin, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	rawPosts, err := model.PostService.FindUnreviewed()
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	for _, rawPost := range rawPosts {
 		post := post{}
@@ -223,11 +214,7 @@ func GetUnreviewedPost(this *server.Context) error {
 		post.Images, _ = util.GetImages("./post/" + strconv.Itoa(int(post.ID)))
 		resp.Posts = append(resp.Posts, post)
 	}
-	if err = this.ServeJSON(&resp); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrServer)
-	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func UpdatePostStatus(this *server.Context) error {
@@ -239,27 +226,27 @@ func UpdatePostStatus(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	_, _, _, isAdmin, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if !isAdmin {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	if err = model.PostService.UpdatePostStatus(req.TargetID); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func AdminDeletePost(this *server.Context) error {
@@ -271,27 +258,27 @@ func AdminDeletePost(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	_, _, _, isAdmin, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	if err = model.PostService.DeleteByID(req.TargetID); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func GetUnfinishedTrade(this *server.Context) error {
@@ -305,18 +292,18 @@ func GetUnfinishedTrade(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	_, _, _, isAdmin, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 
 	rawTrades, err := model.TradeService.FindUnfinishedTrade()
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 	for _, rawTrade := range rawTrades {
 		tradeForFeed := tradeForResp{}
@@ -327,11 +314,7 @@ func GetUnfinishedTrade(this *server.Context) error {
 		tradeForFeed.Cost = rawTrade.Cost
 		resp.Trades = append(resp.Trades, tradeForFeed)
 	}
-	if err = this.ServeJSON(&resp); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
-	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func CancelTrade(this *server.Context) error {
@@ -339,28 +322,28 @@ func CancelTrade(this *server.Context) error {
 		err     error
 		isAdmin bool
 		req     struct {
-			ID     int64  `json:"id" validate:"required, numeric, gte=1"`
-			OpenID string `json:"open_id" validate:"required, len=28"`
-			Cost   int64  `json:"cost" validate:"required, numeric, gte=0"`
+			ID     int64  `json:"id" validate:"required,gte=1"`
+			OpenID string `json:"open_id" validate:"required,len=28"`
+			Cost   int64  `json:"cost" validate:"required,gte=0"`
 		}
 	)
 	authorization := this.GetHeader("Authorization")
 	_, _, _, isAdmin, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	trade := model.Trade{
@@ -369,10 +352,10 @@ func CancelTrade(this *server.Context) error {
 		Cost:   req.Cost,
 	}
 	if err = model.TradeService.Cancel(&trade); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 }
 
 func UpdateTradeStatus(this *server.Context) error {
@@ -384,25 +367,25 @@ func UpdateTradeStatus(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	_, _, _, isAdmin, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	if err = model.TradeService.UpdateTradeStatus(req.TargetID); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }

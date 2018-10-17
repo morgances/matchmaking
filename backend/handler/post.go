@@ -7,11 +7,11 @@ package handler
 
 import (
 	"github.com/TechCatsLab/apix/http/server"
+	"github.com/TechCatsLab/comment/response"
+	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
-	"log"
-	"net/http"
 	"strconv"
 	"time"
 )
@@ -33,41 +33,30 @@ func CreatePost(this *server.Context) error {
 		err    error
 		openid string
 		postId int64
-		req    struct {
-			Title    string `json:"title" validate:"required"`
-			Content  string `json:"content"`
-			ImageNum int    `json:"image_num" validate:"required, numeric, gte=0"`
-		}
 	)
 	authorization := this.GetHeader("Authorization")
 	openid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
-	}
-	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
-	}
+	title := this.FormValue("title")
+	content := this.FormValue("content")
 	post := &model.Post{
 		OpenID:  openid,
-		Title:   req.Title,
-		Content: req.Content,
+		Title:   title,
+		Content: content,
 	}
 	if postId, err = model.PostService.Insert(post); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 
-	if err = util.SavePostImages(req.ImageNum, int(postId), this.Request()); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrSaveImage)
+	if err = util.SavePostImages(int(postId), this.Request()); err != nil {
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrSaveImage, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func GetReviewedPost(this *server.Context) error {
@@ -77,17 +66,10 @@ func GetReviewedPost(this *server.Context) error {
 			Posts []post `json:"resp"`
 		}
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, _, _, err = util.ParseToken(authorization)
-	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
-	}
-
 	rawPosts, err := model.PostService.FindReviewed()
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 	for _, rawPost := range rawPosts {
 		post := post{}
@@ -100,15 +82,7 @@ func GetReviewedPost(this *server.Context) error {
 		post.Images, _ = util.GetImages("./post/" + strconv.Itoa(int(post.ID)))
 		resp.Posts = append(resp.Posts, post)
 	}
-	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrLoadImage)
-	}
-	if err = this.ServeJSON(&resp); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrServer)
-	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func GetMyPost(this *server.Context) error {
@@ -122,14 +96,14 @@ func GetMyPost(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 
 	rawPosts, err := model.PostService.FindByOpenID(oid)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 	for _, rawPost := range rawPosts {
 		post := post{}
@@ -142,15 +116,8 @@ func GetMyPost(this *server.Context) error {
 		post.Images, _ = util.GetImages("./post/" + strconv.Itoa(int(post.ID)))
 		resp.Posts = append(resp.Posts, post)
 	}
-	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrLoadImage)
-	}
-	if err = this.ServeJSON(&resp); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrServer)
-	}
-	return this.WriteHeader(http.StatusOK)
+
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func CommendPost(this *server.Context) error {
@@ -158,28 +125,23 @@ func CommendPost(this *server.Context) error {
 		err error
 		req targetID
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, _, _, err = util.ParseToken(authorization)
-	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
-	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	if err = model.PostService.Commend(req.TargetID); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
+// todo: delete image
 func DeletePost(this *server.Context) error {
 	var (
 		err error
@@ -189,21 +151,21 @@ func DeletePost(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	if err = model.PostService.DeleteByOpenIDAndID(oid, req.TargetID); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }

@@ -8,11 +8,11 @@ package handler
 import (
 	"fmt"
 	"github.com/TechCatsLab/apix/http/server"
+	"github.com/TechCatsLab/comment/response"
+	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
-	"log"
-	"net/http"
 )
 
 type (
@@ -30,7 +30,7 @@ func CreateGoods(this *server.Context) error {
 		isAdmin bool
 		req     struct {
 			Title       string `json:"title" validate:"required"`
-			Price       int64  `json:"price" validate:"required, numeric, gte=0"`
+			Price       int64  `json:"price" validate:"required,gte=0"`
 			Description string `json:"description"`
 		}
 		lastId int64
@@ -38,20 +38,20 @@ func CreateGoods(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	_, _, _, isAdmin, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	image, _, err := this.Request().FormFile("goods_image")
 
@@ -62,14 +62,14 @@ func CreateGoods(this *server.Context) error {
 	}
 	lastId, err = model.GoodsService.Insert(goods)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 	if err = util.SaveImage(fmt.Sprintf("./goods/%d.jpg", lastId), image); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrSaveImage)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrSaveImage, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func GetGoodsByID(this *server.Context) error {
@@ -80,28 +80,25 @@ func GetGoodsByID(this *server.Context) error {
 		resp  goodsResp
 	)
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	goods, err = model.GoodsService.FindByID(req.TargetID)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 	resp.ID = goods.ID
 	resp.Title = goods.Title
 	resp.Price = goods.Price
 	resp.Description = goods.Description
-	if err = this.ServeJSON(&resp); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
-	}
-	return this.WriteHeader(http.StatusOK)
+
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func GetGoodsByPrice(this *server.Context) error {
@@ -115,8 +112,8 @@ func GetGoodsByPrice(this *server.Context) error {
 
 	goodss, err = model.GoodsService.FindByPrice()
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 	for _, goods := range goodss {
 		var r goodsResp
@@ -126,11 +123,7 @@ func GetGoodsByPrice(this *server.Context) error {
 		r.Description = goods.Description
 		resp.Goods = append(resp.Goods, r)
 	}
-	if err = this.ServeJSON(&resp); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
-	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func UpdateGoods(this *server.Context) error {
@@ -138,9 +131,9 @@ func UpdateGoods(this *server.Context) error {
 		err     error
 		isAdmin bool
 		req     struct {
-			ID          int64  `json:"id" validate:"required, numeric, gte=1"`
+			ID          int64  `json:"id" validate:"required,gte=1"`
 			Title       string `json:"title" validate:"required"`
-			Price       int64  `json:"price" validate:"required, numeric, gte=1"`
+			Price       int64  `json:"price" validate:"required,gte=1"`
 			Description string `json:"description"`
 		}
 		goods model.Goods
@@ -148,20 +141,20 @@ func UpdateGoods(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	_, _, _, isAdmin, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	goods.ID = req.ID
@@ -169,10 +162,10 @@ func UpdateGoods(this *server.Context) error {
 	goods.Price = req.Price
 	goods.Description = goods.Description
 	if err = model.GoodsService.Update(&goods); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func DeleteGoods(this *server.Context) error {
@@ -184,25 +177,25 @@ func DeleteGoods(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	_, _, _, isAdmin, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrPermissionDenied)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	if err = model.GoodsService.DeleteByID(req.TargetID); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }

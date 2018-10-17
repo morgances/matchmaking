@@ -8,23 +8,22 @@
 package handler
 
 import (
-	"log"
-	"time"
-
+	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/silenceper/wechat/oauth"
 
+	"fmt"
 	"github.com/TechCatsLab/apix/http/server"
+	"github.com/TechCatsLab/comment/response"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
+	"github.com/morgances/matchmaking/backend/myerr"
 	"github.com/morgances/matchmaking/backend/util"
 	"mime/multipart"
-	"net/http"
-	"strconv"
 )
 
 type (
 	userInfo struct {
-		OpenID           string `json: "open_id"`
+		OpenID           string `json:"open_id"`
 		NickName         string `json:"nick_name"`
 		Sex              uint8  `json:"sex"`
 		Age              uint8  `json:"age"`
@@ -41,7 +40,7 @@ type (
 		NickName         string `json:"nick_name"`
 		RealName         string `json:"real_name"`
 		Sex              uint8  `json:"sex"`
-		Age              uint8  `json:"age"` // todo: turn birthday to age before feedback
+		Age              uint8  `json:"age"`
 		Height           string `json:"height"`
 		Location         string `json:"location"`
 		Job              string `json:"job"`
@@ -57,10 +56,10 @@ type (
 	}
 
 	fillInfo struct {
-		Phone            string `json:"phone" validate:"required, numeric, len=11"`
+		Phone            string `json:"phone" validate:"required,numeric,len=11"`
 		Wechat           string `json:"wechat" validate:"required"`
 		RealName         string `json:"real_name" validate:"required"`
-		Birthday         string `json:"birthday" validate:"required,len=10,contains=-"` // todo: validate xxxx-xx-xx format
+		Birthday         string `json:"birthday" validate:"required,len=10,contains=-"`
 		Height           string `json:"height" validate:"required"`
 		Job              string `json:"job" validate:"required"`
 		Faith            string `json:"faith" validate:"required"`
@@ -73,7 +72,7 @@ type (
 		Faith            string `json:"faith" validate:"required"`
 		SelfIntroduction string `json:"self_introduction" validate:"required"`
 		SelecCriteria    string `json:"selec_criteria" validate:"required"`
-		Phone            string `json:"phone" validate:"required, numeric, len=11"`
+		Phone            string `json:"phone" validate:"required,numeric,len=11"`
 		Wechat           string `json:"wechat" validate:"required"`
 	}
 
@@ -87,7 +86,7 @@ type (
 	}
 
 	targetOpenID struct {
-		TargetOpenID string `json:"target_open_id" validate:"required, len=28"`
+		TargetOpenID string `json:"target_open_id" validate:"required,len=28"`
 	}
 )
 
@@ -104,85 +103,81 @@ func WechatLogin(this *server.Context) error {
 
 	var err error
 	if err = this.JSONBody(&wechatCode); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	if err = this.Validate(&wechatCode); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	// todo: need redirect ?
 	if err = auth.Redirect(this.Response(), this.Request(), "127.0.0.1:3000/matchmaking/user/fillinfo", "", "301"); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrWechatAuth)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	wechatData, err = auth.GetUserAccessToken(wechatCode.Code)
 	if err != nil {
-		log.Println("Error get user accessToken:", err)
-		return this.WriteHeader(constant.ErrWechatAuth)
+		log.Error("Error get user accessToken:", err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrWechatAuth, nil)
 	}
 
 	userData, err = auth.GetUserInfo(wechatData.AccessToken, wechatData.OpenID)
 	if err != nil {
-		log.Println("Error get user information:", err)
-		return this.WriteHeader(constant.ErrWechatAuth)
+		log.Error("Error get user information:", err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrWechatAuth, nil)
 	}
 
 	err = model.UserService.WeChatLogin(userData.OpenID, userData.Nickname, userData.City, uint8(userData.Sex))
 	if err != nil {
-		log.Println("Wechat login failed.")
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error("wechat login failed: ", err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 	util.SaveWechatAvatar(userData.OpenID, userData.HeadImgURL)
 
 	resp.Token, err = util.NewToken(wechatData.OpenID, wechatData.AccessToken, uint8(userData.Sex), false)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrNewToken)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-
-	err = this.ServeJSON(resp)
-	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(ErrNewToken)
-	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func FillInfo(this *server.Context) error {
 	var (
-		err      error
-		req      fillInfo
-		oid      string
-		bornYear int
+		err error
+		req fillInfo
+		oid string
 	)
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
-	}
-	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
-	}
-	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 
+	fmt.Println(oid)
+
+	if err = this.JSONBody(&req); err != nil {
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
+	}
+	if err = this.Validate(&req); err != nil {
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
+	}
 	userp, err := model.UserService.FindByOpenID(oid)
 	if err != nil {
-		return err
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	bornYear, err = strconv.Atoi(userp.Birthday[:3])
+
+	age, err := util.GetAge(userp.Birthday)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	age := uint8(time.Now().Year() - bornYear)
 	userp.Phone = req.Phone
 	userp.Wechat = req.Wechat
 	userp.Birthday = req.Birthday
@@ -195,10 +190,10 @@ func FillInfo(this *server.Context) error {
 	userp.Age = age
 
 	if err = model.UserService.Update(userp); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func UserChangeInfo(this *server.Context) error {
@@ -210,23 +205,25 @@ func UserChangeInfo(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
+
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	userp, err := model.UserService.FindByOpenID(oid)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
+
 	userp.NickName = req.NickName
 	userp.Faith = req.Faith
 	userp.SelfIntroduction = req.SelfIntroduction
@@ -235,10 +232,10 @@ func UserChangeInfo(this *server.Context) error {
 	userp.Wechat = req.Wechat
 
 	if err = model.UserService.Update(userp); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func GetUserDetail(this *server.Context) error {
@@ -249,18 +246,18 @@ func GetUserDetail(this *server.Context) error {
 		resp  detailUserInfo
 	)
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	userp, err = model.UserService.FindByOpenID(req.TargetOpenID)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 
 	resp.OpenID = userp.OpenID
@@ -281,10 +278,7 @@ func GetUserDetail(this *server.Context) error {
 	resp.Location = userp.Location
 	resp.Faith = userp.Faith
 
-	if err = this.ServeJSON(&resp); err != nil {
-		return this.WriteHeader(constant.ErrMysql)
-	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func GetRecommendUsers(this *server.Context) error {
@@ -300,23 +294,25 @@ func GetRecommendUsers(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	_, _, sex, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 
 	// recommend contrast sex
+	var allowedsex uint8 = 0
 	if sex == 0 {
-		sex = 1
+		allowedsex = 1
 	} else {
-		sex = 0
+		allowedsex = 0
 	}
 
-	userSlice, err = model.UserService.RecommendByCharm(sex)
+	userSlice, err = model.UserService.RecommendByCharm(allowedsex)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 	for i, user := range userSlice {
+		resp.UserInformation = append(resp.UserInformation, userInfo{})
 		resp.UserInformation[i].OpenID = user.OpenID
 		resp.UserInformation[i].NickName = user.NickName
 		resp.UserInformation[i].Sex = user.Sex
@@ -328,11 +324,7 @@ func GetRecommendUsers(this *server.Context) error {
 		resp.UserInformation[i].Vip = user.Vip
 		resp.UserInformation[i].SelfIntroduction = user.SelfIntroduction
 	}
-	if err = this.ServeJSON(&resp); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
-	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func GetAlbum(this *server.Context) error {
@@ -342,76 +334,64 @@ func GetAlbum(this *server.Context) error {
 		isAbleToLook bool
 		req          targetOpenID
 		resp         struct {
-			album []string `json:"album"`
+			Album []string `json:"album"`
 		}
 	)
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if oid != req.TargetOpenID {
 		isAbleToLook, err = model.FollowService.FollowExist(oid, req.TargetOpenID)
 		if err != nil {
-			log.Println(err)
-			return this.WriteHeader(constant.ErrMysql)
+			log.Error(err)
+			return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 		}
 	} else {
 		isAbleToLook = true
 	}
 
 	if !isAbleToLook {
-		return this.WriteHeader(constant.ErrNeedFollow)
+		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 
-	resp.album, err = util.GetImages("./album/" + oid + "/")
+	resp.Album, err = util.GetImages("./album/" + req.TargetOpenID + "/")
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrLoadImage)
+		if err == myerr.ErrUserHasNoAlbum {
+			return response.WriteStatusAndDataJSON(this, constant.ErrNoAlbum, nil)
+		}
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	if err = this.ServeJSON(&resp); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrServer)
-	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func UploadPhotos(this *server.Context) error {
 	var (
 		err error
 		oid string
-		req struct {
-			ImageNum int `json:"image_num" validate:"required, numeric, gte=1"`
-		}
 	)
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+	if err = util.SavePhotos(oid, this.Request()); err != nil {
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrSaveImage, nil)
 	}
-	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
-	}
-	if err = util.SavePhotos(req.ImageNum, oid, this.Request()); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrSaveImage)
-	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func RemovePhotos(this *server.Context) error {
@@ -419,25 +399,25 @@ func RemovePhotos(this *server.Context) error {
 		err error
 		oid string
 		req struct {
-			Images []string `json:"images" validate:"required,dive,required"`
+			Images []string `json:"images" validate:"required,dive,required,contains=/"`
 		}
 	)
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	util.RemovePhotosIfExist(oid, util.GetImageBase(req.Images))
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func ChangeAvatar(this *server.Context) error {
@@ -449,49 +429,49 @@ func ChangeAvatar(this *server.Context) error {
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	req, _, err = this.Request().FormFile("req")
+	req, _, err = this.Request().FormFile("avatar")
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	err = util.ChangeAvatar(oid, req)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrServer)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func SendRose(this *server.Context) error {
 	var (
 		req struct {
 			Reciever string `json:"reciever" validate:"required,len=28"`
-			RoseNum  int    `json:"rose_num" validate:"required,numeric,gte=1"`
+			RoseNum  int    `json:"rose_num" validate:"required,gte=1"`
 		}
 	)
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err := util.ParseToken(authorization)
 	if err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 	if err = this.Validate(&req); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrInvalidParam)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
 	if err = model.UserService.SendRose(oid, req.Reciever, req.RoseNum); err != nil {
-		log.Println(err)
-		return this.WriteHeader(constant.ErrMysql)
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return this.WriteHeader(http.StatusOK)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 //func Recharge(this *server.Context) error {
@@ -507,16 +487,16 @@ func SendRose(this *server.Context) error {
 //	}
 //	if err = this.JSONBody(&recharge); err != nil {
 //		log.Println(err)
-//		this.WriteHeader(constant.ErrInvalidParam)
+//		this.WriteHeader(constant.StatusInvalidParam)
 //	}
 //	if err = this.Validate(&recharge); err != nil {
 //		log.Println(err)
-//		this.WriteHeader(constant.ErrInvalidParam)
+//		this.WriteHeader(constant.StatusInvalidParam)
 //	}
 //
 //	if err = model.UserService.Recharge(recharge.TargetOpenID, recharge.Rose); err != nil {
 //		log.Println(err)
-//		this.WriteHeader(constant.ErrMysql)
+//		this.WriteHeader(constant.StatusDatabaseWrong)
 //	}
 //	return this.WriteHeader(http.StatusOK)
 //}
@@ -530,12 +510,12 @@ func SendRose(this *server.Context) error {
 //	oid, _,_, err = util.ParseToken(authorization)
 //	if err != nil {
 //		log.Println(err)
-//		return this.WriteHeader(constant.ErrInvalidParam)
+//		return this.WriteHeader(constant.StatusInvalidParam)
 //	}
 //
 //	if err = model.UserService.BecomeVIP(oid); err != nil {
 //		log.Println(err)
-//		return this.WriteHeader(constant.ErrInvalidParam)
+//		return this.WriteHeader(constant.StatusInvalidParam)
 //	}
 //	return this.WriteHeader(http.StatusOK)
 //}

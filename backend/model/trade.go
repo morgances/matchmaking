@@ -61,8 +61,7 @@ func (tradeServPrvd) Insert(t *Trade) error {
 		tx.Rollback()
 		return ErrMysql
 	}
-	tx.Commit()
-	return nil
+	return tx.Commit()
 }
 
 // Cancel can only cancel unfinished order
@@ -92,8 +91,7 @@ func (tradeServPrvd) Cancel(t *Trade) error {
 		tx.Rollback()
 		return ErrMysql
 	}
-	tx.Commit()
-	return nil
+	return tx.Commit()
 }
 
 func (tradeServPrvd) FindByID(id int64) (*Trade, error) {
