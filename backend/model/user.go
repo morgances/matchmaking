@@ -40,7 +40,7 @@ type (
 		Certified     bool
 		Vip           bool
 		DatePrivilege int64
-		Points        int64
+		Points        float64
 		Rose          int64
 		Charm         int64
 	}

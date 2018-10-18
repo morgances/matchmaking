@@ -37,7 +37,7 @@ func Login(this *server.Context) error {
 	}
 	if err = model.AdminService.Login(acc, pass); err != nil {
 		log.Error(err)
-		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
+		return response.WriteStatusAndDataJSON(this, constant.ErrAccount, nil)
 	}
 	if resp.Token, err = util.NewToken("admin", "admin", 1, true); err != nil {
 		log.Error(err)
@@ -184,7 +184,7 @@ func GetUnreviewedPost(this *server.Context) error {
 		err     error
 		isAdmin bool
 		resp    struct {
-			Posts []post `json:"resp"`
+			Posts []post `json:"posts"`
 		}
 	)
 	authorization := this.GetHeader("Authorization")
@@ -278,6 +278,11 @@ func AdminDeletePost(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
+	if err = util.ClearPostImages(req.TargetID); err != nil {
+		// make a log but tell admin succeed, because it succeed in database
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
+	}
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
@@ -321,11 +326,7 @@ func CancelTrade(this *server.Context) error {
 	var (
 		err     error
 		isAdmin bool
-		req     struct {
-			ID     int64  `json:"id" validate:"required,gte=1"`
-			OpenID string `json:"open_id" validate:"required,len=28"`
-			Cost   int64  `json:"cost" validate:"required,gte=0"`
-		}
+		req     targetID
 	)
 	authorization := this.GetHeader("Authorization")
 	_, _, _, isAdmin, err = util.ParseToken(authorization)
@@ -346,10 +347,15 @@ func CancelTrade(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
+	tradeRecord, err := model.TradeService.FindByID(req.TargetID)
+	if err != nil {
+		log.Error("CancelTrade: ", err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
+	}
 	trade := model.Trade{
-		ID:     req.ID,
-		OpenID: req.OpenID,
-		Cost:   req.Cost,
+		ID:     tradeRecord.ID,
+		OpenID: tradeRecord.OpenID,
+		Cost:   tradeRecord.Cost,
 	}
 	if err = model.TradeService.Cancel(&trade); err != nil {
 		log.Error(err)

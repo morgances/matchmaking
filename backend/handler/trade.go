@@ -23,7 +23,7 @@ type (
 		BuyerName string    `json:"buyer_name"`
 		GoodsName string    `json:"goods_name"`
 		DateTime  time.Time `json:"date_time"`
-		Cost      int64     `json:"cost"`
+		Cost      float64   `json:"cost"`
 		Finished  bool      `json:"finished"`
 	}
 )
@@ -32,12 +32,7 @@ func CreateTrade(this *server.Context) error {
 	var (
 		err error
 		oid string
-		req struct {
-			GoodsID   int64  `json:"goods_id" validate:"required,gte=1"`
-			BuyerName string `json:"buyer_name" validate:"required"`
-			GoodsName string `json:"goods_name" validate:"required"`
-			Cost      int64  `json:"cost" validate:"required,gte=0"`
-		}
+		req targetID
 	)
 	authorization := this.GetHeader("Authorization")
 	oid, _, _, _, err = util.ParseToken(authorization)
@@ -55,14 +50,28 @@ func CreateTrade(this *server.Context) error {
 	}
 
 	trade := model.Trade{
-		OpenID:    oid,
-		GoodsID:   req.GoodsID,
-		BuyerName: req.BuyerName,
-		GoodsName: req.GoodsName,
-		Cost:      req.Cost,
+		OpenID:  oid,
+		GoodsID: req.TargetID,
 	}
+	u, err := model.UserService.FindByOpenID(oid)
+	if err != nil {
+		log.Error("CreateTrade: get buyer name by openid: ", err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
+	}
+	trade.BuyerName = u.RealName
+	g, err := model.GoodsService.FindByID(req.TargetID)
+	if err != nil {
+		log.Error("CreateTrade: get goods information by goodsid: ", err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
+	}
+	trade.GoodsName = g.Title
+	trade.Cost = g.Price
+	if u.Vip {
+		trade.Cost = trade.Cost * 0.88
+	}
+
 	if err = model.TradeService.Insert(&trade); err != nil {
-		log.Error(err)
+		log.Error("CreateTrade: ", err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)

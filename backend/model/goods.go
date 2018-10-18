@@ -19,7 +19,7 @@ type (
 	Goods struct {
 		ID          int64
 		Title       string
-		Price       int64
+		Price       float64
 		Description string
 	}
 )
@@ -84,7 +84,7 @@ func (goodsServPrvd) FindByPrice() (gs []Goods, err error) {
 func (goodsServPrvd) Update(g *Goods) error {
 	_, err := DB.Exec(
 		`UPDATE goods 
-					SET title=?,price=?,description=?,image=?
+					SET title=?,price=?,description=?
 					WHERE id=? LIMIT 1`,
 		g.Title, g.Price, g.Description,
 		g.ID,

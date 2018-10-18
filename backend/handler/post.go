@@ -90,7 +90,7 @@ func GetMyPost(this *server.Context) error {
 		err  error
 		oid  string
 		resp struct {
-			Posts []post `json:"resp"`
+			Posts []post `json:"posts"`
 		}
 	)
 	authorization := this.GetHeader("Authorization")
@@ -141,7 +141,6 @@ func CommendPost(this *server.Context) error {
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
-// todo: delete image
 func DeletePost(this *server.Context) error {
 	var (
 		err error
@@ -167,5 +166,11 @@ func DeletePost(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
+	if err = util.ClearPostImages(req.TargetID); err != nil {
+		// make a log but tell user succeed, because it succeed in database
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
+	}
+
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }

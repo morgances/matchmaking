@@ -8,7 +8,6 @@ package util
 import (
 	"errors"
 	"fmt"
-	"github.com/morgances/matchmaking/backend/myerr"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
@@ -19,6 +18,103 @@ import (
 	"strings"
 	"time"
 )
+
+var ErrNoImageExist = errors.New("error user has no album")
+
+// SaveWechatAvatar save the wechat avatar as the initial avatar
+func SaveWechatAvatar(oid, url string) error {
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	file, err := os.Create("./avatar/" + oid + ".jpg")
+	if err != nil {
+		if os.IsNotExist(err) {
+			if err := os.Mkdir("./avatar", 0755); err != nil {
+				return err
+			}
+		} else {
+			return err
+		}
+	}
+	defer file.Close()
+	_, err = io.Copy(file, resp.Body)
+	return err
+}
+
+func ChangeAvatar(oid string, avatar multipart.File) error {
+	return SaveImage("./avatar/"+oid+".jpg", avatar)
+}
+
+// SavePhotos save photos to user album
+func SavePhotos(oid string, r *http.Request) error {
+	return SaveImages("./album/"+oid+"/", r)
+}
+
+func RemovePhotosIfExist(openid string, photos []string) {
+	bases := GetImageBase(photos)
+	if len(bases) == 0 {
+		return
+	}
+	dir := "./album/" + openid + "/"
+	for _, base := range bases {
+		os.Remove(dir + base)
+	}
+}
+
+// operate post image -----------------------------------------------
+
+func SavePostImages(id int, r *http.Request) error {
+	return SaveImages(fmt.Sprintf("./post/%d/", id), r)
+}
+
+// ClearPostImages if exist
+func ClearPostImages(postid int64) error {
+	err := os.RemoveAll(fmt.Sprintf("./post/%d", postid))
+	if err != nil {
+		return errors.New(fmt.Sprintf("ClearPostImages ./post/%d/ :", postid) + err.Error())
+	}
+	return nil
+}
+
+// operate goods image--------------------------------------------------
+
+func ChangeGoodsImage(goodsid int, avatar multipart.File) error {
+	return SaveImage(fmt.Sprintf("./goods/%d.jpg", goodsid), avatar)
+}
+
+func RemoveGoodsImage(goodsid int64) error {
+	return os.RemoveAll(fmt.Sprintf("./goods/%d.jpg", goodsid))
+}
+
+// ------------------------------------------------------------------
+
+func SaveImages(dir string, r *http.Request) error {
+	num, err := strconv.Atoi(r.FormValue("image_num"))
+	if err != nil {
+		return errors.New("Save images: " + err.Error())
+	}
+	hasImageSaveFailed := false
+	timeUnix := time.Now().Unix()
+	for i := 1; i <= num; i++ {
+		image, _, err := r.FormFile(fmt.Sprintf("image_%d", i))
+		if err != nil {
+			return errors.New(fmt.Sprintf("Save images %d: %v", i, err))
+		}
+		// todo: make images will not be created with the same name when one user upload photos twice in a second
+		// todo: should I return err when one of images failed to save ?
+		err = SaveImage(dir+fmt.Sprintf("%d-%d.jpg", timeUnix, i), image)
+		if err != nil {
+			hasImageSaveFailed = true
+		}
+		image.Close()
+	}
+	if hasImageSaveFailed {
+		return errors.New("There is image failed to saved in " + dir)
+	}
+	return nil
+}
 
 // SaveImage cover image if it already exist
 func SaveImage(name string, image multipart.File) error {
@@ -49,81 +145,6 @@ func SaveImage(name string, image multipart.File) error {
 	return nil
 }
 
-func SaveImages(dir string, r *http.Request) error {
-	num, err := strconv.Atoi(r.FormValue("image_num"))
-	if err != nil {
-		return errors.New("Save images: " + err.Error())
-	}
-	hasImageSaveFailed := false
-	timeUnix := time.Now().Unix()
-	for i := 1; i <= num; i++ {
-		image, _, err := r.FormFile(fmt.Sprintf("image_%d", i))
-		if err != nil {
-			return errors.New(fmt.Sprintf("Save images %d: %v", i, err))
-		}
-		// todo: make images will not be created with the same name when one user upload photos twice in a second
-		// todo: should I return err when one of images failed to save ?
-		err = SaveImage(dir+fmt.Sprintf("%d-%d.jpg", timeUnix, i), image)
-		if err != nil {
-			hasImageSaveFailed = true
-		}
-		image.Close()
-	}
-	if hasImageSaveFailed {
-		return errors.New("There is image failed to saved in "+dir)
-	}
-	return nil
-}
-
-func SavePhotos(oid string, r *http.Request) error {
-	return SaveImages("./album/"+oid+"/", r)
-}
-
-func SavePostImages(id int, r *http.Request) error {
-	return SaveImages(fmt.Sprintf("./post/%d/", id), r)
-}
-
-func ChangeAvatar(oid string, avatar multipart.File) error {
-	return SaveImage("./avatar/"+oid+".jpg", avatar)
-}
-
-func SaveWechatAvatar(oid, url string) error {
-	resp, err := http.Get(url)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	file, err := os.Create("./avatar/" + oid + ".jpg")
-	if err != nil {
-		if os.IsNotExist(err) {
-			if err := os.Mkdir("./avatar", 0755); err != nil {
-				return err
-			}
-		} else {
-			return err
-		}
-	}
-	defer file.Close()
-	_, err = io.Copy(file, resp.Body)
-	return err
-}
-
-// RemoveImageIfExist todo: need update images of post ?
-func RemoveImageIfExist(name string) error {
-	err := os.Remove(name)
-	if os.IsNotExist(err) || err == nil {
-		return nil
-	}
-	return err
-}
-
-func RemovePhotosIfExist(oid string, bases []string) {
-	dir := "./album/" + oid + "/"
-	for _, base := range bases {
-		os.Remove(dir + base)
-	}
-}
-
 func GetImages(dir string) (imgs []string, err error) {
 	if !strings.HasSuffix(dir, "/") {
 		dir += "/"
@@ -132,12 +153,19 @@ func GetImages(dir string) (imgs []string, err error) {
 	infos, err = ioutil.ReadDir(dir)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return nil, myerr.ErrUserHasNoAlbum
+			return nil, ErrNoImageExist
 		}
 		return nil, err
 	}
 	for _, info := range infos {
-		imgs = append(imgs, dir+info.Name())
+		name := info.Name()
+		if !strings.HasSuffix(name, ".jpg") {
+			continue
+		}
+		imgs = append(imgs, dir+name)
+	}
+	if imgs == nil {
+		return nil, ErrNoImageExist
 	}
 	return imgs, nil
 }

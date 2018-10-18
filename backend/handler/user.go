@@ -16,7 +16,6 @@ import (
 	"github.com/TechCatsLab/comment/response"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
-	"github.com/morgances/matchmaking/backend/myerr"
 	"github.com/morgances/matchmaking/backend/util"
 	"mime/multipart"
 )
@@ -36,23 +35,23 @@ type (
 	}
 
 	detailUserInfo struct {
-		OpenID           string `json:"open_id"`
-		NickName         string `json:"nick_name"`
-		RealName         string `json:"real_name"`
-		Sex              uint8  `json:"sex"`
-		Age              uint8  `json:"age"`
-		Height           string `json:"height"`
-		Location         string `json:"location"`
-		Job              string `json:"job"`
-		Faith            string `json:"faith"`
-		Constellation    string `json:"constellation"`
-		SelfIntroduction string `json:"self_introduction"`
-		SelecCriteria    string `json:"selec_criteria"`
-		Certified        bool   `json:"certified"`
-		Vip              bool   `json:"vip"`
-		Points           int64  `json:"points"`
-		Rose             int64  `json:"rose"`
-		Charm            int64  `json:"charm"`
+		OpenID           string  `json:"open_id"`
+		NickName         string  `json:"nick_name"`
+		RealName         string  `json:"real_name"`
+		Sex              uint8   `json:"sex"`
+		Age              uint8   `json:"age"`
+		Height           string  `json:"height"`
+		Location         string  `json:"location"`
+		Job              string  `json:"job"`
+		Faith            string  `json:"faith"`
+		Constellation    string  `json:"constellation"`
+		SelfIntroduction string  `json:"self_introduction"`
+		SelecCriteria    string  `json:"selec_criteria"`
+		Certified        bool    `json:"certified"`
+		Vip              bool    `json:"vip"`
+		Points           float64 `json:"points"`
+		Rose             int64   `json:"rose"`
+		Charm            int64   `json:"charm"`
 	}
 
 	fillInfo struct {
@@ -367,7 +366,7 @@ func GetAlbum(this *server.Context) error {
 
 	resp.Album, err = util.GetImages("./album/" + req.TargetOpenID + "/")
 	if err != nil {
-		if err == myerr.ErrUserHasNoAlbum {
+		if err == util.ErrNoImageExist {
 			return response.WriteStatusAndDataJSON(this, constant.ErrNoAlbum, nil)
 		}
 		log.Error(err)
@@ -416,7 +415,7 @@ func RemovePhotos(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
-	util.RemovePhotosIfExist(oid, util.GetImageBase(req.Images))
+	util.RemovePhotosIfExist(oid, req.Images)
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 

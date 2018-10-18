@@ -11,6 +11,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"github.com/morgances/matchmaking/backend/conf"
 	"time"
 )
 
@@ -24,7 +25,7 @@ type (
 		BuyerName string
 		GoodsName string
 		DateTime  time.Time
-		Cost      int64
+		Cost      float64
 		Finished  bool
 	}
 )
@@ -38,29 +39,33 @@ func (tradeServPrvd) Insert(t *Trade) error {
 	if err != nil {
 		return err
 	}
+
 	var rslt sql.Result
 	if rslt, err = tx.Exec(`UPDATE user SET points=points-? WHERE open_id=? LIMIT 1`, t.Cost, t.OpenID); err != nil {
 		tx.Rollback()
-		return ErrMysql
+		return err
 	}
 
 	if affec, err := rslt.RowsAffected(); err == nil && affec != 1 {
 		tx.Rollback()
-		return ErrMysql
+		return ErrMakeTrade
 	}
+
 	rslt, err = DB.Exec(
-		`INSERT INTO trade(open_id,goods_id,data_time,cost)
-					VALUES(?,?,NOW(),?,?,?)`,
+		`INSERT INTO `+conf.MatchMakeConf.Database+`.trade(open_id,goods_id,buyer_name,goods_title,cost,date_time,finished)
+					VALUES(?,?,?,?,?,NOW(),0)`,
 		t.OpenID, t.GoodsID, t.BuyerName, t.GoodsName, t.Cost,
 	)
 	if err != nil {
 		tx.Rollback()
-		return ErrMysql
+		return err
 	}
+
 	if affec, err := rslt.RowsAffected(); err == nil && affec != 1 {
 		tx.Rollback()
-		return ErrMysql
+		return ErrMakeTrade
 	}
+
 	return tx.Commit()
 }
 
@@ -73,30 +78,30 @@ func (tradeServPrvd) Cancel(t *Trade) error {
 	var rslt sql.Result
 	if rslt, err = tx.Exec(`UPDATE user SET points=points+? WHERE open_id=? LIMIT 1`, t.Cost, t.OpenID); err != nil {
 		tx.Rollback()
-		return ErrMysql
+		return ErrMakeTrade
 	}
 	if affec, err := rslt.RowsAffected(); err == nil && affec != 1 {
 		tx.Rollback()
-		return ErrMysql
+		return ErrMakeTrade
 	}
 	rslt, err = DB.Exec(
-		`DELETE FROM trade WHERE id=? AND finished=0 LIMIT 1`,
+		`DELETE FROM `+conf.MatchMakeConf.Database+`.trade WHERE id=? AND finished=0 LIMIT 1`,
 		t.ID,
 	)
 	if err != nil {
 		tx.Rollback()
-		return ErrMysql
+		return ErrMakeTrade
 	}
 	if affec, err := rslt.RowsAffected(); err == nil && affec != 1 {
 		tx.Rollback()
-		return ErrMysql
+		return ErrMakeTrade
 	}
 	return tx.Commit()
 }
 
 func (tradeServPrvd) FindByID(id int64) (*Trade, error) {
 	row := DB.QueryRow(
-		`SELECT * FROM trade WHERE id=? LOCK IN SHARE MODE`,
+		`SELECT * FROM `+conf.MatchMakeConf.Database+`.trade WHERE id=? LOCK IN SHARE MODE`,
 		id,
 	)
 	t := Trade{}
@@ -111,7 +116,7 @@ func (tradeServPrvd) FindByID(id int64) (*Trade, error) {
 func (tradeServPrvd) FindByOpenID(oid string) (ts []Trade, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM trade WHERE open_id=? ORDER BY date_time DESC LOCK IN SHARE MODE`,
+		`SELECT * FROM `+conf.MatchMakeConf.Database+`.trade WHERE open_id=? ORDER BY date_time DESC LOCK IN SHARE MODE`,
 		oid,
 	)
 	if err != nil {
@@ -134,7 +139,7 @@ func (tradeServPrvd) FindByOpenID(oid string) (ts []Trade, err error) {
 func (tradeServPrvd) FindUnfinishedTrade() (ts []Trade, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM trade WHERE finished=0 ORDER BY date_time DESC LOCK IN SHARE MODE`,
+		`SELECT * FROM ` + conf.MatchMakeConf.Database + `.trade WHERE finished=0 ORDER BY date_time DESC LOCK IN SHARE MODE`,
 	)
 	if err != nil {
 		return nil, err
@@ -154,14 +159,14 @@ func (tradeServPrvd) FindUnfinishedTrade() (ts []Trade, err error) {
 }
 
 func (tradeServPrvd) UpdateTradeStatus(id int64) error {
-	rslt, err := DB.Exec(
-		`UPDATE trade SET finished=1 WHERE id=? LIMIT 1`,
+	_, err := DB.Exec(
+		`UPDATE `+conf.MatchMakeConf.Database+`.trade SET finished=1 WHERE id=? LIMIT 1`,
 		id,
 	)
-	if affected, err := rslt.RowsAffected(); err == nil && affected != 1 {
+	if err != nil {
 		return errors.New(fmt.Sprintf("failed to update status of trade: %d", id))
 	}
-	return err
+	return nil
 }
 
 //func (tradeServPrvd) DeleteByID(id int64) error {

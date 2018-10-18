@@ -5,6 +5,8 @@
 
 package model
 
+import "errors"
+
 type (
 	adminServPrvd struct{}
 )
@@ -14,8 +16,11 @@ var (
 )
 
 func (adminServPrvd) Login(acc, pass string) error {
-	row := DB.QueryRow(`SELECT * FROM admin WHERE account=?, password=? LOCK IN SHARE MODE`, acc, pass)
+	row := DB.QueryRow(`SELECT COUNT(0) FROM admin WHERE account=? AND password=? LOCK IN SHARE MODE`, acc, pass)
 	var exist int64
 	err := row.Scan(&exist)
-	return err
+	if err != nil || exist != 1 {
+		return errors.New("login failed")
+	}
+	return nil
 }

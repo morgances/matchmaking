@@ -26,14 +26,14 @@ func (signInServPrvd) Insert(oid string) error {
 	year, month, day := time.Now().Date()
 	date := fmt.Sprintf("%d-%02d-%02d", year, month, day)
 	_, err := DB.Exec(
-		`INSERT INTO signin_record(open_id, date)
+		`INSERT INTO signin_record(open_id, signin_date)
 					VALUES(?,?)`,
 		oid, date,
 	)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate entry") {
-			return ErrDuplicateEntry
+			return nil
 		}
 		return err
 	}

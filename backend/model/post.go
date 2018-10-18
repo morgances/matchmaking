@@ -165,9 +165,12 @@ func (postServPrvd) DeleteByID(id int64) error {
 
 func (postServPrvd) DeleteByOpenIDAndID(oid string, id int64) error {
 	rslt, err := DB.Exec(
-		`DELETE FROM post WHERE open_id=?,id=? LIMIT 1`,
+		`DELETE FROM post WHERE open_id=? AND id=? LIMIT 1`,
 		oid, id,
 	)
+	if err != nil {
+		return errors.New("DeleteByOpenIDAndID: " + err.Error())
+	}
 	if affected, err := rslt.RowsAffected(); err == nil && affected != 1 {
 		return errors.New(fmt.Sprintf("user: %s failed to update status of post: %d", oid, id))
 	}

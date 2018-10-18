@@ -12,7 +12,6 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"github.com/TechCatsLab/storage/mysql"
 	"github.com/morgances/matchmaking/backend/conf"
 	"strings"
 )
@@ -38,13 +37,14 @@ func init() {
 }
 
 func initDatabase() error {
-	err := mysql.CreateDatabaseIfNotExist(DB, conf.MatchMakeConf.Database)
+	_, err := DB.Exec("CREATE DATABASE IF NOT EXISTS " + conf.MatchMakeConf.Database)
 	if err != nil {
 		return err
 	}
 	if _, err = DB.Exec("USE " + conf.MatchMakeConf.Database); err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -130,7 +130,7 @@ func initTable() error {
 	}
 
 	_, err = DB.Exec(
-		`CREATE TABLE IF NOT EXISTS Signinin_record(
+		`CREATE TABLE IF NOT EXISTS signin_record(
 			open_id VARCHAR(255),
 			signin_date DATE,
 			PRIMARY KEY (open_id, signin_date))ENGINE=InnoDB DEFAULT CHARSET=utf8
@@ -144,7 +144,7 @@ func initTable() error {
 		`CREATE TABLE IF NOT EXISTS goods(
 			id INT AUTO_INCREMENT,
 			title VARCHAR(50) UNIQUE,
-			price INT UNSIGNED NOT NULL,
+			price FLOAT(12,2) UNSIGNED NOT NULL,
 			description VARCHAR(255) DEFAULT 'null',
 			PRIMARY KEY (id))ENGINE=InnoDB DEFAULT CHARSET=utf8
 		`,
@@ -161,7 +161,7 @@ func initTable() error {
 			buyer_name VARCHAR(10) NOT NULL,
 			goods_title VARCHAR(50) NOT NULL,
 			date_time DATETIME NOT NULL,
-			cost INT UNSIGNED NOT NULL,
+			cost FLOAT(12,2) UNSIGNED NOT NULL,
 			finished TINYINT UNSIGNED DEFAULT 0,
 			PRIMARY KEY (id))ENGINE=InnoDB DEFAULT CHARSET=utf8
 		`,

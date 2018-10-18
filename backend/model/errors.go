@@ -12,6 +12,5 @@ import (
 )
 
 var (
-	ErrDuplicateEntry = errors.New("error duplicate entry")
-	ErrMysql          = errors.New("error mysql")
+	ErrMakeTrade = errors.New("error make a trade")
 )
