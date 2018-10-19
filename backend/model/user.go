@@ -11,8 +11,9 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/morgances/matchmaking/backend/util"
 	"time"
+
+	"github.com/morgances/matchmaking/backend/util"
 )
 
 type (
@@ -170,6 +171,9 @@ func (userServPrvd) DatePrivilegeAdd(oid string, num int64) error {
 	rslt, err := DB.Exec(`UPDATE user SET date_privilege=date_privilege+? WHERE open_id=? LIMIT 1`,
 		num, oid,
 	)
+	if err != nil {
+		return err
+	}
 	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
 		return errors.New(fmt.Sprintf("failed to add dataPrivilege of user(id): %s", oid))
 	}
@@ -238,20 +242,3 @@ func (userServPrvd) SendRose(sender, recer string, num int) error {
 	}
 	return tx.Commit()
 }
-
-//func (userServPrvd) BecomeVIP(oid string) error {
-//	_, err := DB.Exec(
-//		`UPDATE user SET vip=1,points=points+520,rose=rose+520,date_privilege=date_privilege+1 WHERE open_id=? LIMIT 1`,
-//		oid,
-//	)
-//	return err
-//}
-
-//func (userServPrvd) Recharge (oid string, rose int64) error {
-//	addPoints := rose*10
-//	_, err := DB.Exec(
-//		`UPDATE user SET points=points+?,rose=rose+? WHERE open_id=? LIMIT 1`,
-//		addPoints,rose,oid,
-//	)
-//	return err
-//}

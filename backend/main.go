@@ -8,7 +8,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"strings"
 
@@ -17,16 +16,17 @@ import (
 	"github.com/morgances/matchmaking/backend/conf"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/router"
+	log "github.com/TechCatsLab/logging/logrus"
 )
 
 func main() {
-	config := &server.Configuration{Address: conf.MatchMakeConf.Address + ":" + conf.MatchMakeConf.Port}
+	config := &server.Configuration{Address: conf.MMConf.Address + ":" + conf.MMConf.Port}
 	ep := server.NewEntrypoint(config, nil)
 
 	ep.AttachMiddleware(middleware.NegroniCorsAllowAll())
 	ep.AttachMiddleware(middleware.NegroniLoggerHandler())
 	ep.AttachMiddleware(middleware.NegroniRecoverHandler())
-	ep.AttachMiddleware(middleware.NegroniJwtHandler(conf.MatchMakeConf.PrivateTokenKey, skipper, nil, jwtErrHandler))
+	ep.AttachMiddleware(middleware.NegroniJwtHandler(conf.MMConf.PrivateTokenKey, skipper, nil, jwtErrHandler))
 
 	if err := ep.Start(router.Router.Handler()); err != nil {
 		log.Fatal(err)
@@ -40,11 +40,10 @@ func skipper(path string) bool {
 			return true
 		}
 	}
-
 	return false
 }
 
 func jwtErrHandler(w http.ResponseWriter, r *http.Request, err string) {
-	log.Println(err)
+	log.Error(err)
 	http.Error(w, err, constant.ErrToken)
 }

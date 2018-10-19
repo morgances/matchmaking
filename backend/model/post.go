@@ -10,7 +10,6 @@ package model
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"time"
 )
 
@@ -131,48 +130,36 @@ func (postServPrvd) FindReviewed() (ps []Post, err error) {
 }
 
 func (postServPrvd) UpdatePostStatus(id int64) error {
-	rslt, err := DB.Exec(
+	_, err := DB.Exec(
 		`UPDATE post SET reviewed=1 WHERE id=? LIMIT 1`,
 		id,
 	)
-	if affected, err := rslt.RowsAffected(); err == nil && affected != 1 {
-		return errors.New(fmt.Sprintf("failed to update status of post: %d", id))
-	}
 	return err
 }
 
 func (postServPrvd) Commend(id int64) error {
-	rslt, err := DB.Exec(
+	_, err := DB.Exec(
 		`UPDATE post SET commend=commend+1 WHERE id=? LIMIT 1`,
 		id,
 	)
-	if affected, err := rslt.RowsAffected(); err == nil && affected != 1 {
-		return errors.New(fmt.Sprintf("failed to commend post: %d", id))
-	}
 	return err
 }
 
 func (postServPrvd) DeleteByID(id int64) error {
-	rslt, err := DB.Exec(
+	_, err := DB.Exec(
 		`DELETE FROM post WHERE id=? LIMIT 1`,
 		id,
 	)
-	if affected, err := rslt.RowsAffected(); err == nil && affected != 1 {
-		return errors.New(fmt.Sprintf("failed to delete post: %d", id))
-	}
 	return err
 }
 
 func (postServPrvd) DeleteByOpenIDAndID(oid string, id int64) error {
-	rslt, err := DB.Exec(
+	_, err := DB.Exec(
 		`DELETE FROM post WHERE open_id=? AND id=? LIMIT 1`,
 		oid, id,
 	)
 	if err != nil {
 		return errors.New("DeleteByOpenIDAndID: " + err.Error())
 	}
-	if affected, err := rslt.RowsAffected(); err == nil && affected != 1 {
-		return errors.New(fmt.Sprintf("user: %s failed to update status of post: %d", oid, id))
-	}
-	return err
+	return nil
 }

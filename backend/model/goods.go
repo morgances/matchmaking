@@ -9,8 +9,6 @@ package model
 
 import (
 	"database/sql"
-	"errors"
-	"fmt"
 )
 
 type (
@@ -93,16 +91,9 @@ func (goodsServPrvd) Update(g *Goods) error {
 }
 
 func (goodsServPrvd) DeleteByID(id int64) error {
-	var rslt sql.Result
-	rslt, err := DB.Exec(
+	_, err := DB.Exec(
 		`DELETE FROM goods WHERE id=? LIMIT 1`,
 		id,
 	)
-	if err != nil {
-		return err
-	}
-	if affected, err := rslt.RowsAffected(); err == nil && affected != 1 {
-		return errors.New(fmt.Sprintf("failed to delete good: %d", id))
-	}
 	return err
 }

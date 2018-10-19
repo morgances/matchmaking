@@ -13,11 +13,16 @@
         "address": "127.0.0.1",
         "port": "3000"
     },
-    "private_token_key": "zhanghao",
-    "app_id": "",
-    "app_secret": "",
     "admin": {
         "account": "zhanghao",
         "password": "123456"
+    },
+    "app": {
+        "app_id": "",
+        "app_secret": "",
+        "mch_id": "",
+        "key": "",
+        "vip_fee": 3000,
+        "private_token_key": "zhanghao"
     }
 }

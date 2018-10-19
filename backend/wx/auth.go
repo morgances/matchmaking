@@ -5,7 +5,7 @@
  * @Last Modified time: 2018-10-10 02:03:29
  */
 
-package util
+package wx
 
 import (
 	"encoding/base64"
@@ -15,8 +15,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/morgances/matchmaking/backend/conf"
+
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/silenceper/wechat/context"
 	"github.com/silenceper/wechat/oauth"
 )
@@ -42,7 +43,7 @@ func NewToken(oid, acid string, sex uint8, isAdm bool) (string, error) {
 		"is_admin":  isAdm,
 		"exp":       time.Now().Add(30 * 24 * time.Hour).Unix(),
 	})
-	return token.SignedString([]byte(conf.MatchMakeConf.PrivateTokenKey))
+	return token.SignedString([]byte(conf.MMConf.PrivateTokenKey))
 }
 
 func ParseToken(tokenString string) (oid, acid string, sex uint8, isAdm bool, err error) {
@@ -60,7 +61,7 @@ func ParseToken(tokenString string) (oid, acid string, sex uint8, isAdm bool, er
 			return nil, errParseToken
 		}
 
-		return []byte(conf.MatchMakeConf.PrivateTokenKey), nil
+		return []byte(conf.MMConf.PrivateTokenKey), nil
 	})
 	if err != nil {
 		return "", "", 0, false, err
@@ -87,8 +88,8 @@ func ParseToken(tokenString string) (oid, acid string, sex uint8, isAdm bool, er
 
 func NewOauth() *oauth.Oauth {
 	return oauth.NewOauth(&context.Context{
-		AppID:     conf.MatchMakeConf.AppID,
-		AppSecret: conf.MatchMakeConf.AppID,
+		AppID:     conf.MMConf.AppID,
+		AppSecret: conf.MMConf.AppID,
 	})
 }
 

@@ -8,16 +8,18 @@
 package handler
 
 import (
-	log "github.com/TechCatsLab/logging/logrus"
-	"github.com/silenceper/wechat/oauth"
-
+	"mime/multipart"
 	"fmt"
+
 	"github.com/TechCatsLab/apix/http/server"
 	"github.com/TechCatsLab/comment/response"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
-	"mime/multipart"
+	"github.com/morgances/matchmaking/backend/wx"
+	log "github.com/TechCatsLab/logging/logrus"
+
+	"github.com/silenceper/wechat/oauth"
 )
 
 type (
@@ -79,17 +81,12 @@ type (
 		Code string `json:"code" validate:"required"`
 	}
 
-	recharge struct {
-		OpenID string `json:"open_id" validate:"required"`
-		Rose   int64  `json:"rose" validate:"required"`
-	}
-
 	targetOpenID struct {
 		TargetOpenID string `json:"target_open_id" validate:"required,len=28"`
 	}
 )
 
-var auth = util.NewOauth()
+var auth = wx.NewOauth()
 
 // WechatLogin
 func WechatLogin(this *server.Context) error {
@@ -111,11 +108,6 @@ func WechatLogin(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
-	// todo: need redirect ?
-	if err = auth.Redirect(this.Response(), this.Request(), "127.0.0.1:3000/matchmaking/user/fillinfo", "", "301"); err != nil {
-		log.Error(err)
-		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
-	}
 	wechatData, err = auth.GetUserAccessToken(wechatCode.Code)
 	if err != nil {
 		log.Error("Error get user accessToken:", err)
@@ -135,7 +127,7 @@ func WechatLogin(this *server.Context) error {
 	}
 	util.SaveWechatAvatar(userData.OpenID, userData.HeadImgURL)
 
-	resp.Token, err = util.NewToken(wechatData.OpenID, wechatData.AccessToken, uint8(userData.Sex), false)
+	resp.Token, err = wx.NewToken(wechatData.OpenID, wechatData.AccessToken, uint8(userData.Sex), false)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -150,7 +142,7 @@ func FillInfo(this *server.Context) error {
 		oid string
 	)
 	authorization := this.GetHeader("Authorization")
-	oid, _, _, _, err = util.ParseToken(authorization)
+	oid, _, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -202,7 +194,7 @@ func UserChangeInfo(this *server.Context) error {
 		oid string
 	)
 	authorization := this.GetHeader("Authorization")
-	oid, _, _, _, err = util.ParseToken(authorization)
+	oid, _, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -291,7 +283,7 @@ func GetRecommendUsers(this *server.Context) error {
 	)
 
 	authorization := this.GetHeader("Authorization")
-	_, _, sex, _, err = util.ParseToken(authorization)
+	_, _, sex, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -337,7 +329,7 @@ func GetAlbum(this *server.Context) error {
 		}
 	)
 	authorization := this.GetHeader("Authorization")
-	oid, _, _, _, err = util.ParseToken(authorization)
+	oid, _, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -381,7 +373,7 @@ func UploadPhotos(this *server.Context) error {
 		oid string
 	)
 	authorization := this.GetHeader("Authorization")
-	oid, _, _, _, err = util.ParseToken(authorization)
+	oid, _, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -402,7 +394,7 @@ func RemovePhotos(this *server.Context) error {
 		}
 	)
 	authorization := this.GetHeader("Authorization")
-	oid, _, _, _, err = util.ParseToken(authorization)
+	oid, _, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -426,7 +418,7 @@ func ChangeAvatar(this *server.Context) error {
 		req multipart.File
 	)
 	authorization := this.GetHeader("Authorization")
-	oid, _, _, _, err = util.ParseToken(authorization)
+	oid, _, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -452,7 +444,7 @@ func SendRose(this *server.Context) error {
 		}
 	)
 	authorization := this.GetHeader("Authorization")
-	oid, _, _, _, err := util.ParseToken(authorization)
+	oid, _, _, _, err := wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -472,49 +464,3 @@ func SendRose(this *server.Context) error {
 	}
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
-
-//func Recharge(this *server.Context) error {
-//	var (
-//		err error
-//		recharge recharge
-//	)
-//	authorization := this.GetHeader("Authorization")
-//	_, _, _, err = util.ParseToken(authorization)
-//	if err != nil {
-//		log.Println(err)
-//		this.WriteHeader(constant.ErrBadJWT)
-//	}
-//	if err = this.JSONBody(&recharge); err != nil {
-//		log.Println(err)
-//		this.WriteHeader(constant.StatusInvalidParam)
-//	}
-//	if err = this.Validate(&recharge); err != nil {
-//		log.Println(err)
-//		this.WriteHeader(constant.StatusInvalidParam)
-//	}
-//
-//	if err = model.UserService.Recharge(recharge.TargetOpenID, recharge.Rose); err != nil {
-//		log.Println(err)
-//		this.WriteHeader(constant.StatusDatabaseWrong)
-//	}
-//	return this.WriteHeader(http.StatusOK)
-//}
-
-//func BecomeVIP(this *server.Context) error {
-//	var (
-//		err   error
-//		oid   string
-//	)
-//	authorization := this.GetHeader("Authorization")
-//	oid, _,_, err = util.ParseToken(authorization)
-//	if err != nil {
-//		log.Println(err)
-//		return this.WriteHeader(constant.StatusInvalidParam)
-//	}
-//
-//	if err = model.UserService.BecomeVIP(oid); err != nil {
-//		log.Println(err)
-//		return this.WriteHeader(constant.StatusInvalidParam)
-//	}
-//	return this.WriteHeader(http.StatusOK)
-//}

@@ -6,13 +6,15 @@
 package handler
 
 import (
+	"strconv"
+
 	"github.com/TechCatsLab/apix/http/server"
 	"github.com/TechCatsLab/comment/response"
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
-	"strconv"
+	"github.com/morgances/matchmaking/backend/wx"
 )
 
 type (
@@ -30,7 +32,7 @@ func Login(this *server.Context) error {
 		resp token
 	)
 	authorization := this.GetHeader("Authorization")
-	acc, pass, err := util.ParseBase64(authorization)
+	acc, pass, err := wx.ParseBase64(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
@@ -39,7 +41,7 @@ func Login(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrAccount, nil)
 	}
-	if resp.Token, err = util.NewToken("admin", "admin", 1, true); err != nil {
+	if resp.Token, err = wx.NewToken("admin", "admin", 1, true); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
@@ -53,7 +55,7 @@ func Certify(this *server.Context) error {
 		isAdmin bool
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = util.ParseToken(authorization)
+	_, _, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -84,7 +86,7 @@ func DatePrivilegeReduce(this *server.Context) error {
 		isAdmin bool
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = util.ParseToken(authorization)
+	_, _, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -116,7 +118,7 @@ func DatePrivilegeAdd(this *server.Context) error {
 		req     targetOpenID
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = util.ParseToken(authorization)
+	_, _, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -153,7 +155,7 @@ func GetContact(this *server.Context) error {
 		}
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = util.ParseToken(authorization)
+	_, _, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -188,7 +190,7 @@ func GetUnreviewedPost(this *server.Context) error {
 		}
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = util.ParseToken(authorization)
+	_, _, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -224,7 +226,7 @@ func UpdatePostStatus(this *server.Context) error {
 		req     targetID
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = util.ParseToken(authorization)
+	_, _, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
@@ -256,7 +258,7 @@ func AdminDeletePost(this *server.Context) error {
 		req     targetID
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = util.ParseToken(authorization)
+	_, _, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -295,7 +297,7 @@ func GetUnfinishedTrade(this *server.Context) error {
 		}
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = util.ParseToken(authorization)
+	_, _, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -329,7 +331,7 @@ func CancelTrade(this *server.Context) error {
 		req     targetID
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = util.ParseToken(authorization)
+	_, _, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -371,7 +373,7 @@ func UpdateTradeStatus(this *server.Context) error {
 		req     targetID
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = util.ParseToken(authorization)
+	_, _, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)

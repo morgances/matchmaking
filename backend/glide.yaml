@@ -18,3 +18,4 @@ import:
 - package: github.com/TechCatsLab/logging
   subpackages:
   - logrus
+- package: github.com/chanxuehong/wechat.v2

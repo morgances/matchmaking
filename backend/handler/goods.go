@@ -7,14 +7,16 @@ package handler
 
 import (
 	"fmt"
+	"mime/multipart"
+	"strconv"
+
 	"github.com/TechCatsLab/apix/http/server"
 	"github.com/TechCatsLab/comment/response"
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
-	"mime/multipart"
-	"strconv"
+	"github.com/morgances/matchmaking/backend/wx"
 )
 
 type (
@@ -33,7 +35,7 @@ func CreateGoods(this *server.Context) error {
 		lastId  int64
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = util.ParseToken(authorization)
+	_, _, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -137,7 +139,7 @@ func UpdateGoods(this *server.Context) error {
 		goods model.Goods
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = util.ParseToken(authorization)
+	_, _, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -176,7 +178,7 @@ func ChangeGoodsImage(this *server.Context) error {
 		}
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = util.ParseToken(authorization)
+	_, _, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -207,7 +209,7 @@ func DeleteGoods(this *server.Context) error {
 		req     targetID
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = util.ParseToken(authorization)
+	_, _, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)

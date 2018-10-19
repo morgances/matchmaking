@@ -1,3 +1,8 @@
+/*
+ * Revision History:
+ *     Initial: 2018/10/13        Zhang Hao
+ */
+
 package conf
 
 import (
@@ -17,37 +22,47 @@ type matchMakeConfig struct {
 	Address string
 	Port    string
 
-	PrivateTokenKey string
+	// app config
 	AppID           string
 	AppSecret       string
+	MchID           string
+	AppOrderKey     string
+	VIPFee          int
+	PrivateTokenKey string
 
 	// admin config
 	AdmAccount  string
 	AdmPassword string
 }
 
-var MatchMakeConf *matchMakeConfig
+var MMConf *matchMakeConfig
 
 func init() {
-	viper.AddConfigPath("./conf")
+	viper.AddConfigPath("./")
 	viper.SetConfigName("config")
 
 	if err := viper.ReadInConfig(); err != nil {
 		panic(err)
 	}
-	MatchMakeConf = &matchMakeConfig{
-		UserName:        viper.GetString("mysql.user_name"),
-		Password:        viper.GetString("mysql.password"),
-		Protocol:        viper.GetString("mysql.protocol"),
-		MysqlAddress:    viper.GetString("mysql.host.address"),
-		MysqlPort:       viper.GetString("mysql.host.port"),
-		Database:        viper.GetString("mysql.database"),
-		Address:         viper.GetString("host.address"),
-		Port:            viper.GetString("host.port"),
-		PrivateTokenKey: viper.GetString("private_token_key"),
-		AppID:           viper.GetString("app_id"),
-		AppSecret:       viper.GetString("app_secret"),
-		AdmAccount:      viper.GetString("admin.account"),
-		AdmPassword:     viper.GetString("admin.password"),
+	MMConf = &matchMakeConfig{
+		UserName:     viper.GetString("mysql.user_name"),
+		Password:     viper.GetString("mysql.password"),
+		Protocol:     viper.GetString("mysql.protocol"),
+		MysqlAddress: viper.GetString("mysql.host.address"),
+		MysqlPort:    viper.GetString("mysql.host.port"),
+		Database:     viper.GetString("mysql.database"),
+
+		Address: viper.GetString("host.address"),
+		Port:    viper.GetString("host.port"),
+
+		PrivateTokenKey: viper.GetString("app.private_token_key"),
+		AppID:           viper.GetString("app.app_id"),
+		AppSecret:       viper.GetString("app.app_secret"),
+		MchID:           viper.GetString("app.mch_id"),
+		VIPFee:          viper.GetInt("app.vip_fee"),
+		AppOrderKey:     viper.GetString("app.key"),
+
+		AdmAccount:  viper.GetString("admin.account"),
+		AdmPassword: viper.GetString("admin.password"),
 	}
 }

@@ -5,7 +5,9 @@
 
 package model
 
-import "errors"
+import (
+	"errors"
+)
 
 type (
 	adminServPrvd struct{}

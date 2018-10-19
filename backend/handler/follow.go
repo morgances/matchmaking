@@ -11,7 +11,7 @@ import (
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
-	"github.com/morgances/matchmaking/backend/util"
+	"github.com/morgances/matchmaking/backend/wx"
 )
 
 type (
@@ -28,7 +28,7 @@ func Follow(this *server.Context) error {
 		req targetOpenID
 	)
 	authorization := this.GetHeader("Authorization")
-	oid, _, _, _, err = util.ParseToken(authorization)
+	oid, _, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -61,7 +61,7 @@ func Unfollow(this *server.Context) error {
 		req targetOpenID
 	)
 	authorization := this.GetHeader("Authorization")
-	oid, _, _, _, err = util.ParseToken(authorization)
+	oid, _, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -92,7 +92,7 @@ func GetFollowing(this *server.Context) error {
 		}
 	)
 	authorization := this.GetHeader("Authorization")
-	oid, _, _, _, err = util.ParseToken(authorization)
+	oid, _, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -122,7 +122,7 @@ func GetFollower(this *server.Context) error {
 		}
 	)
 	authorization := this.GetHeader("Authorization")
-	oid, _, _, _, err = util.ParseToken(authorization)
+	oid, _, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)

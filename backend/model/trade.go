@@ -11,8 +11,13 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/morgances/matchmaking/backend/conf"
 	"time"
+
+	"github.com/morgances/matchmaking/backend/conf"
+)
+
+var (
+	ErrMakeTrade = errors.New("error make a trade")
 )
 
 type (
@@ -52,7 +57,7 @@ func (tradeServPrvd) Insert(t *Trade) error {
 	}
 
 	rslt, err = DB.Exec(
-		`INSERT INTO `+conf.MatchMakeConf.Database+`.trade(open_id,goods_id,buyer_name,goods_title,cost,date_time,finished)
+		`INSERT INTO `+conf.MMConf.Database+`.trade(open_id,goods_id,buyer_name,goods_title,cost,date_time,finished)
 					VALUES(?,?,?,?,?,NOW(),0)`,
 		t.OpenID, t.GoodsID, t.BuyerName, t.GoodsName, t.Cost,
 	)
@@ -85,7 +90,7 @@ func (tradeServPrvd) Cancel(t *Trade) error {
 		return ErrMakeTrade
 	}
 	rslt, err = DB.Exec(
-		`DELETE FROM `+conf.MatchMakeConf.Database+`.trade WHERE id=? AND finished=0 LIMIT 1`,
+		`DELETE FROM `+conf.MMConf.Database+`.trade WHERE id=? AND finished=0 LIMIT 1`,
 		t.ID,
 	)
 	if err != nil {
@@ -101,7 +106,7 @@ func (tradeServPrvd) Cancel(t *Trade) error {
 
 func (tradeServPrvd) FindByID(id int64) (*Trade, error) {
 	row := DB.QueryRow(
-		`SELECT * FROM `+conf.MatchMakeConf.Database+`.trade WHERE id=? LOCK IN SHARE MODE`,
+		`SELECT * FROM `+conf.MMConf.Database+`.trade WHERE id=? LOCK IN SHARE MODE`,
 		id,
 	)
 	t := Trade{}
@@ -116,7 +121,7 @@ func (tradeServPrvd) FindByID(id int64) (*Trade, error) {
 func (tradeServPrvd) FindByOpenID(oid string) (ts []Trade, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM `+conf.MatchMakeConf.Database+`.trade WHERE open_id=? ORDER BY date_time DESC LOCK IN SHARE MODE`,
+		`SELECT * FROM `+conf.MMConf.Database+`.trade WHERE open_id=? ORDER BY date_time DESC LOCK IN SHARE MODE`,
 		oid,
 	)
 	if err != nil {
@@ -139,7 +144,7 @@ func (tradeServPrvd) FindByOpenID(oid string) (ts []Trade, err error) {
 func (tradeServPrvd) FindUnfinishedTrade() (ts []Trade, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM ` + conf.MatchMakeConf.Database + `.trade WHERE finished=0 ORDER BY date_time DESC LOCK IN SHARE MODE`,
+		`SELECT * FROM ` + conf.MMConf.Database + `.trade WHERE finished=0 ORDER BY date_time DESC LOCK IN SHARE MODE`,
 	)
 	if err != nil {
 		return nil, err
@@ -160,7 +165,7 @@ func (tradeServPrvd) FindUnfinishedTrade() (ts []Trade, err error) {
 
 func (tradeServPrvd) UpdateTradeStatus(id int64) error {
 	_, err := DB.Exec(
-		`UPDATE `+conf.MatchMakeConf.Database+`.trade SET finished=1 WHERE id=? LIMIT 1`,
+		`UPDATE `+conf.MMConf.Database+`.trade SET finished=1 WHERE id=? LIMIT 1`,
 		id,
 	)
 	if err != nil {
@@ -168,11 +173,3 @@ func (tradeServPrvd) UpdateTradeStatus(id int64) error {
 	}
 	return nil
 }
-
-//func (tradeServPrvd) DeleteByID(id int64) error {
-//	_, err := DB.Exec(
-//		`DELETE FROM trade WHERE id=? LIMIT 1`,
-//		id,
-//	)
-//	return err
-//}

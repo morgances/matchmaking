@@ -41,5 +41,6 @@ const (
 	ErrMysql = 700
 
 	ErrSaveImage = 800
+
 	ErrNoAlbum   = 801
 )

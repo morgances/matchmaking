@@ -10,16 +10,16 @@ import (
 	"github.com/TechCatsLab/comment/controller"
 	"github.com/morgances/matchmaking/backend/conf"
 	"github.com/morgances/matchmaking/backend/model"
-	"log"
+	log "github.com/TechCatsLab/logging/logrus"
 )
 
 var CommentService *controller.Controller
 
 func init() {
 	commentConfInstance := &commentConf.Config{
-		UserDB:       conf.MatchMakeConf.Database,
+		UserDB:       conf.MMConf.Database,
 		UserTable:    "user",
-		CommentDB:    conf.MatchMakeConf.Database,
+		CommentDB:    conf.MMConf.Database,
 		CommentTable: "comment",
 	}
 	CommentService = controller.New(model.DB, commentConfInstance)

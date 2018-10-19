@@ -1,5 +1,5 @@
-hash: b80085a10e1dbd0436144ef053ddbab393c83bd70976344c2b0e55880a9a09d7
-updated: 2018-10-17T02:11:57.008802+08:00
+hash: 5cdac038335d8447eb0314f3773470b0392f8c8f36c32e7670d36fb80c5b111d
+updated: 2018-10-18T22:26:38.532424+08:00
 imports:
 - name: github.com/auth0/go-jwt-middleware
   version: 5493cabe49f7bfa6e2ec444a09d334d90cd4e2bd
@@ -7,6 +7,10 @@ imports:
   version: bc664df9673713a0ccf26e3b55a673ec7301088b
   subpackages:
   - memcache
+- name: github.com/chanxuehong/wechat
+  version: 105a3b1f6e39c305337ab374fdec8fd46c0069ec
+- name: github.com/chanxuehong/wechat.v2
+  version: 271f6da2c638c39e9b9c6d3e11c817a7431757ba
 - name: github.com/dgrijalva/jwt-go
   version: 06ea1031745cb8b3dab3f6a236daf2b0aa468b7e
 - name: github.com/fsnotify/fsnotify
@@ -96,8 +100,6 @@ imports:
   - logrus/hooks
 - name: github.com/TechCatsLab/storage
   version: 6940f43f48978f575829a59b87e72ad755dd81e0
-  subpackages:
-  - mysql
 - name: github.com/urfave/negroni
   version: 5dbbc83f748fc3ad38585842b0aedab546d0ea1e
 - name: golang.org/x/crypto
