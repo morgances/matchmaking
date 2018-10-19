@@ -6,7 +6,7 @@ import styles from './UserLayout.less';
 
 const copyright = (
   <Fragment>
-    Copyright <Icon type="copyright" /> 2018 极智人（北京）科技有限公司出品
+    Copyright <Icon type="copyright" /> 2018 老子是刘琦，我的出品
   </Fragment>
 );
 
