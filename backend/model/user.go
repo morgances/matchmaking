@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/morgances/matchmaking/backend/util"
+	"github.com/morgances/matchmaking/backend/conf"
 )
 
 type (
@@ -70,7 +71,7 @@ func (userServPrvd) WeChatLogin(oid, nickName, loc string, sex uint8) error {
 
 func (userServPrvd) insert(u *User) error {
 	_, err := DB.Exec(
-		`INSERT INTO user(open_id, nick_name, sex, location,create_at)
+		`INSERT INTO `+conf.MMConf.Database+`.user(open_id, nick_name, sex, location,create_at)
 					VALUES(?,?,?,?,?,NOW())`,
 		u.OpenID, u.NickName, u.Sex, u.Location,
 	)
@@ -79,7 +80,7 @@ func (userServPrvd) insert(u *User) error {
 
 func (userServPrvd) userExist(oid string) (bool, error) {
 	row := DB.QueryRow(
-		`SELECT COUNT(0) FROM user WHERE open_id = ? LOCK IN SHARE MODE`,
+		`SELECT COUNT(0) FROM `+conf.MMConf.Database+`.user WHERE open_id = ? LOCK IN SHARE MODE`,
 		oid,
 	)
 	var (
@@ -94,7 +95,7 @@ func (userServPrvd) userExist(oid string) (bool, error) {
 
 func (userServPrvd) FindByOpenID(oid string) (u *User, err error) {
 	row := DB.QueryRow(
-		`SELECT * FROM user WHERE open_id = ? LOCK IN SHARE MODE`,
+		`SELECT * FROM `+conf.MMConf.Database+`.user WHERE open_id = ? LOCK IN SHARE MODE`,
 		oid,
 	)
 
@@ -115,7 +116,7 @@ func (userServPrvd) FindByOpenID(oid string) (u *User, err error) {
 func (userServPrvd) RecommendByCharm(sex uint8) (us []User, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM user WHERE  sex=? ORDER BY charm DESC LOCK IN SHARE MODE`,
+		`SELECT * FROM `+conf.MMConf.Database+`.user WHERE  sex=? ORDER BY charm DESC LOCK IN SHARE MODE`,
 		sex,
 	)
 	if err != nil {
@@ -138,7 +139,7 @@ func (userServPrvd) RecommendByCharm(sex uint8) (us []User, err error) {
 }
 
 func (userServPrvd) GetContact(oid string) (phone, wechat string, err error) {
-	row := DB.QueryRow(`SELECT phone, wechat FROM user WHERE open_id=? LOCK IN SHARE MODE`, oid)
+	row := DB.QueryRow(`SELECT phone, wechat FROM `+conf.MMConf.Database+`.user WHERE open_id=? LOCK IN SHARE MODE`, oid)
 	if err = row.Scan(&phone, &wechat); err != nil {
 		return "", "", err
 	}
@@ -146,7 +147,7 @@ func (userServPrvd) GetContact(oid string) (phone, wechat string, err error) {
 }
 
 func (userServPrvd) Certify(oid string) error {
-	rslt, err := DB.Exec(`UPDATE user SET certified=1 WHERE open_id=? LIMIT 1`, oid)
+	rslt, err := DB.Exec(`UPDATE `+conf.MMConf.Database+`.user SET certified=1 WHERE open_id=? LIMIT 1`, oid)
 	if err != nil {
 		return err
 	}
@@ -157,7 +158,7 @@ func (userServPrvd) Certify(oid string) error {
 }
 
 func (userServPrvd) DatePrivilegeReduce(oid string) error {
-	rslt, err := DB.Exec(`UPDATE user SET date_privilege=date_privilege-1 WHERE open_id=? LIMIT 1`, oid)
+	rslt, err := DB.Exec(`UPDATE `+conf.MMConf.Database+`.user SET date_privilege=date_privilege-1 WHERE open_id=? LIMIT 1`, oid)
 	if err != nil {
 		return err
 	}
@@ -168,7 +169,7 @@ func (userServPrvd) DatePrivilegeReduce(oid string) error {
 }
 
 func (userServPrvd) DatePrivilegeAdd(oid string, num int64) error {
-	rslt, err := DB.Exec(`UPDATE user SET date_privilege=date_privilege+? WHERE open_id=? LIMIT 1`,
+	rslt, err := DB.Exec(`UPDATE `+conf.MMConf.Database+`.user SET date_privilege=date_privilege+? WHERE open_id=? LIMIT 1`,
 		num, oid,
 	)
 	if err != nil {
@@ -187,7 +188,7 @@ func (userServPrvd) Update(u *User) error {
 		return err
 	}
 	rslt, err := DB.Exec(
-		`UPDATE user 
+		`UPDATE `+conf.MMConf.Database+`.user 
 				  SET phone=?,wechat=?,nick_name=?,real_name=?,sex=?,birthday=?,height=?,location=?,job=?,faith=?,constellation=?,self_introduction=?,selec_criteria=?,
 				  certified=?,vip=?,date_privilege=?,points=?,rose=?,charm=?,age=?
 				  WHERE open_id=? LIMIT 1`,
@@ -217,7 +218,7 @@ func (userServPrvd) SendRose(sender, recer string, num int) error {
 		return err
 	}
 	rslt, err = tx.Exec(
-		`UPDATE user SET rose=rose-? WHERE open_id=? LIMIT 1`,
+		`UPDATE `+conf.MMConf.Database+`.user SET rose=rose-? WHERE open_id=? LIMIT 1`,
 		num, sender,
 	)
 	if err != nil {
@@ -229,7 +230,7 @@ func (userServPrvd) SendRose(sender, recer string, num int) error {
 		return errSendRose
 	}
 	rslt, err = tx.Exec(
-		`UPDATE user SET rose=rose+?, charm=charm+? WHERE open_id=? LIMIT 1`,
+		`UPDATE `+conf.MMConf.Database+`.user SET rose=rose+?, charm=charm+? WHERE open_id=? LIMIT 1`,
 		num, num, recer,
 	)
 	if err != nil {

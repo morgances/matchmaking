@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/TechCatsLab/apix/http/server"
-	"github.com/TechCatsLab/comment/response"
+	"github.com/zh1014/comment/response"
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
@@ -363,7 +363,7 @@ func CancelTrade(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func UpdateTradeStatus(this *server.Context) error {

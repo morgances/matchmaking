@@ -7,6 +7,8 @@ package model
 
 import (
 	"errors"
+
+	"github.com/morgances/matchmaking/backend/conf"
 )
 
 type (
@@ -18,7 +20,7 @@ var (
 )
 
 func (adminServPrvd) Login(acc, pass string) error {
-	row := DB.QueryRow(`SELECT COUNT(0) FROM admin WHERE account=? AND password=? LOCK IN SHARE MODE`, acc, pass)
+	row := DB.QueryRow(`SELECT COUNT(0) FROM `+conf.MMConf.Database+`.admin WHERE account=? AND password=? LOCK IN SHARE MODE`, acc, pass)
 	var exist int64
 	err := row.Scan(&exist)
 	if err != nil || exist != 1 {

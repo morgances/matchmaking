@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/TechCatsLab/apix/http/server"
-	"github.com/TechCatsLab/comment/response"
+	"github.com/zh1014/comment/response"
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"

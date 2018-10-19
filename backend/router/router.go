@@ -36,7 +36,7 @@ func init() {
 	Router.Post("/matchmaking/user/getuserdetail", handler.GetUserDetail) // both user and admin todo: use Get ?
 	Router.Get("/matchmaking/user/getrecommendusers", handler.GetRecommendUsers)
 
-	Router.Post("/matchmaking/comment/create", handler.CommentService.Insert)
+	Router.Post("/matchmaking/comment/insert", handler.CommentService.Insert)
 	Router.Post("/matchmaking/comment/change", handler.CommentService.ChangeContent)
 	Router.Post("/matchmaking/comment/commentsofuser", handler.CommentService.ListCommentsByUserID) // todo: use Get ?
 	Router.Post("/matchmaking/comment/commentsofpost", handler.CommentService.ListCommentsByTarget) // todo: use Get ?

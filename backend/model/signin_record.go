@@ -12,6 +12,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	"github.com/morgances/matchmaking/backend/conf"
 )
 
 type (
@@ -26,7 +28,7 @@ func (signInServPrvd) Insert(oid string) error {
 	year, month, day := time.Now().Date()
 	date := fmt.Sprintf("%d-%02d-%02d", year, month, day)
 	_, err := DB.Exec(
-		`INSERT INTO signin_record(open_id, signin_date)
+		`INSERT INTO `+conf.MMConf.Database+`.signin_record(open_id, signin_date)
 					VALUES(?,?)`,
 		oid, date,
 	)
@@ -43,7 +45,7 @@ func (signInServPrvd) Insert(oid string) error {
 func (signInServPrvd) FindByOpenID(oid string) (dates []string, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT signin_date FROM signin_record WHERE open_id=? LOCK IN SHARE MODE`,
+		`SELECT signin_date FROM `+conf.MMConf.Database+`.signin_record WHERE open_id=? LOCK IN SHARE MODE`,
 		oid,
 	)
 	if err != nil {

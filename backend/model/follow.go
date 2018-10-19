@@ -10,6 +10,8 @@ package model
 import (
 	"database/sql"
 	"errors"
+
+	"github.com/morgances/matchmaking/backend/conf"
 )
 
 type (
@@ -25,7 +27,7 @@ func (followServPrvd) Insert(fan, idol string) error {
 	if err != nil {
 		return err
 	}
-	rslt, err := tx.Exec(`UPDATE user SET rose=rose-1 WHERE open_id=? LIMIT 1`, fan)
+	rslt, err := tx.Exec(`UPDATE `+conf.MMConf.Database+`.user SET rose=rose-1 WHERE open_id=? LIMIT 1`, fan)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -35,7 +37,7 @@ func (followServPrvd) Insert(fan, idol string) error {
 		return errors.New(fan + "failed to start to follow " + idol)
 	}
 	rslt, err = tx.Exec(
-		`INSERT INTO follow(fan, idol) VALUES(?,?)`,
+		`INSERT INTO `+conf.MMConf.Database+`.follow(fan, idol) VALUES(?,?)`,
 		fan, idol,
 	)
 	if err != nil {
@@ -54,7 +56,7 @@ func (followServPrvd) FindFollowing(oid string) (us []User, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
 		`SELECT u.open_id,u.nick_name
-			  		FROM follow f JOIN user u ON f.idol=u.open_id 
+			  		FROM `+conf.MMConf.Database+`.follow f JOIN `+conf.MMConf.Database+`.user u ON f.idol=u.open_id 
 			  		WHERE f.fan=? LOCK IN SHARE MODE`,
 		oid,
 	)
@@ -77,7 +79,7 @@ func (followServPrvd) FindFollower(oid string) (us []User, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
 		`SELECT u.open_id,u.nick_name
-			  		FROM follow f JOIN user u ON f.fan=u.open_id 
+			  		FROM `+conf.MMConf.Database+`.follow f JOIN `+conf.MMConf.Database+`.user u ON f.fan=u.open_id 
 			  		WHERE f.idol=? LOCK IN SHARE MODE`,
 		oid,
 	)
@@ -98,7 +100,7 @@ func (followServPrvd) FindFollower(oid string) (us []User, err error) {
 
 func (followServPrvd) Delete(fan, idol string) error {
 	_, err := DB.Exec(
-		`DELETE FROM follow WHERE fan=? AND idol=? LIMIT 1`,
+		`DELETE FROM `+conf.MMConf.Database+`.follow WHERE fan=? AND idol=? LIMIT 1`,
 		fan, idol,
 	)
 	return err
@@ -106,7 +108,7 @@ func (followServPrvd) Delete(fan, idol string) error {
 
 func (followServPrvd) FollowExist(fan, idol string) (bool, error) {
 	row := DB.QueryRow(
-		`SELECT COUNT(0) FROM follow WHERE fan=? AND idol=? LOCK IN SHARE MODE`,
+		`SELECT COUNT(0) FROM `+conf.MMConf.Database+`.follow WHERE fan=? AND idol=? LOCK IN SHARE MODE`,
 		fan, idol,
 	)
 	var exist int32

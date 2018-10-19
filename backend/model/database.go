@@ -53,7 +53,7 @@ func initTable() error {
 		`CREATE TABLE IF NOT EXISTS user(
 					phone VARCHAR(20) DEFAULT 'null',
 					wechat VARCHAR(20) DEFAULT 'null',
-					nick_name VARCHAR(10),
+					nick_name VARCHAR(10) DEFAULT 'null',
 					real_name VARCHAR(10) DEFAULT 'null',
 					sex	TINYINT(1) UNSIGNED NOT NULL,
 					birthday DATE DEFAULT '2018-01-01',

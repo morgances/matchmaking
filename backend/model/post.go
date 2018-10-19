@@ -11,6 +11,8 @@ import (
 	"database/sql"
 	"errors"
 	"time"
+
+	"github.com/morgances/matchmaking/backend/conf"
 )
 
 type (
@@ -33,7 +35,7 @@ var (
 
 func (postServPrvd) Insert(p *Post) (int64, error) {
 	result, err := DB.Exec(
-		`INSERT INTO post(open_id,title,content,date_time)
+		`INSERT INTO `+conf.MMConf.Database+`.post(open_id,title,content,date_time)
 					VALUES(?,?,?,NOW())
 		`,
 		p.OpenID, p.Title, p.Content,
@@ -50,7 +52,7 @@ func (postServPrvd) Insert(p *Post) (int64, error) {
 
 func (postServPrvd) FindByID(id int64) (p *Post, err error) {
 	row := DB.QueryRow(
-		`SELECT * FROM post WHERE id=? LOCK IN SHARE MODE`,
+		`SELECT * FROM `+conf.MMConf.Database+`.post WHERE id=? LOCK IN SHARE MODE`,
 		id,
 	)
 	p = &Post{}
@@ -65,7 +67,7 @@ func (postServPrvd) FindByID(id int64) (p *Post, err error) {
 func (postServPrvd) FindByOpenID(oid string) (ps []Post, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM post WHERE open_id=? ORDER BY date_time DESC LOCK IN SHARE MODE`,
+		`SELECT * FROM `+conf.MMConf.Database+`.post WHERE open_id=? ORDER BY date_time DESC LOCK IN SHARE MODE`,
 		oid,
 	)
 	if err != nil {
@@ -88,7 +90,7 @@ func (postServPrvd) FindByOpenID(oid string) (ps []Post, err error) {
 func (postServPrvd) FindUnreviewed() (ps []Post, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM post WHERE reviewed=0 ORDER BY date_time DESC LOCK IN SHARE MODE`,
+		`SELECT * FROM `+conf.MMConf.Database+`.post WHERE reviewed=0 ORDER BY date_time DESC LOCK IN SHARE MODE`,
 	)
 	if err != nil {
 		return nil, err
@@ -110,7 +112,7 @@ func (postServPrvd) FindUnreviewed() (ps []Post, err error) {
 func (postServPrvd) FindReviewed() (ps []Post, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM post WHERE reviewed=1 ORDER BY date_time DESC LOCK IN SHARE MODE`,
+		`SELECT * FROM `+conf.MMConf.Database+`.post WHERE reviewed=1 ORDER BY date_time DESC LOCK IN SHARE MODE`,
 	)
 	if err != nil {
 		return nil, err
@@ -131,7 +133,7 @@ func (postServPrvd) FindReviewed() (ps []Post, err error) {
 
 func (postServPrvd) UpdatePostStatus(id int64) error {
 	_, err := DB.Exec(
-		`UPDATE post SET reviewed=1 WHERE id=? LIMIT 1`,
+		`UPDATE `+conf.MMConf.Database+`.post SET reviewed=1 WHERE id=? LIMIT 1`,
 		id,
 	)
 	return err
@@ -139,7 +141,7 @@ func (postServPrvd) UpdatePostStatus(id int64) error {
 
 func (postServPrvd) Commend(id int64) error {
 	_, err := DB.Exec(
-		`UPDATE post SET commend=commend+1 WHERE id=? LIMIT 1`,
+		`UPDATE `+conf.MMConf.Database+`.post SET commend=commend+1 WHERE id=? LIMIT 1`,
 		id,
 	)
 	return err
@@ -147,7 +149,7 @@ func (postServPrvd) Commend(id int64) error {
 
 func (postServPrvd) DeleteByID(id int64) error {
 	_, err := DB.Exec(
-		`DELETE FROM post WHERE id=? LIMIT 1`,
+		`DELETE FROM `+conf.MMConf.Database+`.post WHERE id=? LIMIT 1`,
 		id,
 	)
 	return err
@@ -155,7 +157,7 @@ func (postServPrvd) DeleteByID(id int64) error {
 
 func (postServPrvd) DeleteByOpenIDAndID(oid string, id int64) error {
 	_, err := DB.Exec(
-		`DELETE FROM post WHERE open_id=? AND id=? LIMIT 1`,
+		`DELETE FROM `+conf.MMConf.Database+`.post WHERE open_id=? AND id=? LIMIT 1`,
 		oid, id,
 	)
 	if err != nil {

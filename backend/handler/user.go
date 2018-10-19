@@ -12,7 +12,7 @@ import (
 	"fmt"
 
 	"github.com/TechCatsLab/apix/http/server"
-	"github.com/TechCatsLab/comment/response"
+	"github.com/zh1014/comment/response"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"

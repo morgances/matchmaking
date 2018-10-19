@@ -6,8 +6,8 @@
 package handler
 
 import (
-	commentConf "github.com/TechCatsLab/comment/config"
-	"github.com/TechCatsLab/comment/controller"
+	commentConf "github.com/zh1014/comment/config"
+	"github.com/zh1014/comment/controller"
 	"github.com/morgances/matchmaking/backend/conf"
 	"github.com/morgances/matchmaking/backend/model"
 	log "github.com/TechCatsLab/logging/logrus"
@@ -19,6 +19,9 @@ func init() {
 	commentConfInstance := &commentConf.Config{
 		UserDB:       conf.MMConf.Database,
 		UserTable:    "user",
+		UserID:		  "open_id",
+		UserName:     "nick_name",
+		UserAvatar:   "job",
 		CommentDB:    conf.MMConf.Database,
 		CommentTable: "comment",
 	}

@@ -9,6 +9,8 @@ package model
 
 import (
 	"database/sql"
+
+	"github.com/morgances/matchmaking/backend/conf"
 )
 
 type (
@@ -28,7 +30,7 @@ var (
 
 func (goodsServPrvd) Insert(g *Goods) (int64, error) {
 	result, err := DB.Exec(
-		`INSERT INTO goods(title,price,description)
+		`INSERT INTO `+conf.MMConf.Database+`.goods(title,price,description)
 					VALUES(?,?,?)`,
 		g.Title, g.Price, g.Description,
 	)
@@ -45,7 +47,7 @@ func (goodsServPrvd) Insert(g *Goods) (int64, error) {
 
 func (goodsServPrvd) FindByID(id int64) (g *Goods, err error) {
 	row := DB.QueryRow(
-		`SELECT * FROM goods WHERE id=? LOCK IN SHARE MODE`,
+		`SELECT * FROM `+conf.MMConf.Database+`.goods WHERE id=? LOCK IN SHARE MODE`,
 		id,
 	)
 	g = &Goods{}
@@ -60,7 +62,7 @@ func (goodsServPrvd) FindByID(id int64) (g *Goods, err error) {
 func (goodsServPrvd) FindByPrice() (gs []Goods, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM goods ORDER BY price DESC LOCK IN SHARE MODE`,
+		`SELECT * FROM `+conf.MMConf.Database+`.goods ORDER BY price DESC LOCK IN SHARE MODE`,
 	)
 	if err != nil {
 		return nil, err
@@ -81,7 +83,7 @@ func (goodsServPrvd) FindByPrice() (gs []Goods, err error) {
 
 func (goodsServPrvd) Update(g *Goods) error {
 	_, err := DB.Exec(
-		`UPDATE goods 
+		`UPDATE `+conf.MMConf.Database+`.goods 
 					SET title=?,price=?,description=?
 					WHERE id=? LIMIT 1`,
 		g.Title, g.Price, g.Description,
@@ -92,7 +94,7 @@ func (goodsServPrvd) Update(g *Goods) error {
 
 func (goodsServPrvd) DeleteByID(id int64) error {
 	_, err := DB.Exec(
-		`DELETE FROM goods WHERE id=? LIMIT 1`,
+		`DELETE FROM `+conf.MMConf.Database+`.goods WHERE id=? LIMIT 1`,
 		id,
 	)
 	return err

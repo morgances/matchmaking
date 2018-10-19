@@ -46,17 +46,17 @@ func (tradeServPrvd) Insert(t *Trade) error {
 	}
 
 	var rslt sql.Result
-	if rslt, err = tx.Exec(`UPDATE user SET points=points-? WHERE open_id=? LIMIT 1`, t.Cost, t.OpenID); err != nil {
+	if rslt, err = tx.Exec(`UPDATE `+conf.MMConf.Database+`.user SET points=points-? WHERE open_id=? LIMIT 1`, t.Cost, t.OpenID); err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	if affec, err := rslt.RowsAffected(); err == nil && affec != 1 {
 		tx.Rollback()
-		return ErrMakeTrade
+		return errors.New(fmt.Sprintf("maybe user(%s): %s not exist", t.BuyerName,t.OpenID))
 	}
 
-	rslt, err = DB.Exec(
+	_, err = DB.Exec(
 		`INSERT INTO `+conf.MMConf.Database+`.trade(open_id,goods_id,buyer_name,goods_title,cost,date_time,finished)
 					VALUES(?,?,?,?,?,NOW(),0)`,
 		t.OpenID, t.GoodsID, t.BuyerName, t.GoodsName, t.Cost,
@@ -64,11 +64,6 @@ func (tradeServPrvd) Insert(t *Trade) error {
 	if err != nil {
 		tx.Rollback()
 		return err
-	}
-
-	if affec, err := rslt.RowsAffected(); err == nil && affec != 1 {
-		tx.Rollback()
-		return ErrMakeTrade
 	}
 
 	return tx.Commit()
@@ -81,13 +76,13 @@ func (tradeServPrvd) Cancel(t *Trade) error {
 		return err
 	}
 	var rslt sql.Result
-	if rslt, err = tx.Exec(`UPDATE user SET points=points+? WHERE open_id=? LIMIT 1`, t.Cost, t.OpenID); err != nil {
+	if rslt, err = tx.Exec(`UPDATE `+conf.MMConf.Database+`.user SET points=points+? WHERE open_id=? LIMIT 1`, t.Cost, t.OpenID); err != nil {
 		tx.Rollback()
-		return ErrMakeTrade
+		return errors.New("failed to return points to user(id): "+t.OpenID)
 	}
 	if affec, err := rslt.RowsAffected(); err == nil && affec != 1 {
 		tx.Rollback()
-		return ErrMakeTrade
+		return errors.New("failed to return points to user(id): "+t.OpenID)
 	}
 	rslt, err = DB.Exec(
 		`DELETE FROM `+conf.MMConf.Database+`.trade WHERE id=? AND finished=0 LIMIT 1`,
@@ -95,11 +90,11 @@ func (tradeServPrvd) Cancel(t *Trade) error {
 	)
 	if err != nil {
 		tx.Rollback()
-		return ErrMakeTrade
+		return errors.New(fmt.Sprintf("failed to delete trade record id: %d", t.ID))
 	}
 	if affec, err := rslt.RowsAffected(); err == nil && affec != 1 {
 		tx.Rollback()
-		return ErrMakeTrade
+		return errors.New(fmt.Sprintf("maybe trade record id:%d not exist", t.ID))
 	}
 	return tx.Commit()
 }

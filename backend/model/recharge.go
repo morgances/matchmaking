@@ -43,7 +43,7 @@ func (rechargeServPrvd) Insert(proj, openid string, num int) (id int, err error)
 	}
 	var rslt sql.Result
 	rslt, err = DB.Exec(
-		`INSERT INTO recharge(open_id,project,recharge_num,fee)
+		`INSERT INTO `+conf.MMConf.Database+`.recharge(open_id,project,recharge_num,fee)
 					VALUES(?,?,?,?)`,
 		openid, proj, num, fee,
 	)
@@ -56,7 +56,7 @@ func (rechargeServPrvd) Insert(proj, openid string, num int) (id int, err error)
 }
 
 func (rechargeServPrvd) FindAll() ([]Recharge, error) {
-	rows, err := DB.Query(`SELECT * FROM recharge ORDER BY id DESC LOCK IN SHARE MODE`)
+	rows, err := DB.Query(`SELECT * FROM `+conf.MMConf.Database+`.recharge ORDER BY id DESC LOCK IN SHARE MODE`)
 	if err != nil {
 		return nil, err
 	}
@@ -92,13 +92,13 @@ func (rechargeServPrvd) Success(id int, transid string) error {
 }
 
 func (rechargeServPrvd) Fail(id int) error {
-	_, err := DB.Exec(`UPDATE recharge SET status=2 WHERE id=? LIMIT 1`, id)
+	_, err := DB.Exec(`UPDATE `+conf.MMConf.Database+`.recharge SET status=2 WHERE id=? LIMIT 1`, id)
 	return err
 }
 
 func (rechargeServPrvd) findByID(id int) (*Recharge, error) {
 	row := DB.QueryRow(
-		`SELECT * FROM recharge WHERE id=? LOCK IN SHARE MODE`,
+		`SELECT * FROM `+conf.MMConf.Database+`.recharge WHERE id=? LOCK IN SHARE MODE`,
 		id,
 	)
 	rchg := &Recharge{}
@@ -117,7 +117,7 @@ func upgradeVip(id int, openid, transid string) error {
 	}
 	var rslt sql.Result
 	rslt, err = tx.Exec(
-		`UPDATE user SET vip=1,points=points+520,rose=rose+520,date_privilege=date_privilege+1 WHERE open_id=? LIMIT 1`,
+		`UPDATE `+conf.MMConf.Database+`.user SET vip=1,points=points+520,rose=rose+520,date_privilege=date_privilege+1 WHERE open_id=? LIMIT 1`,
 		openid,
 	)
 	if err != nil {
@@ -133,7 +133,7 @@ func upgradeVip(id int, openid, transid string) error {
 		return errors.New("upgradeVip: user may not exists")
 	}
 	rslt, err = tx.Exec(
-		`UPDATE recharge SET status=1,transaction_id=? WHERE id=? AND status=0 LIMIT 1`,
+		`UPDATE `+conf.MMConf.Database+`.recharge SET status=1,transaction_id=? WHERE id=? AND status=0 LIMIT 1`,
 		transid, id,
 	)
 	if err != nil {
@@ -159,7 +159,7 @@ func rechargeRose(id, num int, openid, transid string) error {
 	}
 	var rslt sql.Result
 	rslt, err = tx.Exec(
-		`UPDATE user SET rose=rose+?,points=points+? WHERE open_id=? LIMIT 1`,
+		`UPDATE `+conf.MMConf.Database+`.user SET rose=rose+?,points=points+? WHERE open_id=? LIMIT 1`,
 		num, num*10, openid,
 	)
 	if err != nil {
@@ -175,7 +175,7 @@ func rechargeRose(id, num int, openid, transid string) error {
 		return errors.New("rechargeRose: user may not exists")
 	}
 	rslt, err = tx.Exec(
-		`UPDATE recharge SET status=1,transaction_id=? WHERE id=? AND status=0 LIMIT 1`,
+		`UPDATE `+conf.MMConf.Database+`.recharge SET status=1,transaction_id=? WHERE id=? AND status=0 LIMIT 1`,
 		transid, id,
 	)
 	if err != nil {
