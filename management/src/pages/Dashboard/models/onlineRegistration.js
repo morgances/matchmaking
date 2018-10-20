@@ -1,7 +1,7 @@
 import { queryTags } from '@/services/api';
 
 export default {
-  namespace: 'monitor',
+  namespace: 'onlineRegistration',
 
   state: {
     tags: [],

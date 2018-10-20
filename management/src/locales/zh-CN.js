@@ -5,7 +5,7 @@ export default {
   'menu.home': '首页',
   'menu.dashboard': '首页',
   'menu.dashboard.test': '测试题',
-  'menu.dashboard.monitor': '线上报名',
+  'menu.dashboard.onlineRegistration': '线上报名',
   'menu.dashboard.workplace': '幸福Show',
   'menu.form': '表单页',
   'menu.form.basicform': '基础表单',

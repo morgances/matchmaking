@@ -9,7 +9,7 @@ import numeral from 'numeral';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 
 import Authorized from '@/utils/Authorized';
-import styles from './Monitor.less';
+import styles from './OnlineRegistration.less';
 
 const { Secured } = Authorized;
 
@@ -22,21 +22,21 @@ const havePermissionAsync = new Promise(resolve => {
 });
 
 @Secured(havePermissionAsync)
-@connect(({ monitor, loading }) => ({
-  monitor,
-  loading: loading.models.monitor,
+@connect(({ onlineRegistration, loading }) => ({
+  onlineRegistration,
+  loading: loading.models.onlineRegistration,
 }))
-class Monitor extends PureComponent {
+class OnlineRegistration extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'monitor/fetchTags',
+      type: 'onlineRegistration/fetchTags',
     });
   }
 
   render() {
-    const { monitor, loading } = this.props;
-    const { tags } = monitor;
+    const { onlineRegistration, loading } = this.props;
+    const { tags } = onlineRegistration;
 
     return (
       <GridContent>
@@ -153,4 +153,4 @@ class Monitor extends PureComponent {
   }
 }
 
-export default Monitor;
+export default OnlineRegistration;

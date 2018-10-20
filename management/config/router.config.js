@@ -28,9 +28,9 @@ export default [
             component: './Dashboard/Test',
           },
           {
-            path: '/dashboard/monitor',
-            name: 'monitor',
-            component: './Dashboard/Monitor',
+            path: '/dashboard/onlineRegistration',
+            name: 'onlineRegistration',
+            component: './Dashboard/OnlineRegistration',
           },
           {
             path: '/dashboard/workplac',

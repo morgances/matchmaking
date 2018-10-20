@@ -73,9 +73,9 @@ let routes = [
             "exact": true
           },
           {
-            "path": "/dashboard/monitor",
-            "name": "monitor",
-            "component": dynamic({ loader: () => import('../Dashboard/Monitor'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
+            "path": "/dashboard/onlineRegistration",
+            "name": "onlineRegistration",
+            "component": dynamic({ loader: () => import('../Dashboard/OnlineRegistration'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
             "exact": true
           },
           {
