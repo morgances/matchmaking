@@ -2062,7 +2062,31 @@ i.antd-pro-components-global-header-index-trigger {
 
 
 
-.antd-pro-pages-dashboard-analysis-iconGroup {
+.antd-pro-pages-dashboard-monitor-mapChart {
+  padding-top: 24px;
+  height: 457px;
+  text-align: center;
+  img {
+    display: inline-block;
+    max-width: 100%;
+    max-height: 437px;
+  }
+}
+
+.pie-stat {
+  font-size: 24px !important;
+}
+
+@media screen and (max-width: @screen-lg) {
+  .antd-pro-pages-dashboard-monitor-mapChart {
+    height: auto;
+  }
+}
+
+
+
+
+.antd-pro-pages-dashboard-test-iconGroup {
   i {
     transition: color 0.32s;
     color: @text-color-secondary;
@@ -2074,7 +2098,7 @@ i.antd-pro-components-global-header-index-trigger {
   }
 }
 
-.antd-pro-pages-dashboard-analysis-rankingList {
+.antd-pro-pages-dashboard-test-rankingList {
   margin: 25px 0 0;
   padding: 0;
   list-style: none;
@@ -2088,7 +2112,7 @@ i.antd-pro-components-global-header-index-trigger {
       font-size: 14px;
       line-height: 22px;
     }
-    .antd-pro-pages-dashboard-analysis-rankingItemNumber {
+    .antd-pro-pages-dashboard-test-rankingItemNumber {
       background-color: @background-color-base;
       border-radius: 20px;
       display: inline-block;
@@ -2100,12 +2124,12 @@ i.antd-pro-components-global-header-index-trigger {
       width: 20px;
       text-align: center;
       margin-top: 1.5px;
-      &.antd-pro-pages-dashboard-analysis-active {
+      &.antd-pro-pages-dashboard-test-active {
         background-color: #314659;
         color: #fff;
       }
     }
-    .antd-pro-pages-dashboard-analysis-rankingItemTitle {
+    .antd-pro-pages-dashboard-test-rankingItemTitle {
       flex: 1;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -2115,7 +2139,7 @@ i.antd-pro-components-global-header-index-trigger {
   }
 }
 
-.antd-pro-pages-dashboard-analysis-salesExtra {
+.antd-pro-pages-dashboard-test-salesExtra {
   display: inline-block;
   margin-right: 24px;
   a {
@@ -2124,17 +2148,17 @@ i.antd-pro-components-global-header-index-trigger {
     &:hover {
       color: @primary-color;
     }
-    &.antd-pro-pages-dashboard-analysis-currentDate {
+    &.antd-pro-pages-dashboard-test-currentDate {
       color: @primary-color;
     }
   }
 }
 
-.antd-pro-pages-dashboard-analysis-salesCard {
-  .antd-pro-pages-dashboard-analysis-salesBar {
+.antd-pro-pages-dashboard-test-salesCard {
+  .antd-pro-pages-dashboard-test-salesBar {
     padding: 0 0 32px 32px;
   }
-  .antd-pro-pages-dashboard-analysis-salesRank {
+  .antd-pro-pages-dashboard-test-salesRank {
     padding: 0 32px 32px 72px;
   }
     .ant-tabs-bar {
@@ -2154,17 +2178,17 @@ i.antd-pro-components-global-header-index-trigger {
     }
 }
 
-.antd-pro-pages-dashboard-analysis-salesCardExtra {
+.antd-pro-pages-dashboard-test-salesCardExtra {
   height: 68px;
 }
 
-.antd-pro-pages-dashboard-analysis-salesTypeRadio {
+.antd-pro-pages-dashboard-test-salesTypeRadio {
   position: absolute;
   left: 24px;
   bottom: 15px;
 }
 
-.antd-pro-pages-dashboard-analysis-offlineCard {
+.antd-pro-pages-dashboard-test-offlineCard {
     .ant-tabs-ink-bar {
       bottom: auto;
     }
@@ -2188,17 +2212,17 @@ i.antd-pro-components-global-header-index-trigger {
     }
 }
 
-.antd-pro-pages-dashboard-analysis-trendText {
+.antd-pro-pages-dashboard-test-trendText {
   margin-left: 8px;
   color: @heading-color;
 }
 
 @media screen and (max-width: @screen-lg) {
-  .antd-pro-pages-dashboard-analysis-salesExtra {
+  .antd-pro-pages-dashboard-test-salesExtra {
     display: none;
   }
 
-  .antd-pro-pages-dashboard-analysis-rankingList {
+  .antd-pro-pages-dashboard-test-rankingList {
     li {
       span:first-child {
         margin-right: 8px;
@@ -2208,48 +2232,24 @@ i.antd-pro-components-global-header-index-trigger {
 }
 
 @media screen and (max-width: @screen-md) {
-  .antd-pro-pages-dashboard-analysis-rankingTitle {
+  .antd-pro-pages-dashboard-test-rankingTitle {
     margin-top: 16px;
   }
 
-  .antd-pro-pages-dashboard-analysis-salesCard .antd-pro-pages-dashboard-analysis-salesBar {
+  .antd-pro-pages-dashboard-test-salesCard .antd-pro-pages-dashboard-test-salesBar {
     padding: 16px;
   }
 }
 
 @media screen and (max-width: @screen-sm) {
-  .antd-pro-pages-dashboard-analysis-salesExtraWrap {
+  .antd-pro-pages-dashboard-test-salesExtraWrap {
     display: none;
   }
 
-  .antd-pro-pages-dashboard-analysis-salesCard {
+  .antd-pro-pages-dashboard-test-salesCard {
       .ant-tabs-content {
         padding-top: 30px;
       }
-  }
-}
-
-
-
-
-.antd-pro-pages-dashboard-monitor-mapChart {
-  padding-top: 24px;
-  height: 457px;
-  text-align: center;
-  img {
-    display: inline-block;
-    max-width: 100%;
-    max-height: 437px;
-  }
-}
-
-.pie-stat {
-  font-size: 24px !important;
-}
-
-@media screen and (max-width: @screen-lg) {
-  .antd-pro-pages-dashboard-monitor-mapChart {
-    height: auto;
   }
 }
 

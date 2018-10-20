@@ -14,12 +14,6 @@ import { LocaleProvider } from 'antd';
 const defaultAntd = require('antd/lib/locale-provider/zh_CN');
 
 const localeInfo = {
-  'en-US': {
-    messages: require('/Users/a11/Github/group-matchmaking/management/src/locales/en-US.js').default,
-    locale: 'en-US',
-    antd: require('antd/lib/locale-provider/en_US'),
-    data: require('react-intl/locale-data/en'),
-  },
   'zh-CN': {
     messages: require('/Users/a11/Github/group-matchmaking/management/src/locales/zh-CN.js').default,
     locale: 'zh-CN',

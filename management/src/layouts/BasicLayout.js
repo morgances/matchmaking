@@ -14,7 +14,6 @@ import Authorized from '@/utils/Authorized';
 import SettingDrawer from '@/components/SettingDrawer';
 import logo from '../assets/smartestee.jpg';
 import Footer from './Footer';
-import Header from './Header';
 import Context from './MenuContext';
 import Exception403 from '../pages/Exception/403';
 
@@ -245,13 +244,6 @@ class BasicLayout extends React.PureComponent {
             minHeight: '100vh',
           }}
         >
-          <Header
-            menuData={menuData}
-            handleMenuCollapse={this.handleMenuCollapse}
-            logo={logo}
-            isMobile={isMobile}
-            {...this.props}
-          />
           <Content style={this.getContentStyle()}>
             <Authorized authority={routerConfig.authority} noMatch={<Exception403 />}>
               {children}

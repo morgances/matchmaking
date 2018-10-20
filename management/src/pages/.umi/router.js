@@ -35,7 +35,7 @@ let routes = [
   },
   {
     "path": "/",
-    "redirect": "/dashboard/analysis",
+    "redirect": "/dashboard/test",
     "exact": true
   },
   {
@@ -45,16 +45,6 @@ let routes = [
       {
         "path": "/user/login",
         "component": dynamic({ loader: () => import('../User/Login'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-        "exact": true
-      },
-      {
-        "path": "/user/register",
-        "component": dynamic({ loader: () => import('../User/Register'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-        "exact": true
-      },
-      {
-        "path": "/user/register-result",
-        "component": dynamic({ loader: () => import('../User/RegisterResult'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
         "exact": true
       },
       {
@@ -77,9 +67,9 @@ let routes = [
         "icon": "dashboard",
         "routes": [
           {
-            "path": "/dashboard/analysis",
-            "name": "analysis",
-            "component": dynamic({ loader: () => import('../Dashboard/Analysis'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
+            "path": "/dashboard/test",
+            "name": "test",
+            "component": dynamic({ loader: () => import('../Dashboard/Test'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
             "exact": true
           },
           {
@@ -89,7 +79,7 @@ let routes = [
             "exact": true
           },
           {
-            "path": "/dashboard/workplace",
+            "path": "/dashboard/workplac",
             "name": "workplace",
             "component": dynamic({ loader: () => import('../Dashboard/Workplace'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
             "exact": true
