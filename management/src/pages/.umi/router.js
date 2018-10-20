@@ -79,9 +79,9 @@ let routes = [
             "exact": true
           },
           {
-            "path": "/dashboard/workplac",
-            "name": "workplace",
-            "component": dynamic({ loader: () => import('../Dashboard/Workplace'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
+            "path": "/dashboard/happinessShow",
+            "name": "happinessShow",
+            "component": dynamic({ loader: () => import('../Dashboard/HappinessShow'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
             "exact": true
           },
           {

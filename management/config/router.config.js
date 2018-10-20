@@ -33,9 +33,9 @@ export default [
             component: './Dashboard/OnlineRegistration',
           },
           {
-            path: '/dashboard/workplac',
-            name: 'workplace',
-            component: './Dashboard/Workplace',
+            path: '/dashboard/happinessShow',
+            name: 'happinessShow',
+            component: './Dashboard/HappinessShow',
           },
         ],
       },
