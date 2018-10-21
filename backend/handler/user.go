@@ -54,6 +54,7 @@ type (
 		Points           float64 `json:"points"`
 		Rose             int64   `json:"rose"`
 		Charm            int64   `json:"charm"`
+		DatePrivilege    int64   `json:"date_privilege"`
 	}
 
 	fillInfo struct {
@@ -268,6 +269,7 @@ func GetUserDetail(this *server.Context) error {
 	resp.Constellation = userp.Constellation
 	resp.Location = userp.Location
 	resp.Faith = userp.Faith
+	resp.DatePrivilege = userp.DatePrivilege
 
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
