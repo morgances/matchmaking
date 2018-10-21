@@ -1713,6 +1713,27 @@ i.antd-pro-components-global-header-index-trigger {
   }
 }
 
+.antd-pro-components-user-information-index-searchFrame {
+  margin-bottom: 200px;
+}
+
+.antd-pro-components-user-information-index-line {
+  display: flex;
+  flex-direction: 'row';
+  align-items: 'center';
+  justify-content: 'center';
+  margin: 0 auto;
+}
+
+.antd-pro-components-user-information-index-lineTitle {
+  font-size: 20px;
+}
+
+.antd-pro-components-user-information-index-lineContent {
+  font-size: 16px;
+  border-bottom: 1px solid lightcoral;
+}
+
 .antd-pro-layouts-header-fixedHeader {
   position: fixed;
   top: 0;
@@ -2227,427 +2248,6 @@ i.antd-pro-components-global-header-index-trigger {
 .antd-pro-pages-forms-style-optional {
   color: @text-color-secondary;
   font-style: normal;
-}
-
-
-
-
-.antd-pro-pages-home-page-happiness-show-activitiesList {
-  padding: 0 24px 8px 24px;
-  .antd-pro-pages-home-page-happiness-show-username {
-    color: @text-color;
-  }
-  .antd-pro-pages-home-page-happiness-show-event {
-    font-weight: normal;
-  }
-}
-
-.antd-pro-pages-home-page-happiness-show-pageHeaderContent {
-  display: flex;
-  .antd-pro-pages-home-page-happiness-show-avatar {
-    flex: 0 1 72px;
-    margin-bottom: 8px;
-    & > span {
-      border-radius: 72px;
-      display: block;
-      width: 72px;
-      height: 72px;
-    }
-  }
-  .antd-pro-pages-home-page-happiness-show-content {
-    position: relative;
-    top: 4px;
-    margin-left: 24px;
-    flex: 1 1 auto;
-    color: @text-color-secondary;
-    line-height: 22px;
-    .antd-pro-pages-home-page-happiness-show-contentTitle {
-      font-size: 20px;
-      line-height: 28px;
-      font-weight: 500;
-      color: @heading-color;
-      margin-bottom: 12px;
-    }
-  }
-}
-
-.antd-pro-pages-home-page-happiness-show-extraContent {
-  .clearfix();
-  float: right;
-  white-space: nowrap;
-  .antd-pro-pages-home-page-happiness-show-statItem {
-    padding: 0 32px;
-    position: relative;
-    display: inline-block;
-    > p:first-child {
-      color: @text-color-secondary;
-      font-size: @font-size-base;
-      line-height: 22px;
-      margin-bottom: 4px;
-    }
-    > p {
-      color: @heading-color;
-      font-size: 30px;
-      line-height: 38px;
-      margin: 0;
-      > span {
-        color: @text-color-secondary;
-        font-size: 20px;
-      }
-    }
-    &:after {
-      background-color: @border-color-split;
-      position: absolute;
-      top: 8px;
-      right: 0;
-      width: 1px;
-      height: 40px;
-      content: '';
-    }
-    &:last-child {
-      padding-right: 0;
-      &:after {
-        display: none;
-      }
-    }
-  }
-}
-
-.antd-pro-pages-home-page-happiness-show-members {
-  a {
-    display: block;
-    margin: 12px 0;
-    height: 24px;
-    color: @text-color;
-    transition: all 0.3s;
-    .textOverflow();
-    .antd-pro-pages-home-page-happiness-show-member {
-      font-size: @font-size-base;
-      line-height: 24px;
-      vertical-align: top;
-      margin-left: 12px;
-    }
-    &:hover {
-      color: @primary-color;
-    }
-  }
-}
-
-.antd-pro-pages-home-page-happiness-show-projectList {
-    .ant-card-meta-description {
-      color: @text-color-secondary;
-      height: 44px;
-      line-height: 22px;
-      overflow: hidden;
-    }
-  .antd-pro-pages-home-page-happiness-show-cardTitle {
-    font-size: 0;
-    a {
-      color: @heading-color;
-      margin-left: 12px;
-      line-height: 24px;
-      height: 24px;
-      display: inline-block;
-      vertical-align: top;
-      font-size: @font-size-base;
-      &:hover {
-        color: @primary-color;
-      }
-    }
-  }
-  .antd-pro-pages-home-page-happiness-show-projectGrid {
-    width: 33.33%;
-  }
-  .antd-pro-pages-home-page-happiness-show-projectItemContent {
-    display: flex;
-    margin-top: 8px;
-    overflow: hidden;
-    font-size: 12px;
-    height: 20px;
-    line-height: 20px;
-    .textOverflow();
-    a {
-      color: @text-color-secondary;
-      display: inline-block;
-      flex: 1 1 0;
-      .textOverflow();
-      &:hover {
-        color: @primary-color;
-      }
-    }
-    .antd-pro-pages-home-page-happiness-show-datetime {
-      color: @disabled-color;
-      flex: 0 0 auto;
-      float: right;
-    }
-  }
-}
-
-.antd-pro-pages-home-page-happiness-show-datetime {
-  color: @disabled-color;
-}
-
-@media screen and (max-width: @screen-xl) and (min-width: @screen-lg) {
-  .antd-pro-pages-home-page-happiness-show-activeCard {
-    margin-bottom: 24px;
-  }
-  .antd-pro-pages-home-page-happiness-show-members {
-    margin-bottom: 0;
-  }
-  .antd-pro-pages-home-page-happiness-show-extraContent {
-    margin-left: -44px;
-    .antd-pro-pages-home-page-happiness-show-statItem {
-      padding: 0 16px;
-    }
-  }
-}
-
-@media screen and (max-width: @screen-lg) {
-  .antd-pro-pages-home-page-happiness-show-activeCard {
-    margin-bottom: 24px;
-  }
-  .antd-pro-pages-home-page-happiness-show-members {
-    margin-bottom: 0;
-  }
-  .antd-pro-pages-home-page-happiness-show-extraContent {
-    float: none;
-    margin-right: 0;
-    .antd-pro-pages-home-page-happiness-show-statItem {
-      padding: 0 16px;
-      text-align: left;
-      &:after {
-        display: none;
-      }
-    }
-  }
-}
-
-@media screen and (max-width: @screen-md) {
-  .antd-pro-pages-home-page-happiness-show-extraContent {
-    margin-left: -16px;
-  }
-  .antd-pro-pages-home-page-happiness-show-projectList {
-    .antd-pro-pages-home-page-happiness-show-projectGrid {
-      width: 50%;
-    }
-  }
-}
-
-@media screen and (max-width: @screen-sm) {
-  .antd-pro-pages-home-page-happiness-show-pageHeaderContent {
-    display: block;
-    .antd-pro-pages-home-page-happiness-show-content {
-      margin-left: 0;
-    }
-  }
-  .antd-pro-pages-home-page-happiness-show-extraContent {
-    .antd-pro-pages-home-page-happiness-show-statItem {
-      float: none;
-    }
-  }
-}
-
-@media screen and (max-width: @screen-xs) {
-  .antd-pro-pages-home-page-happiness-show-projectList {
-    .antd-pro-pages-home-page-happiness-show-projectGrid {
-      width: 100%;
-    }
-  }
-}
-
-
-
-
-.antd-pro-pages-home-page-online-registration-mapChart {
-  padding-top: 24px;
-  height: 457px;
-  text-align: center;
-  img {
-    display: inline-block;
-    max-width: 100%;
-    max-height: 437px;
-  }
-}
-
-.pie-stat {
-  font-size: 24px !important;
-}
-
-@media screen and (max-width: @screen-lg) {
-  .antd-pro-pages-home-page-online-registration-mapChart {
-    height: auto;
-  }
-}
-
-
-
-
-
-.antd-pro-pages-home-page-test-iconGroup {
-  i {
-    transition: color 0.32s;
-    color: @text-color-secondary;
-    cursor: pointer;
-    margin-left: 16px;
-    &:hover {
-      color: @text-color;
-    }
-  }
-}
-
-.antd-pro-pages-home-page-test-rankingList {
-  margin: 25px 0 0;
-  padding: 0;
-  list-style: none;
-  li {
-    .clearfix();
-    margin-top: 16px;
-    display: flex;
-    align-items: center;
-    span {
-      color: @text-color;
-      font-size: 14px;
-      line-height: 22px;
-    }
-    .antd-pro-pages-home-page-test-rankingItemNumber {
-      background-color: @background-color-base;
-      border-radius: 20px;
-      display: inline-block;
-      font-size: 12px;
-      font-weight: 600;
-      margin-right: 16px;
-      height: 20px;
-      line-height: 20px;
-      width: 20px;
-      text-align: center;
-      margin-top: 1.5px;
-      &.antd-pro-pages-home-page-test-active {
-        background-color: #314659;
-        color: #fff;
-      }
-    }
-    .antd-pro-pages-home-page-test-rankingItemTitle {
-      flex: 1;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      margin-right: 8px;
-    }
-  }
-}
-
-.antd-pro-pages-home-page-test-salesExtra {
-  display: inline-block;
-  margin-right: 24px;
-  a {
-    color: @text-color;
-    margin-left: 24px;
-    &:hover {
-      color: @primary-color;
-    }
-    &.antd-pro-pages-home-page-test-currentDate {
-      color: @primary-color;
-    }
-  }
-}
-
-.antd-pro-pages-home-page-test-salesCard {
-  .antd-pro-pages-home-page-test-salesBar {
-    padding: 0 0 32px 32px;
-  }
-  .antd-pro-pages-home-page-test-salesRank {
-    padding: 0 32px 32px 72px;
-  }
-    .ant-tabs-bar {
-      padding-left: 16px;
-      .ant-tabs-nav .ant-tabs-tab {
-        padding-top: 16px;
-        padding-bottom: 14px;
-        line-height: 24px;
-      }
-    }
-    .ant-tabs-extra-content {
-      padding-right: 24px;
-      line-height: 55px;
-    }
-    .ant-card-head {
-      position: relative;
-    }
-}
-
-.antd-pro-pages-home-page-test-salesCardExtra {
-  height: 68px;
-}
-
-.antd-pro-pages-home-page-test-salesTypeRadio {
-  position: absolute;
-  left: 24px;
-  bottom: 15px;
-}
-
-.antd-pro-pages-home-page-test-offlineCard {
-    .ant-tabs-ink-bar {
-      bottom: auto;
-    }
-    .ant-tabs-bar {
-      border-bottom: none;
-    }
-    .ant-tabs-nav-container-scrolling {
-      padding-left: 40px;
-      padding-right: 40px;
-    }
-    .ant-tabs-tab-prev-icon:before {
-      position: relative;
-      left: 6px;
-    }
-    .ant-tabs-tab-next-icon:before {
-      position: relative;
-      right: 6px;
-    }
-    .ant-tabs-tab-active h4 {
-      color: @primary-color;
-    }
-}
-
-.antd-pro-pages-home-page-test-trendText {
-  margin-left: 8px;
-  color: @heading-color;
-}
-
-@media screen and (max-width: @screen-lg) {
-  .antd-pro-pages-home-page-test-salesExtra {
-    display: none;
-  }
-
-  .antd-pro-pages-home-page-test-rankingList {
-    li {
-      span:first-child {
-        margin-right: 8px;
-      }
-    }
-  }
-}
-
-@media screen and (max-width: @screen-md) {
-  .antd-pro-pages-home-page-test-rankingTitle {
-    margin-top: 16px;
-  }
-
-  .antd-pro-pages-home-page-test-salesCard .antd-pro-pages-home-page-test-salesBar {
-    padding: 16px;
-  }
-}
-
-@media screen and (max-width: @screen-sm) {
-  .antd-pro-pages-home-page-test-salesExtraWrap {
-    display: none;
-  }
-
-  .antd-pro-pages-home-page-test-salesCard {
-      .ant-tabs-content {
-        padding-top: 30px;
-      }
-  }
 }
 
 
@@ -3321,6 +2921,26 @@ a.antd-pro-pages-list-articles-listItemMetaTitle {
   }
 }
 
+.antd-pro-pages-user-page-information-searchFrame {
+  margin-bottom: 200px;
+}
+
+.antd-pro-pages-user-page-information-line {
+  display: flex;
+  flex-direction: 'row';
+  align-items: 'center';
+  justify-content: 'center';
+  margin: 0 auto;
+}
+
+.antd-pro-pages-user-page-information-lineTitle {
+  font-size: 20px;
+}
+
+.antd-pro-pages-user-page-information-lineContent {
+  font-size: 16px;
+  border-bottom: 1px solid lightcoral;
+}
 .textOverflow() {
   overflow: hidden;
   text-overflow: ellipsis;

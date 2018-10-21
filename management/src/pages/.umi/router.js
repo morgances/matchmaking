@@ -35,7 +35,7 @@ let routes = [
   },
   {
     "path": "/",
-    "redirect": "/homePage/test",
+    "redirect": "/userpage/information",
     "exact": true
   },
   {
@@ -62,32 +62,14 @@ let routes = [
     ],
     "routes": [
       {
-        "path": "/homePage",
-        "name": "homePage",
+        "path": "/userpage",
+        "name": "userpage",
         "icon": "home",
         "routes": [
           {
-            "path": "/homePage/test",
-            "name": "test",
-            "component": dynamic({ loader: () => import('../HomePage/Test'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "exact": true
-          },
-          {
-            "path": "/homePage/onlineRegistration",
-            "name": "onlineRegistration",
-            "component": dynamic({ loader: () => import('../HomePage/OnlineRegistration'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "exact": true
-          },
-          {
-            "path": "/homePage/happinessShow",
-            "name": "happinessShow",
-            "component": dynamic({ loader: () => import('../HomePage/HappinessShow'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "exact": true
-          },
-          {
-            "path": "/homePage/reservationConsultation",
-            "name": "reservationConsultation",
-            "component": dynamic({ loader: () => import('../HomePage/ReservationConsultation'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
+            "path": "/userpage/information",
+            "name": "userpage",
+            "component": dynamic({ loader: () => import('../UserPage/Information'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
             "exact": true
           },
           {
