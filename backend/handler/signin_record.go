@@ -7,11 +7,11 @@ package handler
 
 import (
 	"github.com/TechCatsLab/apix/http/server"
-	"github.com/zh1014/comment/response"
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/wx"
+	"github.com/zh1014/comment/response"
 )
 
 func Signin(this *server.Context) error {
@@ -20,7 +20,7 @@ func Signin(this *server.Context) error {
 		oid string
 	)
 	authorization := this.GetHeader("Authorization")
-	oid, _, _, _, err = wx.ParseToken(authorization)
+	oid, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -42,7 +42,7 @@ func GetSigninRecord(this *server.Context) error {
 		}
 	)
 	authorization := this.GetHeader("Authorization")
-	oid, _, _, _, err = wx.ParseToken(authorization)
+	oid, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)

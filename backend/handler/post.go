@@ -10,12 +10,12 @@ import (
 	"time"
 
 	"github.com/TechCatsLab/apix/http/server"
-	"github.com/zh1014/comment/response"
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
 	"github.com/morgances/matchmaking/backend/wx"
+	"github.com/zh1014/comment/response"
 )
 
 type (
@@ -37,7 +37,7 @@ func CreatePost(this *server.Context) error {
 		postId int64
 	)
 	authorization := this.GetHeader("Authorization")
-	openid, _, _, _, err = wx.ParseToken(authorization)
+	openid, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -96,7 +96,7 @@ func GetMyPost(this *server.Context) error {
 		}
 	)
 	authorization := this.GetHeader("Authorization")
-	oid, _, _, _, err = wx.ParseToken(authorization)
+	oid, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -150,7 +150,7 @@ func DeletePost(this *server.Context) error {
 		req targetID
 	)
 	authorization := this.GetHeader("Authorization")
-	oid, _, _, _, err = wx.ParseToken(authorization)
+	oid, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)

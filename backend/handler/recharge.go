@@ -12,11 +12,11 @@ import (
 	"strconv"
 
 	"github.com/TechCatsLab/apix/http/server"
-	"github.com/zh1014/comment/response"
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/wx"
+	"github.com/zh1014/comment/response"
 )
 
 type (
@@ -42,7 +42,7 @@ func RechargeVip(this *server.Context) error {
 		}
 	)
 	authorization := this.GetHeader("Authorization")
-	openid, _, _, _, err = wx.ParseToken(authorization)
+	openid, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -87,7 +87,7 @@ func RechargeRose(this *server.Context) error {
 		}
 	)
 	authorization := this.GetHeader("Authorization")
-	openid, _, _, _, err = wx.ParseToken(authorization)
+	openid, _, _, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -136,7 +136,7 @@ func GetRechargeRecord(this *server.Context) error {
 		}
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = wx.ParseToken(authorization)
+	_, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)

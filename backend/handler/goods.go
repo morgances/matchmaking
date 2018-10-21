@@ -11,12 +11,12 @@ import (
 	"strconv"
 
 	"github.com/TechCatsLab/apix/http/server"
-	"github.com/zh1014/comment/response"
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
 	"github.com/morgances/matchmaking/backend/wx"
+	"github.com/zh1014/comment/response"
 )
 
 type (
@@ -35,7 +35,7 @@ func CreateGoods(this *server.Context) error {
 		lastId  int64
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = wx.ParseToken(authorization)
+	_, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -139,7 +139,7 @@ func UpdateGoods(this *server.Context) error {
 		goods model.Goods
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = wx.ParseToken(authorization)
+	_, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -178,7 +178,7 @@ func ChangeGoodsImage(this *server.Context) error {
 		}
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = wx.ParseToken(authorization)
+	_, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -209,7 +209,7 @@ func DeleteGoods(this *server.Context) error {
 		req     targetID
 	)
 	authorization := this.GetHeader("Authorization")
-	_, _, _, isAdmin, err = wx.ParseToken(authorization)
+	_, _, isAdmin, err = wx.ParseToken(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
