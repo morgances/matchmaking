@@ -15,27 +15,32 @@ export default [
     Routes: ['src/pages/Authorized'],
     authority: ['admin', 'user'],
     routes: [
-      // dashboard
-      { path: '/', redirect: '/dashboard/test' },
+      // homePage
+      { path: '/', redirect: '/homePage/test' },
       {
-        path: '/dashboard',
-        name: 'dashboard',
-        icon: 'dashboard',
+        path: '/homePage',
+        name: 'homePage',
+        icon: 'home',
         routes: [
           {
-            path: '/dashboard/test',
+            path: '/homePage/test',
             name: 'test',
-            component: './Dashboard/Test',
+            component: './HomePage/Test',
           },
           {
-            path: '/dashboard/onlineRegistration',
+            path: '/homePage/onlineRegistration',
             name: 'onlineRegistration',
-            component: './Dashboard/OnlineRegistration',
+            component: './HomePage/OnlineRegistration',
           },
           {
-            path: '/dashboard/happinessShow',
+            path: '/homePage/happinessShow',
             name: 'happinessShow',
-            component: './Dashboard/HappinessShow',
+            component: './HomePage/HappinessShow',
+          },
+          {
+            path: '/homePage/reservationConsultation',
+            name: 'reservationConsultation',
+            component: './HomePage/ReservationConsultation',
           },
         ],
       },

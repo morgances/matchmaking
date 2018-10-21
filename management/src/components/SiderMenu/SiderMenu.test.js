@@ -3,10 +3,10 @@ import { getFlatMenuKeys, getMenuMatchKeys } from './SiderMenu';
 
 const menu = [
   {
-    path: '/dashboard',
+    path: '/homePage',
     children: [
       {
-        path: '/dashboard/name',
+        path: '/homePage/name',
       },
     ],
   },
@@ -30,8 +30,8 @@ const flatMenuKeys = getFlatMenuKeys(menu);
 describe('test convert nested menu to flat menu', () => {
   it('simple menu', () => {
     expect(flatMenuKeys).toEqual([
-      '/dashboard',
-      '/dashboard/name',
+      '/homePage',
+      '/homePage/name',
       '/userinfo',
       '/userinfo/:id',
       '/userinfo/:id/info',
@@ -41,17 +41,17 @@ describe('test convert nested menu to flat menu', () => {
 
 describe('test menu match', () => {
   it('simple path', () => {
-    expect(getMenuMatchKeys(flatMenuKeys, urlToList('/dashboard'))).toEqual(['/dashboard']);
+    expect(getMenuMatchKeys(flatMenuKeys, urlToList('/homePage'))).toEqual(['/homePage']);
   });
 
   it('error path', () => {
-    expect(getMenuMatchKeys(flatMenuKeys, urlToList('/dashboardname'))).toEqual([]);
+    expect(getMenuMatchKeys(flatMenuKeys, urlToList('/homePage'))).toEqual([]);
   });
 
   it('Secondary path', () => {
-    expect(getMenuMatchKeys(flatMenuKeys, urlToList('/dashboard/name'))).toEqual([
-      '/dashboard',
-      '/dashboard/name',
+    expect(getMenuMatchKeys(flatMenuKeys, urlToList('/homePage/name'))).toEqual([
+      '/homePage',
+      '/homePage/name',
     ]);
   });
 
