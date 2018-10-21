@@ -8,7 +8,7 @@ import { Radar } from '@/components/Charts';
 import EditableLinkGroup from '@/components/EditableLinkGroup';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
-import styles from './Workplace.less';
+import styles from './HappinessShow.less';
 
 const links = [
   {
@@ -46,7 +46,7 @@ const links = [
   projectLoading: loading.effects['project/fetchNotice'],
   activitiesLoading: loading.effects['activities/fetchList'],
 }))
-class Workplace extends PureComponent {
+class HappinessShow extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -253,4 +253,4 @@ class Workplace extends PureComponent {
   }
 }
 
-export default Workplace;
+export default HappinessShow;

@@ -31,7 +31,7 @@ import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import Yuan from '@/utils/Yuan';
 import { getTimeDistance } from '@/utils/utils';
 
-import styles from './Analysis.less';
+import styles from './Test.less';
 
 const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
@@ -48,13 +48,13 @@ for (let i = 0; i < 7; i += 1) {
   chart,
   loading: loading.effects['chart/fetch'],
 }))
-class Analysis extends Component {
+class Test extends Component {
   constructor(props) {
     super(props);
     this.rankingListData = [];
     for (let i = 0; i < 7; i += 1) {
       this.rankingListData.push({
-        title: formatMessage({ id: 'app.analysis.test' }, { no: i }),
+        title: formatMessage({ id: 'app.test.test' }, { no: i }),
         total: 323234,
       });
     }
@@ -184,16 +184,16 @@ class Analysis extends Component {
       <div className={styles.salesExtraWrap}>
         <div className={styles.salesExtra}>
           <a className={this.isActive('today')} onClick={() => this.selectDate('today')}>
-            <FormattedMessage id="app.analysis.all-day" defaultMessage="All Day" />
+            <FormattedMessage id="app.test.all-day" defaultMessage="All Day" />
           </a>
           <a className={this.isActive('week')} onClick={() => this.selectDate('week')}>
-            <FormattedMessage id="app.analysis.all-week" defaultMessage="All Week" />
+            <FormattedMessage id="app.test.all-week" defaultMessage="All Week" />
           </a>
           <a className={this.isActive('month')} onClick={() => this.selectDate('month')}>
-            <FormattedMessage id="app.analysis.all-month" defaultMessage="All Month" />
+            <FormattedMessage id="app.test.all-month" defaultMessage="All Month" />
           </a>
           <a className={this.isActive('year')} onClick={() => this.selectDate('year')}>
-            <FormattedMessage id="app.analysis.all-year" defaultMessage="All Year" />
+            <FormattedMessage id="app.test.all-year" defaultMessage="All Year" />
           </a>
         </div>
         <RangePicker
@@ -206,14 +206,14 @@ class Analysis extends Component {
 
     const columns = [
       {
-        title: <FormattedMessage id="app.analysis.table.rank" defaultMessage="Rank" />,
+        title: <FormattedMessage id="app.test.table.rank" defaultMessage="Rank" />,
         dataIndex: 'index',
         key: 'index',
       },
       {
         title: (
           <FormattedMessage
-            id="app.analysis.table.search-keyword"
+            id="app.test.table.search-keyword"
             defaultMessage="Search keyword"
           />
         ),
@@ -222,7 +222,7 @@ class Analysis extends Component {
         render: text => <a href="/">{text}</a>,
       },
       {
-        title: <FormattedMessage id="app.analysis.table.users" defaultMessage="Users" />,
+        title: <FormattedMessage id="app.test.table.users" defaultMessage="Users" />,
         dataIndex: 'count',
         key: 'count',
         sorter: (a, b) => a.count - b.count,
@@ -230,7 +230,7 @@ class Analysis extends Component {
       },
       {
         title: (
-          <FormattedMessage id="app.analysis.table.weekly-range" defaultMessage="Weekly Range" />
+          <FormattedMessage id="app.test.table.weekly-range" defaultMessage="Weekly Range" />
         ),
         dataIndex: 'range',
         key: 'range',
@@ -253,7 +253,7 @@ class Analysis extends Component {
             title={data.name}
             subTitle={
               <FormattedMessage
-                id="app.analysis.conversion-rate"
+                id="app.test.conversion-rate"
                 defaultMessage="Conversion Rate"
               />
             }
@@ -292,12 +292,12 @@ class Analysis extends Component {
             <ChartCard
               bordered={false}
               title={
-                <FormattedMessage id="app.analysis.total-sales" defaultMessage="Total Sales" />
+                <FormattedMessage id="app.test.total-sales" defaultMessage="Total Sales" />
               }
               action={
                 <Tooltip
                   title={
-                    <FormattedMessage id="app.analysis.introduce" defaultMessage="introduce" />
+                    <FormattedMessage id="app.test.introduce" defaultMessage="introduce" />
                   }
                 >
                   <Icon type="info-circle-o" />
@@ -308,7 +308,7 @@ class Analysis extends Component {
               footer={
                 <Field
                   label={
-                    <FormattedMessage id="app.analysis.day-sales" defaultMessage="Day Sales" />
+                    <FormattedMessage id="app.test.day-sales" defaultMessage="Day Sales" />
                   }
                   value={`￥${numeral(12423).format('0,0')}`}
                 />
@@ -316,11 +316,11 @@ class Analysis extends Component {
               contentHeight={46}
             >
               <Trend flag="up" style={{ marginRight: 16 }}>
-                <FormattedMessage id="app.analysis.week" defaultMessage="Weekly Changes" />
+                <FormattedMessage id="app.test.week" defaultMessage="Weekly Changes" />
                 <span className={styles.trendText}>12%</span>
               </Trend>
               <Trend flag="down">
-                <FormattedMessage id="app.analysis.day" defaultMessage="Daily Changes" />
+                <FormattedMessage id="app.test.day" defaultMessage="Daily Changes" />
                 <span className={styles.trendText}>11%</span>
               </Trend>
             </ChartCard>
@@ -329,11 +329,11 @@ class Analysis extends Component {
             <ChartCard
               bordered={false}
               loading={loading}
-              title={<FormattedMessage id="app.analysis.visits" defaultMessage="visits" />}
+              title={<FormattedMessage id="app.test.visits" defaultMessage="visits" />}
               action={
                 <Tooltip
                   title={
-                    <FormattedMessage id="app.analysis.introduce" defaultMessage="introduce" />
+                    <FormattedMessage id="app.test.introduce" defaultMessage="introduce" />
                   }
                 >
                   <Icon type="info-circle-o" />
@@ -343,7 +343,7 @@ class Analysis extends Component {
               footer={
                 <Field
                   label={
-                    <FormattedMessage id="app.analysis.day-visits" defaultMessage="Day Visits" />
+                    <FormattedMessage id="app.test.day-visits" defaultMessage="Day Visits" />
                   }
                   value={numeral(1234).format('0,0')}
                 />
@@ -357,11 +357,11 @@ class Analysis extends Component {
             <ChartCard
               bordered={false}
               loading={loading}
-              title={<FormattedMessage id="app.analysis.payments" defaultMessage="Payments" />}
+              title={<FormattedMessage id="app.test.payments" defaultMessage="Payments" />}
               action={
                 <Tooltip
                   title={
-                    <FormattedMessage id="app.analysis.introduce" defaultMessage="Introduce" />
+                    <FormattedMessage id="app.test.introduce" defaultMessage="Introduce" />
                   }
                 >
                   <Icon type="info-circle-o" />
@@ -372,7 +372,7 @@ class Analysis extends Component {
                 <Field
                   label={
                     <FormattedMessage
-                      id="app.analysis.conversion-rate"
+                      id="app.test.conversion-rate"
                       defaultMessage="Conversion Rate"
                     />
                   }
@@ -390,14 +390,14 @@ class Analysis extends Component {
               bordered={false}
               title={
                 <FormattedMessage
-                  id="app.analysis.operational-effect"
+                  id="app.test.operational-effect"
                   defaultMessage="Operational Effect"
                 />
               }
               action={
                 <Tooltip
                   title={
-                    <FormattedMessage id="app.analysis.introduce" defaultMessage="introduce" />
+                    <FormattedMessage id="app.test.introduce" defaultMessage="introduce" />
                   }
                 >
                   <Icon type="info-circle-o" />
@@ -407,11 +407,11 @@ class Analysis extends Component {
               footer={
                 <div style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
                   <Trend flag="up" style={{ marginRight: 16 }}>
-                    <FormattedMessage id="app.analysis.week" defaultMessage="Weekly changes" />
+                    <FormattedMessage id="app.test.week" defaultMessage="Weekly changes" />
                     <span className={styles.trendText}>12%</span>
                   </Trend>
                   <Trend flag="down">
-                    <FormattedMessage id="app.analysis.day" defaultMessage="Weekly changes" />
+                    <FormattedMessage id="app.test.day" defaultMessage="Weekly changes" />
                     <span className={styles.trendText}>11%</span>
                   </Trend>
                 </div>
@@ -427,7 +427,7 @@ class Analysis extends Component {
           <div className={styles.salesCard}>
             <Tabs tabBarExtraContent={salesExtra} size="large" tabBarStyle={{ marginBottom: 24 }}>
               <TabPane
-                tab={<FormattedMessage id="app.analysis.sales" defaultMessage="Sales" />}
+                tab={<FormattedMessage id="app.test.sales" defaultMessage="Sales" />}
                 key="sales"
               >
                 <Row>
@@ -437,7 +437,7 @@ class Analysis extends Component {
                         height={295}
                         title={
                           <FormattedMessage
-                            id="app.analysis.sales-trend"
+                            id="app.test.sales-trend"
                             defaultMessage="Sales Trend"
                           />
                         }
@@ -449,7 +449,7 @@ class Analysis extends Component {
                     <div className={styles.salesRank}>
                       <h4 className={styles.rankingTitle}>
                         <FormattedMessage
-                          id="app.analysis.sales-ranking"
+                          id="app.test.sales-ranking"
                           defaultMessage="Sales Ranking"
                         />
                       </h4>
@@ -477,7 +477,7 @@ class Analysis extends Component {
                 </Row>
               </TabPane>
               <TabPane
-                tab={<FormattedMessage id="app.analysis.visits" defaultMessage="Visits" />}
+                tab={<FormattedMessage id="app.test.visits" defaultMessage="Visits" />}
                 key="views"
               >
                 <Row>
@@ -487,7 +487,7 @@ class Analysis extends Component {
                         height={292}
                         title={
                           <FormattedMessage
-                            id="app.analysis.visits-trend"
+                            id="app.test.visits-trend"
                             defaultMessage="Visits Trend"
                           />
                         }
@@ -499,7 +499,7 @@ class Analysis extends Component {
                     <div className={styles.salesRank}>
                       <h4 className={styles.rankingTitle}>
                         <FormattedMessage
-                          id="app.analysis.visits-ranking"
+                          id="app.test.visits-ranking"
                           defaultMessage="Visits Ranking"
                         />
                       </h4>
@@ -527,7 +527,7 @@ class Analysis extends Component {
               bordered={false}
               title={
                 <FormattedMessage
-                  id="app.analysis.online-top-search"
+                  id="app.test.online-top-search"
                   defaultMessage="Online Top Search"
                 />
               }
@@ -540,13 +540,13 @@ class Analysis extends Component {
                     subTitle={
                       <span>
                         <FormattedMessage
-                          id="app.analysis.search-users"
+                          id="app.test.search-users"
                           defaultMessage="search users"
                         />
                         <Tooltip
                           title={
                             <FormattedMessage
-                              id="app.analysis.introduce"
+                              id="app.test.introduce"
                               defaultMessage="introduce"
                             />
                           }
@@ -566,7 +566,7 @@ class Analysis extends Component {
                   <NumberInfo
                     subTitle={
                       <FormattedMessage
-                        id="app.analysis.per-capita-search"
+                        id="app.test.per-capita-search"
                         defaultMessage="Per Capita Search"
                       />
                     }
@@ -597,7 +597,7 @@ class Analysis extends Component {
               bordered={false}
               title={
                 <FormattedMessage
-                  id="app.analysis.the-proportion-of-sales"
+                  id="app.test.the-proportion-of-sales"
                   defaultMessage="The Proportion of Sales"
                 />
               }
@@ -608,17 +608,17 @@ class Analysis extends Component {
                   <div className={styles.salesTypeRadio}>
                     <Radio.Group value={salesType} onChange={this.handleChangeSalesType}>
                       <Radio.Button value="all">
-                        <FormattedMessage id="app.analysis.channel.all" defaultMessage="ALL" />
+                        <FormattedMessage id="app.test.channel.all" defaultMessage="ALL" />
                       </Radio.Button>
                       <Radio.Button value="online">
                         <FormattedMessage
-                          id="app.analysis.channel.online"
+                          id="app.test.channel.online"
                           defaultMessage="Online"
                         />
                       </Radio.Button>
                       <Radio.Button value="stores">
                         <FormattedMessage
-                          id="app.analysis.channel.stores"
+                          id="app.test.channel.stores"
                           defaultMessage="Stores"
                         />
                       </Radio.Button>
@@ -629,11 +629,11 @@ class Analysis extends Component {
               style={{ marginTop: 24, minHeight: 509 }}
             >
               <h4 style={{ marginTop: 8, marginBottom: 32 }}>
-                <FormattedMessage id="app.analysis.sales" defaultMessage="Sales" />
+                <FormattedMessage id="app.test.sales" defaultMessage="Sales" />
               </h4>
               <Pie
                 hasLegend
-                subTitle={<FormattedMessage id="app.analysis.sales" defaultMessage="Sales" />}
+                subTitle={<FormattedMessage id="app.test.sales" defaultMessage="Sales" />}
                 total={() => <Yuan>{salesPieData.reduce((pre, now) => now.y + pre, 0)}</Yuan>}
                 data={salesPieData}
                 valueFormat={value => <Yuan>{value}</Yuan>}
@@ -659,8 +659,8 @@ class Analysis extends Component {
                     height={400}
                     data={offlineChartData}
                     titleMap={{
-                      y1: formatMessage({ id: 'app.analysis.traffic' }),
-                      y2: formatMessage({ id: 'app.analysis.payments' }),
+                      y1: formatMessage({ id: 'app.test.traffic' }),
+                      y2: formatMessage({ id: 'app.test.payments' }),
                     }}
                   />
                 </div>
@@ -673,4 +673,4 @@ class Analysis extends Component {
   }
 }
 
-export default Analysis;
+export default Test;

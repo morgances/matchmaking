@@ -2,8 +2,8 @@ import { getBreadcrumb } from './index';
 import { urlToList } from '../_utils/pathTools';
 
 const routerData = {
-  '/dashboard/analysis': {
-    name: '分析页',
+  '/homePage/test': {
+    name: '测试题',
   },
   '/userinfo': {
     name: '用户列表',
@@ -17,7 +17,7 @@ const routerData = {
 };
 describe('test getBreadcrumb', () => {
   it('Simple url', () => {
-    expect(getBreadcrumb(routerData, '/dashboard/analysis').name).toEqual('分析页');
+    expect(getBreadcrumb(routerData, '/homePage/test').name).toEqual('测试题');
   });
   it('Parameters url', () => {
     expect(getBreadcrumb(routerData, '/userinfo/2144').name).toEqual('用户信息');

@@ -35,7 +35,7 @@ let routes = [
   },
   {
     "path": "/",
-    "redirect": "/dashboard/analysis",
+    "redirect": "/homePage/test",
     "exact": true
   },
   {
@@ -45,16 +45,6 @@ let routes = [
       {
         "path": "/user/login",
         "component": dynamic({ loader: () => import('../User/Login'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-        "exact": true
-      },
-      {
-        "path": "/user/register",
-        "component": dynamic({ loader: () => import('../User/Register'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-        "exact": true
-      },
-      {
-        "path": "/user/register-result",
-        "component": dynamic({ loader: () => import('../User/RegisterResult'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
         "exact": true
       },
       {
@@ -72,26 +62,32 @@ let routes = [
     ],
     "routes": [
       {
-        "path": "/dashboard",
-        "name": "dashboard",
-        "icon": "dashboard",
+        "path": "/homePage",
+        "name": "homePage",
+        "icon": "home",
         "routes": [
           {
-            "path": "/dashboard/analysis",
-            "name": "analysis",
-            "component": dynamic({ loader: () => import('../Dashboard/Analysis'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
+            "path": "/homePage/test",
+            "name": "test",
+            "component": dynamic({ loader: () => import('../HomePage/Test'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
             "exact": true
           },
           {
-            "path": "/dashboard/monitor",
-            "name": "monitor",
-            "component": dynamic({ loader: () => import('../Dashboard/Monitor'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
+            "path": "/homePage/onlineRegistration",
+            "name": "onlineRegistration",
+            "component": dynamic({ loader: () => import('../HomePage/OnlineRegistration'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
             "exact": true
           },
           {
-            "path": "/dashboard/workplace",
-            "name": "workplace",
-            "component": dynamic({ loader: () => import('../Dashboard/Workplace'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
+            "path": "/homePage/happinessShow",
+            "name": "happinessShow",
+            "component": dynamic({ loader: () => import('../HomePage/HappinessShow'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
+            "exact": true
+          },
+          {
+            "path": "/homePage/reservationConsultation",
+            "name": "reservationConsultation",
+            "component": dynamic({ loader: () => import('../HomePage/ReservationConsultation'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
             "exact": true
           },
           {
