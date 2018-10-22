@@ -20,12 +20,12 @@ import (
 
 type (
 	post struct {
-		ID      int64     `json:"id"`
+		ID      uint32    `json:"id"`
 		OpenID  string    `json:"open_id"`
 		Title   string    `json:"title"`
 		Content string    `json:"content"`
 		Date    time.Time `json:"date"`
-		Commend int64     `json:"commend"`
+		Commend uint32    `json:"commend"`
 		Images  []string  `json:"Images"`
 	}
 )
@@ -34,7 +34,7 @@ func CreatePost(this *server.Context) error {
 	var (
 		err    error
 		openid string
-		postId int64
+		postId uint32
 	)
 	authorization := this.GetHeader("Authorization")
 	openid, _, _, err = wx.ParseToken(authorization)
@@ -54,7 +54,7 @@ func CreatePost(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 
-	if err = util.SavePostImages(int(postId), this.Request()); err != nil {
+	if err = util.SavePostImages(postId, this.Request()); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrSaveImage, nil)
 	}

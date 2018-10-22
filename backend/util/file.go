@@ -65,12 +65,12 @@ func RemovePhotosIfExist(openid string, photos []string) {
 
 // operate post image -----------------------------------------------
 
-func SavePostImages(id int, r *http.Request) error {
+func SavePostImages(id uint32, r *http.Request) error {
 	return SaveImages(fmt.Sprintf("./post/%d/", id), r)
 }
 
 // ClearPostImages if exist
-func ClearPostImages(postid int64) error {
+func ClearPostImages(postid uint32) error {
 	err := os.RemoveAll(fmt.Sprintf("./post/%d", postid))
 	if err != nil {
 		return errors.New(fmt.Sprintf("ClearPostImages ./post/%d/ :", postid) + err.Error())
@@ -80,11 +80,11 @@ func ClearPostImages(postid int64) error {
 
 // operate goods image--------------------------------------------------
 
-func ChangeGoodsImage(goodsid int, avatar multipart.File) error {
+func ChangeGoodsImage(goodsid uint32, avatar multipart.File) error {
 	return SaveImage(fmt.Sprintf("./goods/%d.jpg", goodsid), avatar)
 }
 
-func RemoveGoodsImage(goodsid int64) error {
+func RemoveGoodsImage(goodsid uint32) error {
 	return os.RemoveAll(fmt.Sprintf("./goods/%d.jpg", goodsid))
 }
 

@@ -18,9 +18,9 @@ import (
 
 type (
 	tradeForResp struct {
-		ID        int64     `json:"id"`
+		ID        uint32    `json:"id"`
 		OpenID    string    `json:"open_id"`
-		GoodsID   int64     `json:"goods_id"`
+		GoodsID   uint32    `json:"goods_id"`
 		BuyerName string    `json:"buyer_name"`
 		GoodsName string    `json:"goods_name"`
 		DateTime  time.Time `json:"date_time"`

@@ -21,11 +21,11 @@ import (
 
 type (
 	recharge struct {
-		ID            int
+		ID            uint32
 		OpenID        string
 		Project       string
-		Num           int
-		Fee           int
+		Num           uint32
+		Fee           uint32
 		TransactionID string
 		Status        uint8
 	}
@@ -36,7 +36,7 @@ func RechargeVip(this *server.Context) error {
 		err            error
 		openid         string
 		spbillCreateIp string
-		outTradeNo     int
+		outTradeNo     uint32
 		resp           struct {
 			PrepayID string `json:"prepay_id"`
 		}
@@ -54,7 +54,7 @@ func RechargeVip(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	unifyOrderResp, err := wx.SetOrder(wx.VipOrderInfo(spbillCreateIp, strconv.Itoa(outTradeNo), openid))
+	unifyOrderResp, err := wx.SetOrder(wx.VipOrderInfo(spbillCreateIp, strconv.Itoa(int(outTradeNo)), openid))
 	if err != nil {
 		log.Error(err)
 		if err = model.RechargeService.Fail(outTradeNo); err != nil {
@@ -78,9 +78,9 @@ func RechargeRose(this *server.Context) error {
 		err            error
 		openid         string
 		spbillCreateIp string
-		outTradeNo     int
+		outTradeNo     uint32
 		req            struct {
-			RoseNum int `json:"rose_num" validate:"required,gte=1"`
+			RoseNum uint32 `json:"rose_num" validate:"required,gte=1"`
 		}
 		resp struct {
 			PrepayID string `json:"prepay_id"`
@@ -108,7 +108,7 @@ func RechargeRose(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	unifyOrderResp, err := wx.SetOrder(wx.RoseOrder(spbillCreateIp, strconv.Itoa(outTradeNo), openid, req.RoseNum))
+	unifyOrderResp, err := wx.SetOrder(wx.RoseOrder(spbillCreateIp, strconv.Itoa(int(outTradeNo)), openid, req.RoseNum))
 	if err != nil {
 		log.Error(err)
 		if err = model.RechargeService.Fail(outTradeNo); err != nil {

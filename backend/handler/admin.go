@@ -23,7 +23,7 @@ type (
 	}
 
 	targetID struct {
-		TargetID int64 `json:"target_id" validate:"required,gte=1"`
+		TargetID uint32 `json:"target_id" validate:"required,gte=1"`
 	}
 )
 

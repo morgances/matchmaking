@@ -8,7 +8,6 @@
 package handler
 
 import (
-	"fmt"
 	"mime/multipart"
 
 	"github.com/TechCatsLab/apix/http/server"
@@ -52,9 +51,9 @@ type (
 		Certified        bool    `json:"certified"`
 		Vip              bool    `json:"vip"`
 		Points           float64 `json:"points"`
-		Rose             int64   `json:"rose"`
-		Charm            int64   `json:"charm"`
-		DatePrivilege    int64   `json:"date_privilege"`
+		Rose             uint32  `json:"rose"`
+		Charm            uint32  `json:"charm"`
+		DatePrivilege    uint32  `json:"date_privilege"`
 	}
 
 	fillInfo struct {
@@ -148,9 +147,6 @@ func FillInfo(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-
-	fmt.Println(oid)
-
 	if err = this.JSONBody(&req); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
@@ -442,7 +438,7 @@ func SendRose(this *server.Context) error {
 	var (
 		req struct {
 			Reciever string `json:"reciever" validate:"required,len=28"`
-			RoseNum  int    `json:"rose_num" validate:"required,gte=1"`
+			RoseNum  uint32 `json:"rose_num" validate:"required,gte=1"`
 		}
 	)
 	authorization := this.GetHeader("Authorization")

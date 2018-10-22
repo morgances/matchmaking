@@ -27,64 +27,64 @@ func init() {
 
 	Router.Post("/matchmaking/user/wechatlogin", handler.WechatLogin)
 	Router.Post("/matchmaking/user/fillinfo", handler.FillInfo)
-	Router.Post("/matchmaking/user/userchangeinfo", handler.UserChangeInfo)
+	Router.Post("/matchmaking/user/modifyinfo", handler.UserChangeInfo)
+	Router.Post("/matchmaking/user/changeavatar", handler.ChangeAvatar)
 	Router.Post("/matchmaking/user/uploadphotos", handler.UploadPhotos)
 	Router.Post("/matchmaking/user/removephotos", handler.RemovePhotos)
-	Router.Post("/matchmaking/user/changeavatar", handler.ChangeAvatar)
 	Router.Post("/matchmaking/user/sendrose", handler.SendRose)
-	Router.Post("/matchmaking/user/getalbum", handler.GetAlbum)           // 							 	 todo: use Get ?
-	Router.Post("/matchmaking/user/getuserdetail", handler.GetUserDetail) // both user and admin		 	 todo: use Get ?
-	Router.Get("/matchmaking/user/getrecommendusers", handler.GetRecommendUsers)
+	Router.Post("/matchmaking/user/album", handler.GetAlbum)           									// todo: use Get
+	Router.Post("/matchmaking/user/userdetail", handler.GetUserDetail) 		 // both user and admin		 	todo: use Get
+	Router.Get("/matchmaking/user/recommendusers", handler.GetRecommendUsers)
 
 	Router.Post("/matchmaking/comment/insert", handler.CommentService.Insert)
 	Router.Post("/matchmaking/comment/change", handler.CommentService.ChangeContent)
-	Router.Post("/matchmaking/comment/commentsofuser", handler.CommentService.ListCommentsByUserID) // 		 todo: use Get ?
-	Router.Post("/matchmaking/comment/commentsofpost", handler.CommentService.ListCommentsByTarget) // 		 todo: use Get ?
+	Router.Post("/matchmaking/comment/ofuser", handler.CommentService.ListCommentsByUserID) 				// todo: use Get
+	Router.Post("/matchmaking/comment/ofpost", handler.CommentService.ListCommentsByTarget) 				// todo: use Get
 
 	Router.Post("/matchmaking/follow/follow", handler.Follow)
 	Router.Post("/matchmaking/follow/unfollow", handler.Unfollow)
-	Router.Get("/matchmaking/follow/getfollowing", handler.GetFollowing)
-	Router.Get("/matchmaking/follow/getfollower", handler.GetFollower)
+	Router.Get("/matchmaking/follow/following", handler.GetFollowing)
+	Router.Get("/matchmaking/follow/follower", handler.GetFollower)
 
-	Router.Post("/matchmaking/goods/getgoodsbyid", handler.GetGoodsByID)      // both user and admin       	 todo: use Get ?
-	Router.Get("/matchmaking/goods/getgoodsbyprice", handler.GetGoodsByPrice) // both user and admin
+	Router.Post("/matchmaking/goods/byid", handler.GetGoodsByID)      		 // both user and admin 		todo: use Get
+	Router.Get("/matchmaking/goods/byprice", handler.GetGoodsByPrice) 		 // both user and admin
 
-	Router.Post("/matchmaking/post/createpost", handler.CreatePost)
-	Router.Post("/matchmaking/post/commendpost", handler.CommendPost)
-	Router.Post("/matchmaking/post/deletepost", handler.DeletePost)
-	Router.Get("/matchmaking/post/getreviewedpost", handler.GetReviewedPost) // both user and admin
-	Router.Get("/matchmaking/post/getmypost", handler.GetMyPost)
+	Router.Post("/matchmaking/post/create", handler.CreatePost)
+	Router.Post("/matchmaking/post/commend", handler.CommendPost)
+	Router.Post("/matchmaking/post/delete?isadmin=false", handler.DeletePost)
+	Router.Get("/matchmaking/post/many?isreviewed=true", handler.GetReviewedPost)  		// both user and admin
+	Router.Get("/matchmaking/post/mine", handler.GetMyPost)
 
 	Router.Post("/matchmaking/signin/signin", handler.Signin)
-	Router.Get("/matchmaking/signin/getsigninrecord", handler.GetSigninRecord)
+	Router.Get("/matchmaking/signin/mysigninrecord", handler.GetSigninRecord)
 
-	Router.Post("/matchmaking/trade/createtrade", handler.CreateTrade)
-	Router.Get("/matchmaking/trade/getmytrades", handler.GetMyTrades)
+	Router.Post("/matchmaking/trade/create", handler.CreateTrade)
+	Router.Get("/matchmaking/trade/mytrades", handler.GetMyTrades)
 
-	Router.Post("/matchmaking/recharge/rechargevip", handler.RechargeVip)
-	Router.Post("/matchmaking/recharge/rechargerose", handler.RechargeRose)
+	Router.Post("/matchmaking/recharge/vip", handler.RechargeVip)
+	Router.Post("/matchmaking/recharge/rose", handler.RechargeRose)
 
 	// for admin below ====================================================================
-	Router.Get("/matchmaking/admin/login", handler.Login)
-	Router.Post("/matchmaking/admin/certify", handler.Certify)
-	Router.Post("/matchmaking/admin/dateprivilegereduce", handler.DatePrivilegeReduce)
-	Router.Post("/matchmaking/admin/dateprivilegeadd", handler.DatePrivilegeAdd)
-	Router.Post("/matchmaking/admin/getcontact", handler.GetContact) // 									 todo: use Get ?
+	Router.Post("/matchmaking/admin/login", handler.Login)
+	Router.Post("/matchmaking/user/certifypass", handler.Certify)
+	Router.Post("/matchmaking/user/dateprivilegereduce", handler.DatePrivilegeReduce)
+	Router.Post("/matchmaking/user/dateprivilegeadd", handler.DatePrivilegeAdd)
+	Router.Post("/matchmaking/user/contacts", handler.GetContact)											 // todo: use Get ?
 
-	Router.Get("/matchmaking/admin/getunfinishedtrade", handler.GetUnfinishedTrade)
-	Router.Post("/matchmaking/admin/canceltrade", handler.CancelTrade)
-	Router.Post("/matchmaking/admin/updatetradestatus", handler.UpdateTradeStatus)
+	Router.Get("/matchmaking/trade/unfinished", handler.GetUnfinishedTrade)
+	Router.Post("/matchmaking/trade/cancel", handler.CancelTrade)
+	Router.Post("/matchmaking/trade/updatestatus", handler.UpdateTradeStatus)
 
-	Router.Get("/matchmaking/admin/getunreviewedpost", handler.GetUnreviewedPost)
-	Router.Post("/matchmaking/admin/updatepoststatus", handler.UpdatePostStatus)
-	Router.Post("/matchmaking/admin/admindeletepost", handler.AdminDeletePost)
+	Router.Get("/matchmaking/post/many?isreviewed=false", handler.GetUnreviewedPost)
+	Router.Post("/matchmaking/post/updatestatus", handler.UpdatePostStatus)
+	Router.Post("/matchmaking/post/delete?isadmin=true", handler.AdminDeletePost)
 
-	Router.Post("/matchmaking/goods/creategoods", handler.CreateGoods)
-	Router.Post("/matchmaking/goods/updategoods", handler.UpdateGoods)
-	Router.Post("/matchmaking/goods/changegoodsimage", handler.ChangeGoodsImage)
-	Router.Post("/matchmaking/goods/deletegoods", handler.DeleteGoods)
+	Router.Post("/matchmaking/goods/create", handler.CreateGoods)
+	Router.Post("/matchmaking/goods/update", handler.UpdateGoods)
+	Router.Post("/matchmaking/goods/changeimage", handler.ChangeGoodsImage)
+	Router.Post("/matchmaking/goods/delete", handler.DeleteGoods)
 
-	Router.Get("/matchmaking/recharge/GetRechargeRecord", handler.GetRechargeRecord)
+	Router.Get("/matchmaking/recharge/record", handler.GetRechargeRecord)
 
 	// for wechat notify ====================================================================
 	Router.Post(constant.NotifyUrl, handler.PayResult)

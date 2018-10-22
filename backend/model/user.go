@@ -41,10 +41,10 @@ type (
 		Constellation string
 		Certified     bool
 		Vip           bool
-		DatePrivilege int64
+		DatePrivilege uint32
 		Points        float64
-		Rose          int64
-		Charm         int64
+		Rose          uint32
+		Charm         uint32
 	}
 )
 
@@ -168,7 +168,7 @@ func (userServPrvd) DatePrivilegeReduce(oid string) error {
 	return err
 }
 
-func (userServPrvd) DatePrivilegeAdd(oid string, num int64) error {
+func (userServPrvd) DatePrivilegeAdd(oid string, num uint32) error {
 	rslt, err := DB.Exec(`UPDATE `+conf.MMConf.Database+`.user SET date_privilege=date_privilege+? WHERE open_id=? LIMIT 1`,
 		num, oid,
 	)
@@ -206,7 +206,7 @@ func (userServPrvd) Update(u *User) error {
 	return err
 }
 
-func (userServPrvd) SendRose(sender, recer string, num int) error {
+func (userServPrvd) SendRose(sender, recer string, num uint32) error {
 	var (
 		err         error
 		errSendRose = errors.New("SendRose: failed to send rose")

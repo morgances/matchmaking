@@ -21,7 +21,7 @@ import (
 
 type (
 	goodsResp struct {
-		ID          int64   `json:"id"`
+		ID          uint32  `json:"id"`
 		Title       string  `json:"title"`
 		Price       float64 `json:"price"`
 		Description string  `json:"description"`
@@ -32,7 +32,7 @@ func CreateGoods(this *server.Context) error {
 	var (
 		err     error
 		isAdmin bool
-		lastId  int64
+		lastId  uint32
 	)
 	authorization := this.GetHeader("Authorization")
 	_, _, isAdmin, err = wx.ParseToken(authorization)
@@ -131,7 +131,7 @@ func UpdateGoods(this *server.Context) error {
 		err     error
 		isAdmin bool
 		req     struct {
-			ID          int64   `json:"id" validate:"required,gte=1"`
+			ID          uint32  `json:"id" validate:"required,gte=1"`
 			Title       string  `json:"title" validate:"required"`
 			Price       float64 `json:"price" validate:"required,gte=1"`
 			Description string  `json:"description"`
@@ -172,8 +172,9 @@ func ChangeGoodsImage(this *server.Context) error {
 	var (
 		err     error
 		isAdmin bool
+		gid     int
 		req     struct {
-			goodsID    int            // key: goods_id
+			goodsID    uint32         // key: goods_id
 			goodsImage multipart.File // key: goods_image
 		}
 	)
@@ -192,7 +193,8 @@ func ChangeGoodsImage(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
-	req.goodsID, err = strconv.Atoi(this.FormValue("goods_id"))
+	gid, err = strconv.Atoi(this.FormValue("goods_id"))
+	req.goodsID = uint32(gid)
 
 	if err = util.ChangeGoodsImage(req.goodsID, req.goodsImage); err != nil {
 		log.Error(err)

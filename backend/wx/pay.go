@@ -26,7 +26,7 @@ type OrderInfo struct {
 	MchID          string
 	NonceStr       string
 	SpbillCreateIP string
-	TotalFee       int
+	TotalFee       uint32
 	OutTradeNo     string
 	NotifyUrl      string
 	TradeType      string
@@ -52,7 +52,7 @@ func VipOrderInfo(spbillCreateIP, outTradeNo, openID string) *OrderInfo {
 	}
 }
 
-func RoseOrder(spbillCreateIP, outTradeNo, openID string, num int) *OrderInfo {
+func RoseOrder(spbillCreateIP, outTradeNo, openID string, num uint32) *OrderInfo {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	return &OrderInfo{
 		AppID:     conf.MMConf.AppID,
@@ -72,7 +72,7 @@ func RoseOrder(spbillCreateIP, outTradeNo, openID string, num int) *OrderInfo {
 
 func SetOrder(orderinfo *OrderInfo) (*wechat.UnifyOrderResp, error) {
 	return wechat.SetOrder(orderinfo.AppID, orderinfo.Body, orderinfo.MchID, orderinfo.NonceStr, orderinfo.SpbillCreateIP,
-		orderinfo.TotalFee, orderinfo.OutTradeNo, orderinfo.NotifyUrl, orderinfo.TradeType, orderinfo.OpenID, orderinfo.Key)
+		int(orderinfo.TotalFee), orderinfo.OutTradeNo, orderinfo.NotifyUrl, orderinfo.TradeType, orderinfo.OpenID, orderinfo.Key)
 }
 
 // f(Out_trade_no,Transaction_id,Result_code)
@@ -87,12 +87,12 @@ func HandleRecharge(outTradeNo, transactionID, resultCode string) {
 	}
 	switch resultCode {
 	case "SUCCESS":
-		err = model.RechargeService.Success(outNum, transactionID)
+		err = model.RechargeService.Success(uint32(outNum), transactionID)
 		if err != nil {
 			log.Error("HandleRecharge: ", err)
 		}
 	case "FAIL":
-		err = model.RechargeService.Fail(outNum)
+		err = model.RechargeService.Fail(uint32(outNum))
 		if err != nil {
 			log.Error("HandleRecharge: ", err)
 		}

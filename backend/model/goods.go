@@ -17,7 +17,7 @@ type (
 	goodsServPrvd struct{}
 
 	Goods struct {
-		ID          int64
+		ID          uint32
 		Title       string
 		Price       float64
 		Description string
@@ -28,7 +28,7 @@ var (
 	GoodsService goodsServPrvd
 )
 
-func (goodsServPrvd) Insert(g *Goods) (int64, error) {
+func (goodsServPrvd) Insert(g *Goods) (uint32, error) {
 	result, err := DB.Exec(
 		`INSERT INTO `+conf.MMConf.Database+`.goods(title,price,description)
 					VALUES(?,?,?)`,
@@ -42,10 +42,10 @@ func (goodsServPrvd) Insert(g *Goods) (int64, error) {
 	if err != nil {
 		return 0, err
 	}
-	return lastId, err
+	return uint32(lastId), err
 }
 
-func (goodsServPrvd) FindByID(id int64) (g *Goods, err error) {
+func (goodsServPrvd) FindByID(id uint32) (g *Goods, err error) {
 	row := DB.QueryRow(
 		`SELECT * FROM `+conf.MMConf.Database+`.goods WHERE id=? LOCK IN SHARE MODE`,
 		id,
@@ -92,7 +92,7 @@ func (goodsServPrvd) Update(g *Goods) error {
 	return err
 }
 
-func (goodsServPrvd) DeleteByID(id int64) error {
+func (goodsServPrvd) DeleteByID(id uint32) error {
 	_, err := DB.Exec(
 		`DELETE FROM `+conf.MMConf.Database+`.goods WHERE id=? LIMIT 1`,
 		id,

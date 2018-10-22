@@ -16,11 +16,11 @@ type (
 	rechargeServPrvd struct{}
 
 	Recharge struct {
-		ID            int
+		ID            uint32
 		OpenID        string
 		Project       string
-		Num           int
-		Fee           int
+		Num           uint32
+		Fee           uint32
 		TransactionID string
 		Status        uint8
 	}
@@ -31,8 +31,8 @@ var (
 )
 
 // Insert limit recharge project value to 'vip' and 'rose', num regard as 1 when proj='vip'
-func (rechargeServPrvd) Insert(proj, openid string, num int) (id int, err error) {
-	fee := 0
+func (rechargeServPrvd) Insert(proj, openid string, num uint32) (id uint32, err error) {
+	var fee uint32= 0
 	switch proj {
 	case "vip":
 		fee = conf.MMConf.VIPFee
@@ -52,7 +52,7 @@ func (rechargeServPrvd) Insert(proj, openid string, num int) (id int, err error)
 	}
 	var lastid int64
 	lastid, err = rslt.LastInsertId()
-	return int(lastid), err
+	return uint32(lastid), err
 }
 
 func (rechargeServPrvd) FindAll() ([]Recharge, error) {
@@ -76,7 +76,7 @@ func (rechargeServPrvd) FindAll() ([]Recharge, error) {
 	return rchgs, nil
 }
 
-func (rechargeServPrvd) Success(id int, transid string) error {
+func (rechargeServPrvd) Success(id uint32, transid string) error {
 	info, err := RechargeService.findByID(id)
 	if err != nil {
 		return errors.New("Success: " + err.Error())
@@ -91,12 +91,12 @@ func (rechargeServPrvd) Success(id int, transid string) error {
 	}
 }
 
-func (rechargeServPrvd) Fail(id int) error {
+func (rechargeServPrvd) Fail(id uint32) error {
 	_, err := DB.Exec(`UPDATE `+conf.MMConf.Database+`.recharge SET status=2 WHERE id=? LIMIT 1`, id)
 	return err
 }
 
-func (rechargeServPrvd) findByID(id int) (*Recharge, error) {
+func (rechargeServPrvd) findByID(id uint32) (*Recharge, error) {
 	row := DB.QueryRow(
 		`SELECT * FROM `+conf.MMConf.Database+`.recharge WHERE id=? LOCK IN SHARE MODE`,
 		id,
@@ -109,7 +109,7 @@ func (rechargeServPrvd) findByID(id int) (*Recharge, error) {
 	return rchg, nil
 }
 
-func upgradeVip(id int, openid, transid string) error {
+func upgradeVip(id uint32, openid, transid string) error {
 	var tx *sql.Tx
 	tx, err := DB.Begin()
 	if err != nil {
@@ -151,7 +151,7 @@ func upgradeVip(id int, openid, transid string) error {
 	return tx.Commit()
 }
 
-func rechargeRose(id, num int, openid, transid string) error {
+func rechargeRose(id, num uint32, openid, transid string) error {
 	var tx *sql.Tx
 	tx, err := DB.Begin()
 	if err != nil {

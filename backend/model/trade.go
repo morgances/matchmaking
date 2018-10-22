@@ -24,9 +24,9 @@ type (
 	tradeServPrvd struct{}
 
 	Trade struct {
-		ID        int64
+		ID        uint32
 		OpenID    string
-		GoodsID   int64
+		GoodsID   uint32
 		BuyerName string
 		GoodsName string
 		DateTime  time.Time
@@ -99,7 +99,7 @@ func (tradeServPrvd) Cancel(t *Trade) error {
 	return tx.Commit()
 }
 
-func (tradeServPrvd) FindByID(id int64) (*Trade, error) {
+func (tradeServPrvd) FindByID(id uint32) (*Trade, error) {
 	row := DB.QueryRow(
 		`SELECT * FROM `+conf.MMConf.Database+`.trade WHERE id=? LOCK IN SHARE MODE`,
 		id,
@@ -158,7 +158,7 @@ func (tradeServPrvd) FindUnfinishedTrade() (ts []Trade, err error) {
 	return ts, nil
 }
 
-func (tradeServPrvd) UpdateTradeStatus(id int64) error {
+func (tradeServPrvd) UpdateTradeStatus(id uint32) error {
 	_, err := DB.Exec(
 		`UPDATE `+conf.MMConf.Database+`.trade SET finished=1 WHERE id=? LIMIT 1`,
 		id,

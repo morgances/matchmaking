@@ -19,12 +19,12 @@ type (
 	postServPrvd struct{}
 
 	Post struct {
-		ID       int64
+		ID       uint32
 		OpenID   string
 		Title    string
 		Content  string
 		DateTime time.Time
-		Commend  int64
+		Commend  uint32
 		Reviewed bool
 	}
 )
@@ -33,7 +33,7 @@ var (
 	PostService postServPrvd
 )
 
-func (postServPrvd) Insert(p *Post) (int64, error) {
+func (postServPrvd) Insert(p *Post) (uint32, error) {
 	result, err := DB.Exec(
 		`INSERT INTO `+conf.MMConf.Database+`.post(open_id,title,content,date_time)
 					VALUES(?,?,?,NOW())
@@ -47,10 +47,10 @@ func (postServPrvd) Insert(p *Post) (int64, error) {
 	if err != nil {
 		return 0, err
 	}
-	return lastId, nil
+	return uint32(lastId), nil
 }
 
-func (postServPrvd) FindByID(id int64) (p *Post, err error) {
+func (postServPrvd) FindByID(id uint32) (p *Post, err error) {
 	row := DB.QueryRow(
 		`SELECT * FROM `+conf.MMConf.Database+`.post WHERE id=? LOCK IN SHARE MODE`,
 		id,
@@ -131,7 +131,7 @@ func (postServPrvd) FindReviewed() (ps []Post, err error) {
 	return ps, nil
 }
 
-func (postServPrvd) UpdatePostStatus(id int64) error {
+func (postServPrvd) UpdatePostStatus(id uint32) error {
 	_, err := DB.Exec(
 		`UPDATE `+conf.MMConf.Database+`.post SET reviewed=1 WHERE id=? LIMIT 1`,
 		id,
@@ -139,7 +139,7 @@ func (postServPrvd) UpdatePostStatus(id int64) error {
 	return err
 }
 
-func (postServPrvd) Commend(id int64) error {
+func (postServPrvd) Commend(id uint32) error {
 	_, err := DB.Exec(
 		`UPDATE `+conf.MMConf.Database+`.post SET commend=commend+1 WHERE id=? LIMIT 1`,
 		id,
@@ -147,7 +147,7 @@ func (postServPrvd) Commend(id int64) error {
 	return err
 }
 
-func (postServPrvd) DeleteByID(id int64) error {
+func (postServPrvd) DeleteByID(id uint32) error {
 	_, err := DB.Exec(
 		`DELETE FROM `+conf.MMConf.Database+`.post WHERE id=? LIMIT 1`,
 		id,
@@ -155,7 +155,7 @@ func (postServPrvd) DeleteByID(id int64) error {
 	return err
 }
 
-func (postServPrvd) DeleteByOpenIDAndID(oid string, id int64) error {
+func (postServPrvd) DeleteByOpenIDAndID(oid string, id uint32) error {
 	_, err := DB.Exec(
 		`DELETE FROM `+conf.MMConf.Database+`.post WHERE open_id=? AND id=? LIMIT 1`,
 		oid, id,
