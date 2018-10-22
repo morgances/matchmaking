@@ -13,7 +13,6 @@ import (
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
-	"github.com/morgances/matchmaking/backend/wx"
 	"github.com/zh1014/comment/response"
 	"github.com/dgrijalva/jwt-go"
 )
@@ -33,7 +32,7 @@ func Login(this *server.Context) error {
 		resp token
 	)
 	authorization := this.GetHeader("Authorization")
-	acc, pass, err := wx.ParseBase64(authorization)
+	acc, pass, err := util.ParseBase64(authorization)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
@@ -42,7 +41,7 @@ func Login(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrAccount, nil)
 	}
-	if resp.Token, err = wx.NewToken("admin", 1, true); err != nil {
+	if resp.Token, err = util.NewToken("admin", 1, true); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}

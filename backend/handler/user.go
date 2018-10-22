@@ -126,7 +126,7 @@ func WechatLogin(this *server.Context) error {
 	}
 	util.SaveWechatAvatar(userData.OpenID, userData.HeadImgURL)
 
-	resp.Token, err = wx.NewToken(wechatData.OpenID, uint8(userData.Sex), false)
+	resp.Token, err = util.NewToken(wechatData.OpenID, uint8(userData.Sex), false)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
