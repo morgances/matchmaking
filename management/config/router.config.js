@@ -24,7 +24,7 @@ export default [
         routes: [
           {
             path: '/userpage/information',
-            name: 'userpage',
+            name: 'information',
             component: './UserPage/Information',
           },
         ],

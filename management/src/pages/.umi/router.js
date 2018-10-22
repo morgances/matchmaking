@@ -68,7 +68,7 @@ let routes = [
         "routes": [
           {
             "path": "/userpage/information",
-            "name": "userpage",
+            "name": "information",
             "component": dynamic({ loader: () => import('../UserPage/Information'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
             "exact": true
           },
