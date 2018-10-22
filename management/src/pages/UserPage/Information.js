@@ -26,8 +26,8 @@ class Information extends Component {
       <div>
         <Search
           className={styles.searchFrame}
-          placeholder="输入想要查询的强奸犯"
-          enterButton="Search"
+          placeholder="输入想要查询的强奸犯ID"
+          enterButton
           size="large"
           onSearch={value =>console.log(value)}
         />
@@ -35,23 +35,6 @@ class Information extends Component {
         <div className={styles.showDetails}>
           <div>
             <UserPage item={this.props.information[0]}/>
-            <UserPage item={this.props.information[1]}/>
-            <UserPage item={this.props.information[2]}/>
-            <UserPage item={this.props.information[3]}/>
-            <UserPage item={this.props.information[4]}/>
-            <UserPage item={this.props.information[5]}/>
-            <UserPage item={this.props.information[6]}/>
-            <UserPage item={this.props.information[7]}/>
-            <UserPage item={this.props.information[8]}/>
-            <UserPage item={this.props.information[9]}/>
-            <UserPage item={this.props.information[10]}/>
-            <UserPage item={this.props.information[11]}/>
-            <UserPage item={this.props.information[12]}/>
-            <UserPage item={this.props.information[13]}/>
-            <UserPage item={this.props.information[14]}/>
-            <UserPage item={this.props.information[15]}/>
-            <UserPage item={this.props.information[16]}/>
-            <UserPage item={this.props.information[17]}/>
           </div>
 
           <div className={styles.buttonGroup}>

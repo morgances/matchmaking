@@ -3,59 +3,24 @@ export default {
 
   state: {
     information: [{
-      title: 'ID：',
-      content: '12345678'
-    },{
-      title: 'NickName：',
-      content: '刘琦琦琦',
-    },{
-      title: 'RealName：',
-      content: '刘琦',
-    },{
-      title: 'Sex：',
-      content: '男的，雄性',
-    },{
-      title: 'Age：',
-      content: '23，内心是32岁',
-    },{
-      title: 'Height：',
-      content: '身高1米78，脱了鞋1米7',
-    },{
-      title: 'Location：',
-      content: '家乡是河北承德',
-    },{
-      title: 'Job：',
-      content: '高级前端工程师',
-    },{
-      title: 'Faith：',
-      content: '鸡掰',
-    },{
-      title: 'Constellation：',
-      content: '甘霖娘',
-    },{
-      title: 'SelfIntroduction：',
-      content: '刘琦',
-    },{
-      title: 'SelecCriteria：',
-      content: '刘琦',
-    },{
-      title: 'Certified：',
-      content: '刘琦',
-    },{
-      title: 'Vip：',
-      content: '刘琦',
-    },{
-      title: 'Points：',
-      content: '刘琦',
-    },{
-      title: 'Rose：',
-      content: '刘琦',
-    },{
-      title: 'Charm：',
-      content: '刘琦',
-    },{
-      title: 'DatePrivilege：',
-      content: '刘琦',
+      ID: '3321977w',
+      NickName: 'Siberian Husky',
+      RealName: '刘琦',
+      Sex: '男',
+      Age: '23',
+      Height: '1米78',
+      Location: '河北承德',
+      Job: '高级前端工程师',
+      Faith: '鸡掰',
+      Constellation: '甘霖娘',
+      SelfIntroduction: '鸡掰',
+      SelecCriteria: '甘霖娘',
+      Certified: '鸡掰',
+      Vip: '甘霖娘',
+      Points: '鸡掰',
+      Rose: '甘霖娘',
+      Charm: '鸡掰',
+      DatePrivilege: '甘霖娘',
     }],
   },
 };

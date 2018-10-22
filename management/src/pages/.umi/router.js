@@ -64,7 +64,7 @@ let routes = [
       {
         "path": "/userpage",
         "name": "userpage",
-        "icon": "home",
+        "icon": "team",
         "routes": [
           {
             "path": "/userpage/information",

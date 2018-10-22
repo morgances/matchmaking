@@ -2,8 +2,8 @@
 
 export default {
   'navbar.lang': 'English',
-  'menu.userpage': '首页',
-  'menu.userpage': '首页',
+  'menu.userpage': '用户页',
+  'menu.userpage': '用户管理',
   'menu.userpage.information': '用户信息',
   'menu.form': '表单页',
   'menu.form.basicform': '基础表单',
