@@ -14,8 +14,8 @@ import (
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
-	"github.com/morgances/matchmaking/backend/wx"
 	"github.com/zh1014/comment/response"
+	"github.com/dgrijalva/jwt-go"
 )
 
 type (
@@ -31,15 +31,8 @@ type (
 )
 
 func CreatePost(this *server.Context) error {
-	var (
-		err    error
-		openid string
-		postId uint32
-	)
-	authorization := this.GetHeader("Authorization")
-	openid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	title := this.FormValue("title")
@@ -49,7 +42,8 @@ func CreatePost(this *server.Context) error {
 		Title:   title,
 		Content: content,
 	}
-	if postId, err = model.PostService.Insert(post); err != nil {
+	postId, err := model.PostService.Insert(post)
+	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
@@ -64,9 +58,7 @@ func CreatePost(this *server.Context) error {
 func GetReviewedPost(this *server.Context) error {
 	var (
 		err  error
-		resp struct {
-			Posts []post `json:"resp"`
-		}
+		resp []post
 	)
 	rawPosts, err := model.PostService.FindReviewed()
 	if err != nil {
@@ -82,27 +74,21 @@ func GetReviewedPost(this *server.Context) error {
 		post.Date = rawPost.DateTime
 		post.Commend = rawPost.Commend
 		post.Images, _ = util.GetImages("./post/" + strconv.Itoa(int(post.ID)))
-		resp.Posts = append(resp.Posts, post)
+		resp = append(resp, post)
 	}
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func GetMyPost(this *server.Context) error {
 	var (
-		err  error
-		oid  string
-		resp struct {
-			Posts []post `json:"posts"`
-		}
+		resp []post
 	)
-	authorization := this.GetHeader("Authorization")
-	oid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 
-	rawPosts, err := model.PostService.FindByOpenID(oid)
+	rawPosts, err := model.PostService.FindByOpenID(openid)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
@@ -116,7 +102,7 @@ func GetMyPost(this *server.Context) error {
 		post.Date = rawPost.DateTime
 		post.Commend = rawPost.Commend
 		post.Images, _ = util.GetImages("./post/" + strconv.Itoa(int(post.ID)))
-		resp.Posts = append(resp.Posts, post)
+		resp = append(resp, post)
 	}
 
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
@@ -145,17 +131,14 @@ func CommendPost(this *server.Context) error {
 
 func DeletePost(this *server.Context) error {
 	var (
-		err error
-		oid string
 		req targetID
 	)
-	authorization := this.GetHeader("Authorization")
-	oid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	if err = this.JSONBody(&req); err != nil {
+	err := this.JSONBody(&req)
+	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
@@ -164,7 +147,7 @@ func DeletePost(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
-	if err = model.PostService.DeleteByOpenIDAndID(oid, req.TargetID); err != nil {
+	if err = model.PostService.DeleteByOpenIDAndID(openid, req.TargetID); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}

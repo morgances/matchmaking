@@ -12,12 +12,12 @@ import (
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
-	"github.com/morgances/matchmaking/backend/wx"
 	"github.com/zh1014/comment/response"
+	"github.com/dgrijalva/jwt-go"
 )
 
 type (
-	tradeForResp struct {
+	tradeInfo struct {
 		ID        uint32    `json:"id"`
 		OpenID    string    `json:"open_id"`
 		GoodsID   uint32    `json:"goods_id"`
@@ -32,13 +32,10 @@ type (
 func CreateTrade(this *server.Context) error {
 	var (
 		err error
-		oid string
 		req targetID
 	)
-	authorization := this.GetHeader("Authorization")
-	oid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
@@ -51,10 +48,10 @@ func CreateTrade(this *server.Context) error {
 	}
 
 	trade := model.Trade{
-		OpenID:  oid,
+		OpenID:  openid,
 		GoodsID: req.TargetID,
 	}
-	u, err := model.UserService.FindByOpenID(oid)
+	u, err := model.UserService.FindByOpenID(openid)
 	if err != nil {
 		log.Error("CreateTrade: get buyer name by openid: ", err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
@@ -80,27 +77,20 @@ func CreateTrade(this *server.Context) error {
 
 func GetMyTrades(this *server.Context) error {
 	var (
-		err       error
-		oid       string
-		rawTrades []model.Trade
-		resp      struct {
-			Trades []tradeForResp `json:"trades"`
-		}
+		resp []tradeInfo
 	)
-	authorization := this.GetHeader("Authorization")
-	oid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 
-	rawTrades, err = model.TradeService.FindByOpenID(oid)
+	rawTrades, err := model.TradeService.FindByOpenID(openid)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 	for _, rawTrade := range rawTrades {
-		var tradeForFeed tradeForResp
+		var tradeForFeed tradeInfo
 		tradeForFeed.ID = rawTrade.ID
 		tradeForFeed.OpenID = rawTrade.OpenID
 		tradeForFeed.GoodsID = rawTrade.GoodsID
@@ -109,7 +99,7 @@ func GetMyTrades(this *server.Context) error {
 		tradeForFeed.Cost = rawTrade.Cost
 		tradeForFeed.DateTime = rawTrade.DateTime
 		tradeForFeed.Finished = rawTrade.Finished
-		resp.Trades = append(resp.Trades, tradeForFeed)
+		resp = append(resp, tradeForFeed)
 	}
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }

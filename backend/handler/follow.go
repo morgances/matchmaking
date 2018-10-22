@@ -10,8 +10,8 @@ import (
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
-	"github.com/morgances/matchmaking/backend/wx"
 	"github.com/zh1014/comment/response"
+	"github.com/dgrijalva/jwt-go"
 )
 
 type (
@@ -23,17 +23,14 @@ type (
 
 func Follow(this *server.Context) error {
 	var (
-		err error
-		oid string
-		req targetOpenID
+		req    targetOpenID
 	)
-	authorization := this.GetHeader("Authorization")
-	oid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	if err = this.JSONBody(&req); err != nil {
+	err := this.JSONBody(&req)
+	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
@@ -41,12 +38,12 @@ func Follow(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
-	if oid == req.TargetOpenID {
+	if openid == req.TargetOpenID {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
-	if err = model.FollowService.Insert(oid, req.TargetOpenID); err != nil {
+	if err = model.FollowService.Insert(openid, req.TargetOpenID); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
@@ -56,17 +53,14 @@ func Follow(this *server.Context) error {
 // Unfollow if exist
 func Unfollow(this *server.Context) error {
 	var (
-		err error
-		oid string
 		req targetOpenID
 	)
-	authorization := this.GetHeader("Authorization")
-	oid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	if err = this.JSONBody(&req); err != nil {
+	err := this.JSONBody(&req)
+	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
@@ -75,7 +69,7 @@ func Unfollow(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
-	if err = model.FollowService.Delete(oid, req.TargetOpenID); err != nil {
+	if err = model.FollowService.Delete(openid, req.TargetOpenID); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
@@ -84,21 +78,16 @@ func Unfollow(this *server.Context) error {
 
 func GetFollowing(this *server.Context) error {
 	var (
-		err   error
-		oid   string
-		users []model.User
 		resp  struct {
 			Following []shortUserInfo `json:"following"`
 		}
 	)
-	authorization := this.GetHeader("Authorization")
-	oid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 
-	users, err = model.FollowService.FindFollowing(oid)
+	users, err := model.FollowService.FindFollowing(openid)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
@@ -114,21 +103,14 @@ func GetFollowing(this *server.Context) error {
 
 func GetFollower(this *server.Context) error {
 	var (
-		err   error
-		oid   string
-		users []model.User
-		resp  struct {
-			Follower []shortUserInfo `json:"follower"`
-		}
+		resp  []shortUserInfo
 	)
-	authorization := this.GetHeader("Authorization")
-	oid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 
-	users, err = model.FollowService.FindFollower(oid)
+	users, err := model.FollowService.FindFollower(openid)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
@@ -137,8 +119,7 @@ func GetFollower(this *server.Context) error {
 		var shortUserInfo shortUserInfo
 		shortUserInfo.OpenID = user.OpenID
 		shortUserInfo.NickName = user.NickName
-		resp.Follower = append(resp.Follower, shortUserInfo)
+		resp = append(resp, shortUserInfo)
 	}
-	log.Error(err)
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }

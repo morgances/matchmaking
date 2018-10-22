@@ -8,8 +8,6 @@
 package handler
 
 import (
-	"mime/multipart"
-
 	"github.com/TechCatsLab/apix/http/server"
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
@@ -19,6 +17,7 @@ import (
 	"github.com/zh1014/comment/response"
 
 	"github.com/silenceper/wechat/oauth"
+	"github.com/dgrijalva/jwt-go"
 )
 
 type (
@@ -137,14 +136,11 @@ func WechatLogin(this *server.Context) error {
 
 func FillInfo(this *server.Context) error {
 	var (
-		err error
-		req fillInfo
-		oid string
+		err    error
+		req    fillInfo
 	)
-	authorization := this.GetHeader("Authorization")
-	oid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
@@ -155,7 +151,7 @@ func FillInfo(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
-	userp, err := model.UserService.FindByOpenID(oid)
+	userp, err := model.UserService.FindByOpenID(openid)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
@@ -188,12 +184,9 @@ func UserChangeInfo(this *server.Context) error {
 	var (
 		err error
 		req changeInfo
-		oid string
 	)
-	authorization := this.GetHeader("Authorization")
-	oid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 
@@ -206,7 +199,7 @@ func UserChangeInfo(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
-	userp, err := model.UserService.FindByOpenID(oid)
+	userp, err := model.UserService.FindByOpenID(openid)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
@@ -272,18 +265,10 @@ func GetUserDetail(this *server.Context) error {
 
 func GetRecommendUsers(this *server.Context) error {
 	var (
-		err       error
-		sex       uint8
-		userSlice []model.User
-		resp      struct {
-			UserInformation []userInfo `json:"user_information"`
-		}
+		resp []userInfo
 	)
-
-	authorization := this.GetHeader("Authorization")
-	_, sex, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	sex, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(uint8)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 
@@ -295,23 +280,23 @@ func GetRecommendUsers(this *server.Context) error {
 		allowedsex = 0
 	}
 
-	userSlice, err = model.UserService.RecommendByCharm(allowedsex)
+	userSlice, err := model.UserService.RecommendByCharm(allowedsex)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 	for i, user := range userSlice {
-		resp.UserInformation = append(resp.UserInformation, userInfo{})
-		resp.UserInformation[i].OpenID = user.OpenID
-		resp.UserInformation[i].NickName = user.NickName
-		resp.UserInformation[i].Sex = user.Sex
-		resp.UserInformation[i].Age = user.Age
-		resp.UserInformation[i].Height = user.Height
-		resp.UserInformation[i].Location = user.Location
-		resp.UserInformation[i].Job = user.Job
-		resp.UserInformation[i].Certified = user.Certified
-		resp.UserInformation[i].Vip = user.Vip
-		resp.UserInformation[i].SelfIntroduction = user.SelfIntroduction
+		resp = append(resp, userInfo{})
+		resp[i].OpenID = user.OpenID
+		resp[i].NickName = user.NickName
+		resp[i].Sex = user.Sex
+		resp[i].Age = user.Age
+		resp[i].Height = user.Height
+		resp[i].Location = user.Location
+		resp[i].Job = user.Job
+		resp[i].Certified = user.Certified
+		resp[i].Vip = user.Vip
+		resp[i].SelfIntroduction = user.SelfIntroduction
 	}
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
@@ -319,17 +304,12 @@ func GetRecommendUsers(this *server.Context) error {
 func GetAlbum(this *server.Context) error {
 	var (
 		err          error
-		oid          string
 		isAbleToLook bool
 		req          targetOpenID
-		resp         struct {
-			Album []string `json:"album"`
-		}
+		resp []string
 	)
-	authorization := this.GetHeader("Authorization")
-	oid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
@@ -340,8 +320,8 @@ func GetAlbum(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
-	if oid != req.TargetOpenID {
-		isAbleToLook, err = model.FollowService.FollowExist(oid, req.TargetOpenID)
+	if openid != req.TargetOpenID {
+		isAbleToLook, err = model.FollowService.FollowExist(openid, req.TargetOpenID)
 		if err != nil {
 			log.Error(err)
 			return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
@@ -354,7 +334,7 @@ func GetAlbum(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 
-	resp.Album, err = util.GetImages("./album/" + req.TargetOpenID + "/")
+	resp, err = util.GetImages("./album/" + req.TargetOpenID + "/")
 	if err != nil {
 		if err == util.ErrNoImageExist {
 			return response.WriteStatusAndDataJSON(this, constant.ErrNoAlbum, nil)
@@ -366,17 +346,11 @@ func GetAlbum(this *server.Context) error {
 }
 
 func UploadPhotos(this *server.Context) error {
-	var (
-		err error
-		oid string
-	)
-	authorization := this.GetHeader("Authorization")
-	oid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	if err = util.SavePhotos(oid, this.Request()); err != nil {
+	if err := util.SavePhotos(openid, this.Request()); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrSaveImage, nil)
 	}
@@ -386,15 +360,12 @@ func UploadPhotos(this *server.Context) error {
 func RemovePhotos(this *server.Context) error {
 	var (
 		err error
-		oid string
 		req struct {
 			Images []string `json:"images" validate:"required,dive,required,contains=/"`
 		}
 	)
-	authorization := this.GetHeader("Authorization")
-	oid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
@@ -405,28 +376,21 @@ func RemovePhotos(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
-	util.RemovePhotosIfExist(oid, req.Images)
+	util.RemovePhotosIfExist(openid, req.Images)
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
 func ChangeAvatar(this *server.Context) error {
-	var (
-		err error
-		oid string
-		req multipart.File
-	)
-	authorization := this.GetHeader("Authorization")
-	oid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	req, _, err = this.Request().FormFile("avatar")
+	req, _, err := this.Request().FormFile("avatar")
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
-	err = util.ChangeAvatar(oid, req)
+	err = util.ChangeAvatar(openid, req)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
@@ -436,15 +400,14 @@ func ChangeAvatar(this *server.Context) error {
 
 func SendRose(this *server.Context) error {
 	var (
+		err error
 		req struct {
 			Reciever string `json:"reciever" validate:"required,len=28"`
 			RoseNum  uint32 `json:"rose_num" validate:"required,gte=1"`
 		}
 	)
-	authorization := this.GetHeader("Authorization")
-	oid, _, _, err := wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
@@ -456,7 +419,7 @@ func SendRose(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
-	if err = model.UserService.SendRose(oid, req.Reciever, req.RoseNum); err != nil {
+	if err = model.UserService.SendRose(openid, req.Reciever, req.RoseNum); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}

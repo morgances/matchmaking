@@ -17,6 +17,7 @@ import (
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/wx"
 	"github.com/zh1014/comment/response"
+	"github.com/dgrijalva/jwt-go"
 )
 
 type (
@@ -33,23 +34,17 @@ type (
 
 func RechargeVip(this *server.Context) error {
 	var (
-		err            error
-		openid         string
-		spbillCreateIp string
-		outTradeNo     uint32
-		resp           struct {
+		resp struct {
 			PrepayID string `json:"prepay_id"`
 		}
 	)
-	authorization := this.GetHeader("Authorization")
-	openid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	spbillCreateIp = this.Request().Header.Get(http.CanonicalHeaderKey("X-Forwarded-For"))
+	spbillCreateIp := this.Request().Header.Get(http.CanonicalHeaderKey("X-Forwarded-For"))
 
-	outTradeNo, err = model.RechargeService.Insert("vip", openid, 1)
+	outTradeNo, err := model.RechargeService.Insert("vip", openid, 1)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
@@ -76,8 +71,6 @@ func RechargeVip(this *server.Context) error {
 func RechargeRose(this *server.Context) error {
 	var (
 		err            error
-		openid         string
-		spbillCreateIp string
 		outTradeNo     uint32
 		req            struct {
 			RoseNum uint32 `json:"rose_num" validate:"required,gte=1"`
@@ -86,10 +79,8 @@ func RechargeRose(this *server.Context) error {
 			PrepayID string `json:"prepay_id"`
 		}
 	)
-	authorization := this.GetHeader("Authorization")
-	openid, _, _, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if err = this.JSONBody(&req); err != nil {
@@ -101,7 +92,7 @@ func RechargeRose(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
-	spbillCreateIp = this.Request().Header.Get(http.CanonicalHeaderKey("X-Forwarded-For"))
+	spbillCreateIp := this.Request().Header.Get(http.CanonicalHeaderKey("X-Forwarded-For"))
 
 	outTradeNo, err = model.RechargeService.Insert("rose", openid, req.RoseNum)
 	if err != nil {
@@ -129,20 +120,13 @@ func RechargeRose(this *server.Context) error {
 
 func GetRechargeRecord(this *server.Context) error {
 	var (
-		err     error
-		isAdmin bool
-		resp    struct {
-			RechargeRecord []recharge `json:"recharge_record"`
-		}
+		resp []recharge
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, isAdmin, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(bool)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 
@@ -160,7 +144,7 @@ func GetRechargeRecord(this *server.Context) error {
 		oneRecord.Fee = rchg.Fee
 		oneRecord.TransactionID = rchg.TransactionID
 		oneRecord.Status = rchg.Status
-		resp.RechargeRecord = append(resp.RechargeRecord, oneRecord)
+		resp = append(resp, oneRecord)
 	}
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }

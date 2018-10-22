@@ -15,12 +15,12 @@ import (
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
-	"github.com/morgances/matchmaking/backend/wx"
 	"github.com/zh1014/comment/response"
+	"github.com/dgrijalva/jwt-go"
 )
 
 type (
-	goodsResp struct {
+	goodsInfo struct {
 		ID          uint32  `json:"id"`
 		Title       string  `json:"title"`
 		Price       float64 `json:"price"`
@@ -31,17 +31,13 @@ type (
 func CreateGoods(this *server.Context) error {
 	var (
 		err     error
-		isAdmin bool
 		lastId  uint32
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, isAdmin, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(bool)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 
@@ -77,7 +73,7 @@ func GetGoodsByID(this *server.Context) error {
 		err   error
 		req   targetID
 		goods *model.Goods
-		resp  goodsResp
+		resp  goodsInfo
 	)
 	if err = this.JSONBody(&req); err != nil {
 		log.Error(err)
@@ -105,9 +101,7 @@ func GetGoodsByPrice(this *server.Context) error {
 	var (
 		err    error
 		goodss []model.Goods
-		resp   struct {
-			Goods []goodsResp `json:"goods"`
-		}
+		resp   []goodsInfo
 	)
 
 	goodss, err = model.GoodsService.FindByPrice()
@@ -116,20 +110,18 @@ func GetGoodsByPrice(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 	for _, goods := range goodss {
-		var r goodsResp
+		var r goodsInfo
 		r.ID = goods.ID
 		r.Title = goods.Title
 		r.Price = goods.Price
 		r.Description = goods.Description
-		resp.Goods = append(resp.Goods, r)
+		resp = append(resp, r)
 	}
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func UpdateGoods(this *server.Context) error {
 	var (
-		err     error
-		isAdmin bool
 		req     struct {
 			ID          uint32  `json:"id" validate:"required,gte=1"`
 			Title       string  `json:"title" validate:"required"`
@@ -138,17 +130,15 @@ func UpdateGoods(this *server.Context) error {
 		}
 		goods model.Goods
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, isAdmin, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(bool)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
-	if err = this.JSONBody(&req); err != nil {
+	err := this.JSONBody(&req)
+	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
@@ -160,7 +150,7 @@ func UpdateGoods(this *server.Context) error {
 	goods.ID = req.ID
 	goods.Title = req.Title
 	goods.Price = req.Price
-	goods.Description = goods.Description
+	goods.Description = req.Description
 	if err = model.GoodsService.Update(&goods); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
@@ -171,21 +161,17 @@ func UpdateGoods(this *server.Context) error {
 func ChangeGoodsImage(this *server.Context) error {
 	var (
 		err     error
-		isAdmin bool
 		gid     int
 		req     struct {
 			goodsID    uint32         // key: goods_id
 			goodsImage multipart.File // key: goods_image
 		}
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, isAdmin, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(bool)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 	req.goodsImage, _, err = this.Request().FormFile("goods_image")
@@ -206,21 +192,17 @@ func ChangeGoodsImage(this *server.Context) error {
 
 func DeleteGoods(this *server.Context) error {
 	var (
-		err     error
-		isAdmin bool
 		req     targetID
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, isAdmin, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(bool)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
-	if err = this.JSONBody(&req); err != nil {
+	err := this.JSONBody(&req)
+	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}

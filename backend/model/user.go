@@ -10,7 +10,6 @@ package model
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/morgances/matchmaking/backend/util"
@@ -147,37 +146,26 @@ func (userServPrvd) GetContact(oid string) (phone, wechat string, err error) {
 }
 
 func (userServPrvd) Certify(oid string) error {
-	rslt, err := DB.Exec(`UPDATE `+conf.MMConf.Database+`.user SET certified=1 WHERE open_id=? LIMIT 1`, oid)
-	if err != nil {
-		return err
-	}
-	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
-		return errors.New(fmt.Sprintf("failed to certify user(id): %s", oid))
-	}
+	_, err := DB.Exec(
+		`UPDATE `+conf.MMConf.Database+`.user SET certified=1 WHERE open_id=? LIMIT 1`,
+		oid,
+	)
 	return err
 }
 
 func (userServPrvd) DatePrivilegeReduce(oid string) error {
-	rslt, err := DB.Exec(`UPDATE `+conf.MMConf.Database+`.user SET date_privilege=date_privilege-1 WHERE open_id=? LIMIT 1`, oid)
-	if err != nil {
-		return err
-	}
-	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
-		return errors.New(fmt.Sprintf("failed to reduce dataPrivilege of user(id): %s", oid))
-	}
+	_, err := DB.Exec(
+		`UPDATE `+conf.MMConf.Database+`.user SET date_privilege=date_privilege-1 WHERE open_id=? LIMIT 1`,
+		oid,
+	)
 	return err
 }
 
 func (userServPrvd) DatePrivilegeAdd(oid string, num uint32) error {
-	rslt, err := DB.Exec(`UPDATE `+conf.MMConf.Database+`.user SET date_privilege=date_privilege+? WHERE open_id=? LIMIT 1`,
+	_, err := DB.Exec(
+		`UPDATE `+conf.MMConf.Database+`.user SET date_privilege=date_privilege+? WHERE open_id=? LIMIT 1`,
 		num, oid,
 	)
-	if err != nil {
-		return err
-	}
-	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
-		return errors.New(fmt.Sprintf("failed to add dataPrivilege of user(id): %s", oid))
-	}
 	return err
 }
 
@@ -187,7 +175,7 @@ func (userServPrvd) Update(u *User) error {
 	if err != nil {
 		return err
 	}
-	rslt, err := DB.Exec(
+	_, err = DB.Exec(
 		`UPDATE `+conf.MMConf.Database+`.user 
 				  SET phone=?,wechat=?,nick_name=?,real_name=?,sex=?,birthday=?,height=?,location=?,job=?,faith=?,constellation=?,self_introduction=?,selec_criteria=?,
 				  certified=?,vip=?,date_privilege=?,points=?,rose=?,charm=?,age=?
@@ -196,28 +184,15 @@ func (userServPrvd) Update(u *User) error {
 		u.Certified, u.Vip, u.DatePrivilege, u.Points, u.Rose, u.Charm, u.Age,
 		u.OpenID,
 	)
-	if err != nil {
-		return err
-	}
-	// user not exist or no change happened
-	if affected, err := rslt.RowsAffected(); err == nil && affected != 1 {
-		return errors.New(fmt.Sprintf("failed to update information of user %s id: %d", u.RealName, u.OpenID))
-	}
 	return err
 }
 
 func (userServPrvd) SendRose(sender, recer string, num uint32) error {
-	var (
-		err         error
-		errSendRose = errors.New("SendRose: failed to send rose")
-		tx          *sql.Tx
-		rslt        sql.Result
-	)
-	tx, err = DB.Begin()
+	tx, err := DB.Begin()
 	if err != nil {
 		return err
 	}
-	rslt, err = tx.Exec(
+	_, err = tx.Exec(
 		`UPDATE `+conf.MMConf.Database+`.user SET rose=rose-? WHERE open_id=? LIMIT 1`,
 		num, sender,
 	)
@@ -225,21 +200,13 @@ func (userServPrvd) SendRose(sender, recer string, num uint32) error {
 		tx.Rollback()
 		return errors.New("SendRose: rose not enough for (id): " + sender + " :" + err.Error())
 	}
-	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
-		tx.Rollback()
-		return errSendRose
-	}
-	rslt, err = tx.Exec(
+	_, err = tx.Exec(
 		`UPDATE `+conf.MMConf.Database+`.user SET rose=rose+?, charm=charm+? WHERE open_id=? LIMIT 1`,
 		num, num, recer,
 	)
 	if err != nil {
 		tx.Rollback()
 		return errors.New("SendRose: receiver error (id): " + sender + " :" + err.Error())
-	}
-	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
-		tx.Rollback()
-		return errSendRose
 	}
 	return tx.Commit()
 }

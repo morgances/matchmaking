@@ -45,23 +45,18 @@ func (tradeServPrvd) Insert(t *Trade) error {
 		return err
 	}
 
-	var rslt sql.Result
-	if rslt, err = tx.Exec(`UPDATE `+conf.MMConf.Database+`.user SET points=points-? WHERE open_id=? LIMIT 1`, t.Cost, t.OpenID); err != nil {
+	if _, err = tx.Exec(
+		`UPDATE `+conf.MMConf.Database+`.user SET points=points-? WHERE open_id=? LIMIT 1`, t.Cost, t.OpenID,
+	); err != nil {
 		tx.Rollback()
 		return err
 	}
 
-	if affec, err := rslt.RowsAffected(); err == nil && affec != 1 {
-		tx.Rollback()
-		return errors.New(fmt.Sprintf("maybe user(%s): %s not exist", t.BuyerName,t.OpenID))
-	}
-
-	_, err = DB.Exec(
+	if _, err = tx.Exec(
 		`INSERT INTO `+conf.MMConf.Database+`.trade(open_id,goods_id,buyer_name,goods_title,cost,date_time,finished)
 					VALUES(?,?,?,?,?,NOW(),0)`,
 		t.OpenID, t.GoodsID, t.BuyerName, t.GoodsName, t.Cost,
-	)
-	if err != nil {
+	);err != nil {
 		tx.Rollback()
 		return err
 	}

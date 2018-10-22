@@ -15,6 +15,7 @@ import (
 	"github.com/morgances/matchmaking/backend/util"
 	"github.com/morgances/matchmaking/backend/wx"
 	"github.com/zh1014/comment/response"
+	"github.com/dgrijalva/jwt-go"
 )
 
 type (
@@ -50,25 +51,17 @@ func Login(this *server.Context) error {
 
 func Certify(this *server.Context) error {
 	var (
-		err     error
 		req     targetOpenID
-		isAdmin bool
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, isAdmin, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(bool)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	//////todo:
-	//token := this.Request().Context().Value("is_admin").(*jwt.Token)
-	//isAdmin = token.Header["is_admin"].(bool)
-	//println(isAdmin)
 	if !isAdmin {
-		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
-	if err = this.JSONBody(&req); err != nil {
+	err := this.JSONBody(&req)
+	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
@@ -85,21 +78,17 @@ func Certify(this *server.Context) error {
 
 func DatePrivilegeReduce(this *server.Context) error {
 	var (
-		err     error
 		req     targetOpenID
-		isAdmin bool
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, isAdmin, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(bool)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
-	if err = this.JSONBody(&req); err != nil {
+	err := this.JSONBody(&req)
+	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
@@ -117,21 +106,17 @@ func DatePrivilegeReduce(this *server.Context) error {
 
 func DatePrivilegeAdd(this *server.Context) error {
 	var (
-		err     error
-		isAdmin bool
 		req     targetOpenID
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, isAdmin, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(bool)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
-	if err = this.JSONBody(&req); err != nil {
+	err := this.JSONBody(&req)
+	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
@@ -150,25 +135,21 @@ func DatePrivilegeAdd(this *server.Context) error {
 
 func GetContact(this *server.Context) error {
 	var (
-		err     error
-		isAdmin bool
 		req     targetOpenID
 		resp    struct {
 			Phone  string `json:"phone"`
 			Wechat string `json:"wechat"`
 		}
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, isAdmin, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(bool)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
-	if err = this.JSONBody(&req); err != nil {
+	err := this.JSONBody(&req)
+	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
@@ -187,20 +168,13 @@ func GetContact(this *server.Context) error {
 
 func GetUnreviewedPost(this *server.Context) error {
 	var (
-		err     error
-		isAdmin bool
-		resp    struct {
-			Posts []post `json:"posts"`
-		}
+		resp    []post
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, isAdmin, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(bool)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
@@ -218,28 +192,24 @@ func GetUnreviewedPost(this *server.Context) error {
 		post.Date = rawPost.DateTime
 		post.Commend = rawPost.Commend
 		post.Images, _ = util.GetImages("./post/" + strconv.Itoa(int(post.ID)))
-		resp.Posts = append(resp.Posts, post)
+		resp = append(resp, post)
 	}
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func UpdatePostStatus(this *server.Context) error {
 	var (
-		err     error
-		isAdmin bool
 		req     targetID
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, isAdmin, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
-		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
+	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(bool)
+	if !ok {
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
-	if err = this.JSONBody(&req); err != nil {
+	err := this.JSONBody(&req)
+	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
@@ -257,21 +227,17 @@ func UpdatePostStatus(this *server.Context) error {
 
 func AdminDeletePost(this *server.Context) error {
 	var (
-		err     error
-		isAdmin bool
 		req     targetID
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, isAdmin, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(bool)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
-	if err = this.JSONBody(&req); err != nil {
+	err := this.JSONBody(&req)
+	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
@@ -294,20 +260,13 @@ func AdminDeletePost(this *server.Context) error {
 
 func GetUnfinishedTrade(this *server.Context) error {
 	var (
-		err     error
-		isAdmin bool
-		resp    struct {
-			Trades []tradeForResp `json:"trades"`
-		}
+		resp    []tradeInfo
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, isAdmin, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(bool)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 
@@ -317,34 +276,30 @@ func GetUnfinishedTrade(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 	for _, rawTrade := range rawTrades {
-		tradeForFeed := tradeForResp{}
+		tradeForFeed := tradeInfo{}
 		tradeForFeed.ID = rawTrade.ID
 		tradeForFeed.OpenID = rawTrade.OpenID
 		tradeForFeed.GoodsID = rawTrade.GoodsID
 		tradeForFeed.DateTime = rawTrade.DateTime
 		tradeForFeed.Cost = rawTrade.Cost
-		resp.Trades = append(resp.Trades, tradeForFeed)
+		resp = append(resp, tradeForFeed)
 	}
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func CancelTrade(this *server.Context) error {
 	var (
-		err     error
-		isAdmin bool
 		req     targetID
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, isAdmin, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(bool)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
-	if err = this.JSONBody(&req); err != nil {
+	err := this.JSONBody(&req)
+	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
@@ -372,21 +327,17 @@ func CancelTrade(this *server.Context) error {
 
 func UpdateTradeStatus(this *server.Context) error {
 	var (
-		err     error
-		isAdmin bool
 		req     targetID
 	)
-	authorization := this.GetHeader("Authorization")
-	_, _, isAdmin, err = wx.ParseToken(authorization)
-	if err != nil {
-		log.Error(err)
+	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(bool)
+	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	if !isAdmin {
-		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
-	if err = this.JSONBody(&req); err != nil {
+	err := this.JSONBody(&req)
+	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}

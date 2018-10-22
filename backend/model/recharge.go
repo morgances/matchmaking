@@ -115,8 +115,7 @@ func upgradeVip(id uint32, openid, transid string) error {
 	if err != nil {
 		return errors.New("upgradeVip: " + err.Error())
 	}
-	var rslt sql.Result
-	rslt, err = tx.Exec(
+	_, err = tx.Exec(
 		`UPDATE `+conf.MMConf.Database+`.user SET vip=1,points=points+520,rose=rose+520,date_privilege=date_privilege+1 WHERE open_id=? LIMIT 1`,
 		openid,
 	)
@@ -124,14 +123,7 @@ func upgradeVip(id uint32, openid, transid string) error {
 		tx.Rollback()
 		return errors.New("upgradeVip: " + err.Error())
 	}
-	if rslt == nil {
-		tx.Rollback()
-		return errors.New("upgradeVip: database driver error")
-	}
-	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
-		tx.Rollback()
-		return errors.New("upgradeVip: user may not exists")
-	}
+	var rslt sql.Result
 	rslt, err = tx.Exec(
 		`UPDATE `+conf.MMConf.Database+`.recharge SET status=1,transaction_id=? WHERE id=? AND status=0 LIMIT 1`,
 		transid, id,
@@ -157,8 +149,7 @@ func rechargeRose(id, num uint32, openid, transid string) error {
 	if err != nil {
 		return errors.New("rechargeRose: " + err.Error())
 	}
-	var rslt sql.Result
-	rslt, err = tx.Exec(
+	_, err = tx.Exec(
 		`UPDATE `+conf.MMConf.Database+`.user SET rose=rose+?,points=points+? WHERE open_id=? LIMIT 1`,
 		num, num*10, openid,
 	)
@@ -166,14 +157,7 @@ func rechargeRose(id, num uint32, openid, transid string) error {
 		tx.Rollback()
 		return errors.New("rechargeRose: " + err.Error())
 	}
-	if rslt == nil {
-		tx.Rollback()
-		return errors.New("rechargeRose: database driver error")
-	}
-	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
-		tx.Rollback()
-		return errors.New("rechargeRose: user may not exists")
-	}
+	var rslt sql.Result
 	rslt, err = tx.Exec(
 		`UPDATE `+conf.MMConf.Database+`.recharge SET status=1,transaction_id=? WHERE id=? AND status=0 LIMIT 1`,
 		transid, id,
