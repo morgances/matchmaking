@@ -2,12 +2,9 @@
 
 export default {
   'navbar.lang': 'English',
-  'menu.home': '首页',
-  'menu.homePage': '首页',
-  'menu.homePage.test': '测试题',
-  'menu.homePage.onlineRegistration': '线上报名',
-  'menu.homePage.happinessShow': '幸福Show',
-  'menu.homePage.reservationConsultation': '咨询预约',
+  'menu.userpage': '用户页',
+  'menu.userpage': '用户管理',
+  'menu.userpage.information': '用户信息',
   'menu.form': '表单页',
   'menu.form.basicform': '基础表单',
   'menu.form.stepform': '分步表单',

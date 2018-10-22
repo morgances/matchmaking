@@ -15,32 +15,17 @@ export default [
     Routes: ['src/pages/Authorized'],
     authority: ['admin', 'user'],
     routes: [
-      // homePage
-      { path: '/', redirect: '/homePage/test' },
+      // userpage
+      { path: '/', redirect: '/userpage/information' },
       {
-        path: '/homePage',
-        name: 'homePage',
-        icon: 'home',
+        path: '/userpage',
+        name: 'userpage',
+        icon: 'team',
         routes: [
           {
-            path: '/homePage/test',
-            name: 'test',
-            component: './HomePage/Test',
-          },
-          {
-            path: '/homePage/onlineRegistration',
-            name: 'onlineRegistration',
-            component: './HomePage/OnlineRegistration',
-          },
-          {
-            path: '/homePage/happinessShow',
-            name: 'happinessShow',
-            component: './HomePage/HappinessShow',
-          },
-          {
-            path: '/homePage/reservationConsultation',
-            name: 'reservationConsultation',
-            component: './HomePage/ReservationConsultation',
+            path: '/userpage/information',
+            name: 'information',
+            component: './UserPage/Information',
           },
         ],
       },
