@@ -267,20 +267,21 @@ func GetRecommendUsers(this *server.Context) error {
 	var (
 		resp []userInfo
 	)
-	sex, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(uint8)
+
+	sex, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["sex"].(float64)
 	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 
 	// recommend contrast sex
-	var allowedsex uint8 = 0
+	var recommedSex uint8 = 0
 	if sex == 0 {
-		allowedsex = 1
+		recommedSex = 1
 	} else {
-		allowedsex = 0
+		recommedSex = 0
 	}
 
-	userSlice, err := model.UserService.RecommendByCharm(allowedsex)
+	userSlice, err := model.UserService.RecommendByCharm(recommedSex)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)

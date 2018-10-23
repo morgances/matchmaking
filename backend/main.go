@@ -35,8 +35,8 @@ func main() {
 }
 
 func skipper(path string) bool {
-	for _, val := range router.Skip {
-		if strings.HasSuffix(path, val) {
+	for i, _ := range router.Skip {
+		if strings.HasSuffix(path, router.Skip[i]) {
 			return true
 		}
 	}

@@ -56,7 +56,7 @@ func init() {
 	Router.Get("/matchmaking/post/mine", handler.GetMyPost)
 
 	Router.Post("/matchmaking/signin/signin", handler.Signin)
-	Router.Get("/matchmaking/signin/mysigninrecord", handler.GetSigninRecord)
+	Router.Get("/matchmaking/signin/myrecord", handler.GetSigninRecord)
 
 	Router.Post("/matchmaking/trade/create", handler.CreateTrade)
 	Router.Get("/matchmaking/trade/mytrades", handler.GetMyTrades)
