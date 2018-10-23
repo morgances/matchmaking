@@ -1,0 +1,89 @@
+<style scoped>
+.total {
+  background-color: #999;
+}
+
+.banner {
+  width: 100%;
+  height: 340px;
+}
+
+.container {
+  padding: 15px 15px 15px 15px;
+  border-bottom: 1px solid #999;
+  background-color: white;
+  margin-top: -10px;
+}
+
+.name {
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.detail {
+  position: relative;
+  font-size: 14px;
+}
+
+.photoList {
+  background-color: white;
+  display: flex;
+  padding: 15px;
+}
+
+.photo {
+  width: 100px;
+  height: 100px;
+}
+
+.background {
+  background-color: white;
+  padding: 15px;
+  border-top: 1px solid #999;
+}
+
+.intruduce {
+  margin-right: 10px;
+  display: inline-block;
+}
+</style>
+
+<template>
+  <view class="total">
+    <image class="banner" src="https://images.unsplash.com/photo-1507402086209-7bc75ccf5369?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=76da8cd3566839e142eeace5c2823fb7&auto=format&fit=crop&w=500&q=60" />
+    <view class="container">
+      <view>
+        <text class="name">童话 28岁</text>
+      </view>
+      <view>
+        <text class="detail">保定 | 期望两年内结婚</text>
+      </view>
+    </view>
+    <view>
+      <view class="container">
+        <text class="detail">照片 1</text>
+      </view>
+      <view class="photoList">
+        <image class="photo" src="https://images.unsplash.com/photo-1507402086209-7bc75ccf5369?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=76da8cd3566839e142eeace5c2823fb7&auto=format&fit=crop&w=500&q=60" />
+      </view>
+    </view>
+    <view class="background">
+      <text class="intruduce">自我介绍</text>
+      <text class="detail">无畏造英雄</text>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Fate extends wepy.page {
+    config = {
+      navigationBarTitleText: '个人介绍'
+    }
+    data = {
+      list: [{id: 1, title: 'title1'}, {id: 2, title: 'title2'}]
+    }
+  }
+</script>

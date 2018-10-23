@@ -196,22 +196,30 @@
     </block>
     </swiper>
     <view class="neck-flex">
-      <view class="neck-icon-flex">
-        <image class="icon-rose" src="../assets/images/tests.png" />
-        <text class="neck-word-icon">测试题</text>
-      </view>
-      <view class="neck-icon-flex">
-        <image class="icon-rose" src="../assets/images/doubleball.png" />
-        <text class="neck-word-icon">线上报名</text>
-      </view>
-      <view class="neck-icon-flex">
-        <image class="icon-rose" src="../assets/images/doublelove.png" />
-        <text class="neck-word-icon">幸福Show</text>
-      </view>
-      <view class="neck-icon-flex">
-        <image class="icon-rose" src="../assets/images/wechat.png" />
-        <text class="neck-word-icon">咨询预约</text>
-      </view>
+      <navigator url="/pages/home/test" open-type="navigateTo">
+        <view class="neck-icon-flex">
+          <image class="icon-rose" src="../assets/images/tests.png" />
+          <text class="neck-word-icon">测试题</text>
+        </view>
+      </navigator>
+      <navigator url="/pages/home/enroll" open-type="navigateTo">
+        <view class="neck-icon-flex">
+          <image class="icon-rose" src="../assets/images/doubleball.png" />
+          <text class="neck-word-icon">线上报名</text>
+        </view>
+      </navigator>
+      <navigator url="/pages/home/show" open-type="navigateTo">
+        <view class="neck-icon-flex">
+          <image class="icon-rose" src="../assets/images/doublelove.png" />
+          <text class="neck-word-icon">幸福Show</text>
+        </view>
+      </navigator>
+      <navigator url="/pages/home/consult" open-type="navigateTo">
+        <view class="neck-icon-flex">
+          <image class="icon-rose" src="../assets/images/wechat.png" />
+          <text class="neck-word-icon">咨询预约</text>
+        </view>
+      </navigator>
     </view>
     <view class="recommend-flex">
       <text class="word-recommend">为您推荐</text>

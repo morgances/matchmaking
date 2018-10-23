@@ -12,7 +12,15 @@ export default class extends wepy.app {
       'pages/fate',
       'pages/love',
       'pages/mall',
-      'pages/setting'
+      'pages/setting',
+      'pages/home/test',
+      'pages/home/show',
+      'pages/home/enroll',
+      'pages/home/consult',
+      'pages/detail',
+      'pages/setting/look',
+      'pages/setting/watch',
+      'pages/setting/watched'
     ],
     window: {
       backgroundTextStyle: 'light',
