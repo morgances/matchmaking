@@ -37,7 +37,7 @@ class Information extends Component {
             <UserPage item={this.props.information[0]}/>
           </div>
 
-          <div className={styles.buttonGroup}>
+          <div className={styles.buttonPosition}>
             <Popover content={popcontent} title="修改以下病句" trigger="click">
               <Button type="primary" size="large">查看联系方式</Button>
             </Popover>

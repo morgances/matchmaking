@@ -17,8 +17,8 @@ app.model({ namespace: 'project', ...(require('/Users/a11/Github/group-matchmaki
 app.model({ namespace: 'setting', ...(require('/Users/a11/Github/group-matchmaking/management/src/models/setting.js').default) });
 app.model({ namespace: 'user', ...(require('/Users/a11/Github/group-matchmaking/management/src/models/user.js').default) });
 app.model({ namespace: 'userinformation', ...(require('/Users/a11/Github/group-matchmaking/management/src/models/userinformation.js').default) });
-app.model({ namespace: 'form', ...(require('/Users/a11/Github/group-matchmaking/management/src/pages/Forms/models/form.js').default) });
 app.model({ namespace: 'rule', ...(require('/Users/a11/Github/group-matchmaking/management/src/pages/List/models/rule.js').default) });
+app.model({ namespace: 'form', ...(require('/Users/a11/Github/group-matchmaking/management/src/pages/Forms/models/form.js').default) });
 app.model({ namespace: 'profile', ...(require('/Users/a11/Github/group-matchmaking/management/src/pages/Profile/models/profile.js').default) });
 app.model({ namespace: 'error', ...(require('/Users/a11/Github/group-matchmaking/management/src/pages/Exception/models/error.js').default) });
 app.model({ namespace: 'geographic', ...(require('/Users/a11/Github/group-matchmaking/management/src/pages/Account/Settings/models/geographic.js').default) });

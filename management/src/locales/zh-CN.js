@@ -12,7 +12,7 @@ export default {
   'menu.form.stepform.confirm': '分步表单（确认转账信息）',
   'menu.form.stepform.result': '分步表单（完成）',
   'menu.form.advancedform': '高级表单',
-  'menu.list': '列表页',
+  'menu.list': '商品列表',
   'menu.list.searchtable': '查询表格',
   'menu.list.basiclist': '标准列表',
   'menu.list.cardlist': '卡片列表',

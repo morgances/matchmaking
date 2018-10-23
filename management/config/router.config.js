@@ -29,6 +29,20 @@ export default [
           },
         ],
       },
+      // list
+      {
+        path: '/list',
+        icon: 'table',
+        name: 'list',
+        routes: [
+          {
+            path: '/list/basic-list',
+            name: 'basiclist',
+            component: './List/BasicList',
+          },
+        ],
+      },
+
       // forms
       {
         path: '/form',
@@ -76,61 +90,13 @@ export default [
           },
         ],
       },
-      // list
-      {
-        path: '/list',
-        icon: 'table',
-        name: 'list',
-        routes: [
-          {
-            path: '/list/table-list',
-            name: 'searchtable',
-            component: './List/TableList',
-          },
-          {
-            path: '/list/basic-list',
-            name: 'basiclist',
-            component: './List/BasicList',
-          },
-          {
-            path: '/list/card-list',
-            name: 'cardlist',
-            component: './List/CardList',
-          },
-          {
-            path: '/list/search',
-            name: 'searchlist',
-            component: './List/List',
-            routes: [
-              {
-                path: '/list/search',
-                redirect: '/list/search/articles',
-              },
-              {
-                path: '/list/search/articles',
-                name: 'articles',
-                component: './List/Articles',
-              },
-              {
-                path: '/list/search/projects',
-                name: 'projects',
-                component: './List/Projects',
-              },
-              {
-                path: '/list/search/applications',
-                name: 'applications',
-                component: './List/Applications',
-              },
-            ],
-          },
-        ],
-      },
+
+      // profile
       {
         path: '/profile',
         name: 'profile',
         icon: 'profile',
         routes: [
-          // profile
           {
             path: '/profile/basic',
             name: 'basic',
@@ -144,12 +110,13 @@ export default [
           },
         ],
       },
+
+      // result
       {
         name: 'result',
         icon: 'check-circle-o',
         path: '/result',
         routes: [
-          // result
           {
             path: '/result/success',
             name: 'success',
@@ -158,12 +125,13 @@ export default [
           { path: '/result/fail', name: 'fail', component: './Result/Error' },
         ],
       },
+
+      // exception
       {
         name: 'exception',
         icon: 'warning',
         path: '/exception',
         routes: [
-          // exception
           {
             path: '/exception/403',
             name: 'not-permission',
