@@ -55,7 +55,7 @@ func initTable() error {
 					wechat VARCHAR(20) DEFAULT 'null',
 					nick_name VARCHAR(10) DEFAULT 'null',
 					real_name VARCHAR(10) DEFAULT 'null',
-					sex	TINYINT(1) UNSIGNED NOT NULL,
+					sex	TINYINT(1) UNSIGNED DEFAULT 0,
 					birthday DATE DEFAULT '2018-01-01',
 					height VARCHAR(10) DEFAULT 'null',
 					location VARCHAR(10) DEFAULT 'null',

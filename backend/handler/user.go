@@ -58,6 +58,7 @@ type (
 	fillInfo struct {
 		Phone            string `json:"phone" validate:"required,numeric,len=11"`
 		Wechat           string `json:"wechat" validate:"required"`
+		Sex   			 uint8  `json:"sex" validate:"required,gte=1"`
 		RealName         string `json:"real_name" validate:"required"`
 		Birthday         string `json:"birthday" validate:"required,len=10,contains=-"`
 		Height           string `json:"height" validate:"required"`
@@ -164,6 +165,7 @@ func FillInfo(this *server.Context) error {
 	}
 	userp.Phone = req.Phone
 	userp.Wechat = req.Wechat
+	userp.Sex = req.Sex
 	userp.Birthday = req.Birthday
 	userp.Height = req.Height
 	userp.Job = req.Job
@@ -275,9 +277,12 @@ func GetRecommendUsers(this *server.Context) error {
 
 	// recommend contrast sex
 	var recommedSex uint8 = 0
-	if sex == 0 {
+	switch sex {
+	case 1:
 		recommedSex = 1
-	} else {
+	case 2:
+		recommedSex = 1
+	default:
 		recommedSex = 0
 	}
 
