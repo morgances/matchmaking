@@ -38,14 +38,8 @@ class Information extends Component {
           </div>
 
           <div className={styles.buttonGroup}>
-            <Button size="large" type="primary">通过审核</Button>
-            <br/>
-            <Button size="large" type="primary" ghost>增加相亲次数</Button>
-            <br/>
-            <Button size="large" type="danger" ghost>减少相亲次数</Button>
-            <br/>
             <Popover content={popcontent} title="修改以下病句" trigger="click">
-              <Button size="large">查看联系方式</Button>
+              <Button type="primary" size="large">查看联系方式</Button>
             </Popover>
           </div>
         </div>

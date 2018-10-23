@@ -17,6 +17,8 @@
   "author": "wanghuajian620 <154659041@qq.com>",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.18.0",
+    "http": "0.0.0",
     "wepy": "^1.6.0",
     "wepy-async-function": "^1.4.4",
     "wepy-com-toast": "^1.0.2"

@@ -1,0 +1,60 @@
+<style scoped>
+.card {
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 15px;
+  border-radius: 15px;
+  height: 140px;
+  color: black;
+  background-repeat: no-repeat;
+  background-size:100% 100%;
+  -moz-background-size:100% 100%;
+  background-color: aquamarine;
+  padding-left: 20px;
+  padding-top: 30px;
+  position: relative;
+}
+
+.card_title {
+  font-size: 20px;
+}
+
+.card_enroll {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+}
+</style>
+
+<template>
+  <view>
+    <scroll-view scroll-y>
+      <view class="card">
+        <text class="card_title">二十岁单身男女的狂欢 </text>
+        <text class="card_enroll">点击报名</text>
+      </view>
+      <view class="card">
+        <text class="card_title">三十岁单身男女的聚会 </text>
+        <text class="card_enroll">点击报名</text>
+      </view>
+      <view class="card">
+        <text class="card_title">保定线上相亲会 </text>
+        <text class="card_enroll">点击报名</text>
+      </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Fate extends wepy.page {
+    config = {
+      navigationBarTitleText: '线上报名'
+    }
+
+    data = {
+      list: [{id: 1, title: 'title1'}, {id: 2, title: 'title2'}]
+    }
+  }
+</script>

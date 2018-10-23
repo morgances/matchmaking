@@ -1,0 +1,52 @@
+<style scoped>
+.card {
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 15px;
+  border-radius: 15px;
+  height: 140px;
+  color: black;
+  background-repeat: no-repeat;
+  background-size:100% 100%;
+  -moz-background-size:100% 100%;
+  background-color: aquamarine;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+</style>
+
+<template>
+  <view>
+    <scroll-view scroll-y>
+      <view class="card">
+        <text class="card_title">你内心的隐藏星座是什么? </text>
+      </view>
+      <view class="card">
+        <text class="card_title">你内心的隐藏星座是什么? </text>
+      </view>
+      <view class="card">
+        <text class="card_title">你内心的隐藏星座是什么? </text>
+      </view>
+      <view class="card">
+        <text class="card_title">你内心的隐藏星座是什么? </text>
+      </view>
+      <view class="card">
+        <text class="card_title">你内心的隐藏星座是什么? </text>
+      </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Fate extends wepy.page {
+    config = {
+      navigationBarTitleText: '测试题'
+    }
+
+    data = {
+      list: [{id: 1, title: 'title1'}, {id: 2, title: 'title2'}]
+    }
+  }
+</script>

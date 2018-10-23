@@ -1,0 +1,22 @@
+<style scoped>
+
+</style>
+
+<template>
+  <view>
+    <text>暂未开通</text>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Fate extends wepy.page {
+    config = {
+      navigationBarTitleText: '我关注谁'
+    }
+    data = {
+      list: [{id: 1, title: 'title1'}, {id: 2, title: 'title2'}]
+    }
+  }
+</script>

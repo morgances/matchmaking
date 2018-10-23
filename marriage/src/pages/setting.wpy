@@ -206,33 +206,39 @@
       </view>
       <button class="button">🎁  开通服务</button>
     </view>
-    <view class="background-cat flex-cat">
-      <view class="flex">
-        <image class="icons distance" src="../assets/images/man.png" />
-        <text class="word">谁看过我（0）</text>
-      </view> 
-      <view class="flex-next">
-        <image class="icons" src="../assets/images/arrow.png" />
+    <navigator url="/pages/setting/look" open-type="navigateTo">
+      <view class="background-cat flex-cat">
+        <view class="flex">
+          <image class="icons distance" src="../assets/images/man.png" />
+          <text class="word">谁看过我（0）</text>
+        </view>
+        <view class="flex-next">
+          <image class="icons" src="../assets/images/arrow.png" />
+        </view>
       </view>
-    </view>
-    <view class="background-cat flex-cat">
-      <view class="flex">
-        <image class="icons distance" src="../assets/images/ecg.png" />
-        <text class="word">谁关注我（0）</text>
-      </view> 
-      <view class="flex-next">
-        <image class="icons" src="../assets/images/arrow.png" />
+    </navigator>
+    <navigator url="/pages/setting/watched" open-type="navigateTo">
+      <view class="background-cat flex-cat">
+        <view class="flex">
+          <image class="icons distance" src="../assets/images/ecg.png" />
+          <text class="word">谁关注我（0）</text>
+        </view> 
+        <view class="flex-next">
+          <image class="icons" src="../assets/images/arrow.png" />
+        </view>
       </view>
-    </view>
-    <view class="background-cat flex-cat">
-      <view class="flex">
-        <image class="icons distance" src="../assets/images/ec.png" />
-        <text class="word">我关注谁（0）</text>
-      </view> 
-      <view class="flex-next">
-        <image class="icons" src="../assets/images/arrow.png" />
+    </navigator>
+    <navigator url="/pages/setting/watch" open-type="navigateTo">
+      <view class="background-cat flex-cat">
+        <view class="flex">
+          <image class="icons distance" src="../assets/images/ec.png" />
+          <text class="word">我关注谁（0）</text>
+        </view> 
+        <view class="flex-next">
+          <image class="icons" src="../assets/images/arrow.png" />
+        </view>
       </view>
-    </view>
+    </navigator>
     <view class="layout-footer-flex">
       <view class="first-footer-flex">
         <view class="icon-footer-flex">
@@ -281,9 +287,6 @@
   export default class Fate extends wepy.page {
     config = {
       navigationBarTitleText: '个人中心'
-    }
-    data = {
-
     }
   }
 </script>
