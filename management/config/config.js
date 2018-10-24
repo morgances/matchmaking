@@ -82,9 +82,9 @@ export default {
     start_url: '/index.html',
     icons: [
       {
-        src: '/favicon.png',
+        src: '/smartestee.jpg',
         sizes: '48x48',
-        type: 'image/png',
+        type: 'image/jpg',
       },
     ],
   },

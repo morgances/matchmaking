@@ -22,6 +22,7 @@ class LoginPage extends Component {
 
   handleSubmit = (err, values) => {
     const { type } = this.state;
+    console.log(type, 'type')
     if (!err) {
       const { dispatch } = this.props;
       dispatch({
@@ -59,7 +60,7 @@ class LoginPage extends Component {
               this.renderMessage('账户或密码错误（admin/888888）')
             }
 
-            <UserName name="userName" placeholder="admin/user" />
+            <UserName name="account" placeholder="admin/user" />
 
             <Password
               name="password"

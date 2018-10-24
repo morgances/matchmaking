@@ -97,10 +97,6 @@ export default {
     });
   },
 
-  'POST /api/register': (req, res) => {
-    res.send({ status: 'ok', currentAuthority: 'user' });
-  },
-
   'GET /api/500': (req, res) => {
     res.status(500).send({
       timestamp: 1513932555104,
