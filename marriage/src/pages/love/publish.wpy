@@ -1,0 +1,53 @@
+<style scoped>
+.textarea {
+  min-height: 240px;
+  width: 100%;
+  padding: 20px;
+  border-bottom: 1px solid gray;
+}
+
+.upload {
+  width: 100px;
+  height: 80px;
+  margin-top: 10px;
+  margin-left: 10px;
+  border: 1px solid gray;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.upload_container {
+  font-size: 16px;
+}
+</style>
+
+<template>
+  <view>
+    <textarea class="textarea"
+      focus placeholder="分享新鲜事..." placeholder-style="color:gray" 
+      maxlength="100" cursor-spacing="0" bindblur="finishInput" />
+    <view class="upload" bindtap="upload">
+      <text class="upload_container">上传图片</text>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Fate extends wepy.page {
+  config = {
+    navigationBarTitleText: '发布动态'
+  }
+  data = {
+    show: false
+  }
+  methods = {
+    finishInput(event) {
+      console.log(event, '===s')
+    },
+    upload() {
+    }
+  }
+}
+</script>
