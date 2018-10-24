@@ -70,26 +70,28 @@
       <view @tap="know" id="{{index}}">
         <loveCard :item="item"></loveCard>
       </view>
-    </repeat>
-    <view class="footer-flex">
+      <view class="footer-flex">
       <!-- <repeat for="{{clickLike}}" key="index" index="index" item="item">
         <view @tap="knows" id="{{index}}">
           <clickHeart :item="item"></clickHeart>
         </view>
       </repeat> -->
-      <view class="icon-flex">
-        <image class="click-icon" src="../assets/images/clickhand.png" />
-        <text class="word-icon">222</text>
+        <view class="icon-flex">
+          <image class="click-icon" src="../assets/images/clickhand.png" />
+          <text class="word-icon">222</text>
+        </view>
+        <view class="icon-flex">
+          <image class="icon" src="../assets/images/comment1.png" />
+          <text class="word-icon">私密评论</text>
+        </view>
+        <button @tap="give" class="flower">送花</button>
       </view>
-      <view class="icon-flex">
-        <image class="icon" src="../assets/images/comment1.png" />
-        <text class="word-icon">私密评论</text>
+    </repeat>
+    <navigator url="/pages/love/publish" open-type="navigateTo">
+      <view class="release-flex">
+        <image class="release" src="../assets/images/add.png" />
       </view>
-      <button @tap="give" class="flower">送花</button>
-    </view>
-    <view class="release-flex">
-      <image class="release" src="../assets/images/add.png" />
-    </view>
+    </navigator>
   </view>
 </template>
 

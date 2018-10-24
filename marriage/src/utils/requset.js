@@ -1,16 +1,4 @@
-import axios from 'axios'
+const baseURL = 'http://10.0.0.13:3000'
+const token = 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfaWQiOiJ0ZXN0YWNpZCIsImV4cCI6MTU0MjM0MTI2MiwiaXNfYWRtaW4iOmZhbHNlLCJvcGVuX2lkIjoiMTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3OCIsInNleCI6MX0.-xCeuXQSffiYD5bbDT36cRP2gVgpwoJYYwROi1-TW9E'
 
-const service = axios.create({
-  baseURL: 'https://techcats.s8e.io/api', // api的base_url
-  timeout: 15000 // 请求超时时间
-})
-
-service.interceptors.request.use(config => {
-  console.log(config)
-})
-
-service.interceptors.response.use(config => {
-  console.log(config)
-})
-
-export default service
+export { baseURL, token }

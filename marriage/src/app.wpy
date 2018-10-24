@@ -20,7 +20,9 @@ export default class extends wepy.app {
       'pages/detail',
       'pages/setting/look',
       'pages/setting/watch',
-      'pages/setting/watched'
+      'pages/setting/watched',
+      'pages/setting/gift',
+      'pages/love/publish'
     ],
     window: {
       backgroundTextStyle: 'light',

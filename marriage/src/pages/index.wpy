@@ -225,7 +225,7 @@
       <text class="word-recommend">为您推荐</text>
       <view class="change-flex">
         <image class="icon-change" src="../assets/images/change.png" />
-        <text class="word-circle">换一批</text>
+        <text bindtap="getData" class="word-circle">换一批</text>
       </view>
     </view>
     <view class="belly-flex">
@@ -295,6 +295,7 @@
 <script>
   import wepy from 'wepy'
   import { SwiperPicture } from '../libs/manual-content'
+  import { homeData } from '../service/home'
 
   export default class Index extends wepy.page {
     config = {
@@ -316,7 +317,10 @@
     }
 
     methods = {
-
+      async getData() {
+        let resp = await homeData()
+        console.log(resp)
+      }
     }
 
     events = {
