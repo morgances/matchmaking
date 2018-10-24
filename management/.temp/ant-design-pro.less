@@ -1255,6 +1255,50 @@ i.antd-pro-components-global-header-index-trigger {
   }
 }
 
+.antd-pro-components-post-index-auditPost {
+  display:flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border-bottom: 1px solid lightgray;
+  justify-content: space-around;
+}
+
+.antd-pro-components-post-index-post {
+  display: flex;
+  flex-direction: row;
+  padding-top: 5%;
+  padding-bottom: 5%;
+  width: 50%;
+}
+
+.antd-pro-components-post-index-CardID {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 5%;
+}
+
+.antd-pro-components-post-index-tag {
+  margin-bottom: 20px;
+}
+
+.antd-pro-components-post-index-cardContent {
+  width: 50%;
+  padding-left: 5%;
+  border-left: 1px solid lightgray;
+}
+
+.antd-pro-components-post-index-img {
+  width: 200px;
+}
+
+.antd-pro-components-post-index-button {
+  display: flex;
+  flex-direction: column;
+  padding-top: 5%;
+}
 
 
 .antd-pro-components-result-index-result {
@@ -1726,14 +1770,14 @@ i.antd-pro-components-global-header-index-trigger {
 }
 
 .antd-pro-components-user-information-index-lineTitle {
-  font-size: 20px;
   width: 160px;
   text-align: right;
   margin-right: 40px;
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .antd-pro-components-user-information-index-lineContent {
-  font-size: 16px;
   width: 200px;
   border-bottom: 1px solid lightcoral;
 }
@@ -2760,6 +2804,44 @@ a.antd-pro-pages-list-articles-listItemMetaTitle {
   }
 }
 
+.antd-pro-pages-post-dynamic-post-auditPost {
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.antd-pro-pages-post-dynamic-post-post {
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  border: 1px solid lightgray;
+  padding: 5%;
+  width: 50%;
+}
+
+.antd-pro-pages-post-dynamic-post-CardID {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 5%;
+}
+
+.antd-pro-pages-post-dynamic-post-tag {
+  margin-bottom: 20px;
+}
+
+.antd-pro-pages-post-dynamic-post-cardContent {
+  padding-left: 5%;
+  border-left: 1px solid lightgray;
+}
+
+.antd-pro-pages-post-dynamic-post-img {
+  width: 200px;
+}
+
 
 
 .antd-pro-pages-profile-advanced-profile-headerList {
@@ -2855,76 +2937,6 @@ a.antd-pro-pages-list-articles-listItemMetaTitle {
   }
 }
 
-
-
-.antd-pro-pages-user-register-main {
-  width: 368px;
-  margin: 0 auto;
-    .ant-form-item {
-      margin-bottom: 24px;
-    }
-
-  h3 {
-    font-size: 16px;
-    margin-bottom: 20px;
-  }
-
-  .antd-pro-pages-user-register-getCaptcha {
-    display: block;
-    width: 100%;
-  }
-
-  .antd-pro-pages-user-register-submit {
-    width: 50%;
-  }
-
-  .antd-pro-pages-user-register-login {
-    float: right;
-    line-height: @btn-height-lg;
-  }
-}
-
-.antd-pro-pages-user-register-success,
-.antd-pro-pages-user-register-warning,
-.antd-pro-pages-user-register-error {
-  transition: color 0.3s;
-}
-
-.antd-pro-pages-user-register-success {
-  color: @success-color;
-}
-
-.antd-pro-pages-user-register-warning {
-  color: @warning-color;
-}
-
-.antd-pro-pages-user-register-error {
-  color: @error-color;
-}
-
-.antd-pro-pages-user-register-progress-pass > .antd-pro-pages-user-register-progress {
-    .ant-progress-bg {
-      background-color: @warning-color;
-    }
-}
-
-.antd-pro-pages-user-register-result-registerResult {
-    .anticon {
-      font-size: 64px;
-    }
-  .antd-pro-pages-user-register-result-title {
-    margin-top: 32px;
-    font-size: 20px;
-    line-height: 28px;
-  }
-  .antd-pro-pages-user-register-result-actions {
-    margin-top: 40px;
-    a + a {
-      margin-left: 8px;
-    }
-  }
-}
-
 .antd-pro-pages-user-page-information-searchFrame {
   margin-bottom: 5%;
 }
@@ -2935,13 +2947,13 @@ a.antd-pro-pages-list-articles-listItemMetaTitle {
   margin: 0 auto;
   justify-content: space-around;
   background-color: white;
-  border-radius: 5%;
   padding: 5%;
 }
 
-.antd-pro-pages-user-page-information-buttonGroup {
+.antd-pro-pages-user-page-information-buttonPosition {
   display: flex;
   flex-direction: column;
+  margin-top: 10%;
 }
 
 .textOverflow() {

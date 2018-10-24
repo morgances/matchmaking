@@ -1,16 +1,28 @@
 import mockjs from 'mockjs';
 
 const titles = [
-  'Alipay',
-  'Angular',
-  'Ant Design',
-  'Ant Design Pro',
-  'Bootstrap',
-  'React',
-  'Vue',
-  'Webpack',
+  '苹果',
+  '香蕉',
+  '鸭梨',
+  '甜枣',
+  '橘子',
+  '火龙果',
+  '百香果',
+  '西瓜',
 ];
-const avatars = [
+
+const prices = [
+  '67.67',
+  '6.66',
+  '12.12',
+  '6.70',
+  '12.13',
+  '13.67',
+  '67.76',
+  '6712.13',
+];
+
+const avatars2 = [
   'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png', // Alipay
   'https://gw.alipayobjects.com/zos/rmsportal/zOsKZmFRdUtvpqCImOVY.png', // Angular
   'https://gw.alipayobjects.com/zos/rmsportal/dURIMkkrRFpPgTuzkwnB.png', // Ant Design
@@ -21,7 +33,7 @@ const avatars = [
   'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png', // Webpack
 ];
 
-const avatars2 = [
+const avatars = [
   'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
   'https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png',
   'https://gw.alipayobjects.com/zos/rmsportal/gaOngJwsRYRaVAuXXcmB.png',
@@ -49,16 +61,16 @@ const desc = [
 ];
 
 const user = [
-  '付小小',
-  '曲丽丽',
-  '林东东',
-  '周星星',
-  '吴加好',
-  '朱偏右',
-  '鱼酱',
-  '乐哥',
-  '谭小仪',
-  '仲尼',
+  '刘琦',
+  '哈士奇',
+  '王华建',
+  '大保健',
+  '王博峰',
+  '我不服',
+  '张豪',
+  '阿豪',
+  '封逸飞',
+  '带你装逼带你飞',
 ];
 
 function fakeList(count) {
@@ -68,11 +80,12 @@ function fakeList(count) {
       id: `fake-list-${i}`,
       owner: user[i % 10],
       title: titles[i % 8],
-      avatar: avatars[i % 8],
+      avatar: avatars2[i % 8],
+      prices: prices[i % 8],
       cover: parseInt(i / 4, 10) % 2 === 0 ? covers[i % 4] : covers[3 - (i % 4)],
       status: ['active', 'exception', 'normal'][i % 3],
       percent: Math.ceil(Math.random() * 50) + 50,
-      logo: avatars[i % 8],
+      logo: avatars[i % 10],
       href: 'https://ant.design',
       updatedAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i),
       createdAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i),

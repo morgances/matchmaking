@@ -13,27 +13,6 @@ let routes = [
     "exact": true
   },
   {
-    "path": "/form/step-form",
-    "name": "stepform",
-    "redirect": "/form/step-form/info",
-    "exact": true
-  },
-  {
-    "path": "/list/search",
-    "redirect": "/list/search/articles",
-    "exact": true
-  },
-  {
-    "path": "/account/center",
-    "redirect": "/account/center/articles",
-    "exact": true
-  },
-  {
-    "path": "/account/settings",
-    "redirect": "/account/settings/base",
-    "exact": true
-  },
-  {
     "path": "/",
     "redirect": "/userpage/information",
     "exact": true
@@ -63,8 +42,8 @@ let routes = [
     "routes": [
       {
         "path": "/userpage",
-        "name": "userpage",
         "icon": "team",
+        "name": "userpage",
         "routes": [
           {
             "path": "/userpage/information",
@@ -78,52 +57,14 @@ let routes = [
         ]
       },
       {
-        "path": "/form",
-        "icon": "form",
-        "name": "form",
+        "path": "/list",
+        "icon": "table",
+        "name": "list",
         "routes": [
           {
-            "path": "/form/basic-form",
-            "name": "basicform",
-            "component": dynamic({ loader: () => import('../Forms/BasicForm'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "exact": true
-          },
-          {
-            "path": "/form/step-form",
-            "name": "stepform",
-            "component": dynamic({ loader: () => import('../Forms/StepForm'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "hideChildrenInMenu": true,
-            "routes": [
-              {
-                "path": "/form/step-form/info",
-                "name": "info",
-                "component": dynamic({ loader: () => import('../Forms/StepForm/Step1'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-                "exact": true
-              },
-              {
-                "path": "/form/step-form/confirm",
-                "name": "confirm",
-                "component": dynamic({ loader: () => import('../Forms/StepForm/Step2'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-                "exact": true
-              },
-              {
-                "path": "/form/step-form/result",
-                "name": "result",
-                "component": dynamic({ loader: () => import('../Forms/StepForm/Step3'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-                "exact": true
-              },
-              {
-                "component": () => React.createElement(require('/Users/a11/Github/group-matchmaking/management/node_modules/umi-build-dev/lib/plugins/404/NotFound.js').default, { pagesPath: 'src/pages', hasRoutesInConfig: true })
-              }
-            ]
-          },
-          {
-            "path": "/form/advanced-form",
-            "name": "advancedform",
-            "authority": [
-              "admin"
-            ],
-            "component": dynamic({ loader: () => import('../Forms/AdvancedForm'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
+            "path": "/list/basic-list",
+            "name": "basiclist",
+            "component": dynamic({ loader: () => import('../List/BasicList'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
             "exact": true
           },
           {
@@ -132,55 +73,15 @@ let routes = [
         ]
       },
       {
-        "path": "/list",
-        "icon": "table",
-        "name": "list",
+        "path": "/post",
+        "icon": "calculator",
+        "name": "post",
         "routes": [
           {
-            "path": "/list/table-list",
-            "name": "searchtable",
-            "component": dynamic({ loader: () => import('../List/TableList'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
+            "path": "/post/dynamic-post",
+            "name": "dynamicpost",
+            "component": dynamic({ loader: () => import('../Post/DynamicPost'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
             "exact": true
-          },
-          {
-            "path": "/list/basic-list",
-            "name": "basiclist",
-            "component": dynamic({ loader: () => import('../List/BasicList'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "exact": true
-          },
-          {
-            "path": "/list/card-list",
-            "name": "cardlist",
-            "component": dynamic({ loader: () => import('../List/CardList'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "exact": true
-          },
-          {
-            "path": "/list/search",
-            "name": "searchlist",
-            "component": dynamic({ loader: () => import('../List/List'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "routes": [
-              {
-                "path": "/list/search/articles",
-                "name": "articles",
-                "component": dynamic({ loader: () => import('../List/Articles'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-                "exact": true
-              },
-              {
-                "path": "/list/search/projects",
-                "name": "projects",
-                "component": dynamic({ loader: () => import('../List/Projects'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-                "exact": true
-              },
-              {
-                "path": "/list/search/applications",
-                "name": "applications",
-                "component": dynamic({ loader: () => import('../List/Applications'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-                "exact": true
-              },
-              {
-                "component": () => React.createElement(require('/Users/a11/Github/group-matchmaking/management/node_modules/umi-build-dev/lib/plugins/404/NotFound.js').default, { pagesPath: 'src/pages', hasRoutesInConfig: true })
-              }
-            ]
           },
           {
             "component": () => React.createElement(require('/Users/a11/Github/group-matchmaking/management/node_modules/umi-build-dev/lib/plugins/404/NotFound.js').default, { pagesPath: 'src/pages', hasRoutesInConfig: true })
@@ -206,128 +107,6 @@ let routes = [
             ],
             "component": dynamic({ loader: () => import('../Profile/AdvancedProfile'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
             "exact": true
-          },
-          {
-            "component": () => React.createElement(require('/Users/a11/Github/group-matchmaking/management/node_modules/umi-build-dev/lib/plugins/404/NotFound.js').default, { pagesPath: 'src/pages', hasRoutesInConfig: true })
-          }
-        ]
-      },
-      {
-        "name": "result",
-        "icon": "check-circle-o",
-        "path": "/result",
-        "routes": [
-          {
-            "path": "/result/success",
-            "name": "success",
-            "component": dynamic({ loader: () => import('../Result/Success'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "exact": true
-          },
-          {
-            "path": "/result/fail",
-            "name": "fail",
-            "component": dynamic({ loader: () => import('../Result/Error'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "exact": true
-          },
-          {
-            "component": () => React.createElement(require('/Users/a11/Github/group-matchmaking/management/node_modules/umi-build-dev/lib/plugins/404/NotFound.js').default, { pagesPath: 'src/pages', hasRoutesInConfig: true })
-          }
-        ]
-      },
-      {
-        "name": "exception",
-        "icon": "warning",
-        "path": "/exception",
-        "routes": [
-          {
-            "path": "/exception/403",
-            "name": "not-permission",
-            "component": dynamic({ loader: () => import('../Exception/403'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "exact": true
-          },
-          {
-            "path": "/exception/404",
-            "name": "not-find",
-            "component": dynamic({ loader: () => import('../Exception/404'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "exact": true
-          },
-          {
-            "path": "/exception/500",
-            "name": "server-error",
-            "component": dynamic({ loader: () => import('../Exception/500'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "exact": true
-          },
-          {
-            "path": "/exception/trigger",
-            "name": "trigger",
-            "hideInMenu": true,
-            "component": dynamic({ loader: () => import('../Exception/TriggerException'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "exact": true
-          },
-          {
-            "component": () => React.createElement(require('/Users/a11/Github/group-matchmaking/management/node_modules/umi-build-dev/lib/plugins/404/NotFound.js').default, { pagesPath: 'src/pages', hasRoutesInConfig: true })
-          }
-        ]
-      },
-      {
-        "name": "account",
-        "icon": "user",
-        "path": "/account",
-        "routes": [
-          {
-            "path": "/account/center",
-            "name": "center",
-            "component": dynamic({ loader: () => import('../Account/Center/Center'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "routes": [
-              {
-                "path": "/account/center/articles",
-                "component": dynamic({ loader: () => import('../Account/Center/Articles'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-                "exact": true
-              },
-              {
-                "path": "/account/center/applications",
-                "component": dynamic({ loader: () => import('../Account/Center/Applications'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-                "exact": true
-              },
-              {
-                "path": "/account/center/projects",
-                "component": dynamic({ loader: () => import('../Account/Center/Projects'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-                "exact": true
-              },
-              {
-                "component": () => React.createElement(require('/Users/a11/Github/group-matchmaking/management/node_modules/umi-build-dev/lib/plugins/404/NotFound.js').default, { pagesPath: 'src/pages', hasRoutesInConfig: true })
-              }
-            ]
-          },
-          {
-            "path": "/account/settings",
-            "name": "settings",
-            "component": dynamic({ loader: () => import('../Account/Settings/Info'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "routes": [
-              {
-                "path": "/account/settings/base",
-                "component": dynamic({ loader: () => import('../Account/Settings/BaseView'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-                "exact": true
-              },
-              {
-                "path": "/account/settings/security",
-                "component": dynamic({ loader: () => import('../Account/Settings/SecurityView'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-                "exact": true
-              },
-              {
-                "path": "/account/settings/binding",
-                "component": dynamic({ loader: () => import('../Account/Settings/BindingView'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-                "exact": true
-              },
-              {
-                "path": "/account/settings/notification",
-                "component": dynamic({ loader: () => import('../Account/Settings/NotificationView'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-                "exact": true
-              },
-              {
-                "component": () => React.createElement(require('/Users/a11/Github/group-matchmaking/management/node_modules/umi-build-dev/lib/plugins/404/NotFound.js').default, { pagesPath: 'src/pages', hasRoutesInConfig: true })
-              }
-            ]
           },
           {
             "component": () => React.createElement(require('/Users/a11/Github/group-matchmaking/management/node_modules/umi-build-dev/lib/plugins/404/NotFound.js').default, { pagesPath: 'src/pages', hasRoutesInConfig: true })
