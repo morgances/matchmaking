@@ -11,7 +11,7 @@ import { enquireScreen, unenquireScreen } from 'enquire-js';
 import { formatMessage } from 'umi/locale';
 import SiderMenu from '@/components/SiderMenu';
 import Authorized from '@/utils/Authorized';
-import logo from '../assets/smartestee.jpg';
+import logo from '../assets/bat.png';
 import Context from './MenuContext';
 import Exception403 from '../pages/Exception/403';
 

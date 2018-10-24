@@ -68,7 +68,6 @@ export default (props) => {
         <p className={styles.lineTitle}>认证：</p>
         <p className={styles.lineContent}>
           <Button size="small" type="primary" ghost>{props.item.certified}</Button>
-          认证
         </p>
       </div>
 

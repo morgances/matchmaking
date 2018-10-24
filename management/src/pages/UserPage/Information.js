@@ -34,7 +34,7 @@ class Information extends Component {
 
         <div className={styles.showDetails}>
           <div>
-            <UserPage item={this.props.information[0]}/>
+            <UserPage item={this.props.information[0]} />
           </div>
 
           <div className={styles.buttonPosition}>
