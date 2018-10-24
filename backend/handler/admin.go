@@ -8,13 +8,14 @@ package handler
 import (
 	"strconv"
 
+	"github.com/dgrijalva/jwt-go"
+
 	"github.com/TechCatsLab/apix/http/server"
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
 	"github.com/zh1014/comment/response"
-	"github.com/dgrijalva/jwt-go"
 )
 
 type (
@@ -29,15 +30,22 @@ type (
 
 func Login(this *server.Context) error {
 	var (
+		req struct{
+			Account  string `json:"account" validate:"required"`
+			Password string `json:"password" validate:"required"`
+		}
 		resp token
 	)
-	authorization := this.GetHeader("Authorization")
-	acc, pass, err := util.ParseBase64(authorization)
+	err := this.JSONBody(&req)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
-	if err = model.AdminService.Login(acc, pass); err != nil {
+	if err = this.Validate(&req); err != nil {
+		log.Error(err)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
+	}
+	if err = model.AdminService.Login(req.Account, req.Password); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrAccount, nil)
 	}
