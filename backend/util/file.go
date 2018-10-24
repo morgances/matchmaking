@@ -91,18 +91,22 @@ func RemoveGoodsImage(goodsid uint32) error {
 // ------------------------------------------------------------------
 
 func SaveImages(dir string, r *http.Request) error {
-	num, err := strconv.Atoi(r.FormValue("image_num"))
+	numString := r.FormValue("image_num")
+	if numString == "" { // no image
+		return nil
+	}
+	num, err := strconv.Atoi(numString)
 	if err != nil {
 		return errors.New("Save images: " + err.Error())
 	}
-	hasImageSaveFailed := false
+	hasImageSaveFailed := true
 	timeUnix := time.Now().Unix()
 	for i := 1; i <= num; i++ {
 		image, _, err := r.FormFile(fmt.Sprintf("image_%d", i))
 		if err != nil {
 			return errors.New(fmt.Sprintf("Save images %d: %v", i, err))
 		}
-		// todo: make images will not be created with the same name when one user upload photos twice in a second
+		// todo: let images will not be created with the same name when one user upload photos twice in a second
 		// todo: should I return err when one of images failed to save ?
 		err = SaveImage(dir+fmt.Sprintf("%d-%d.jpg", timeUnix, i), image)
 		if err != nil {
@@ -111,7 +115,7 @@ func SaveImages(dir string, r *http.Request) error {
 		image.Close()
 	}
 	if hasImageSaveFailed {
-		return errors.New("There is image failed to saved in " + dir)
+		return errors.New("There is image failed to be saved in " + dir)
 	}
 	return nil
 }

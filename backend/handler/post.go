@@ -31,6 +31,7 @@ type (
 )
 
 func CreatePost(this *server.Context) error {
+	// image_num title content
 	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
 	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -58,6 +59,7 @@ func CreatePost(this *server.Context) error {
 func GetReviewedPost(this *server.Context) error {
 	var (
 		err  error
+		// todo: need response user information ?
 		resp []post
 	)
 	rawPosts, err := model.PostService.FindReviewed()

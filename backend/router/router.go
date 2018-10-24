@@ -33,7 +33,7 @@ func init() {
 	Router.Post("/matchmaking/user/removephotos", handler.RemovePhotos)
 	Router.Post("/matchmaking/user/sendrose", handler.SendRose)
 	Router.Post("/matchmaking/user/album", handler.GetAlbum)           									// todo: use Get
-	Router.Post("/matchmaking/user/userdetail", handler.GetUserDetail) 		 // both user and admin		 	todo: use Get
+	Router.Post("/matchmaking/user/getuserdetail", handler.GetUserDetail) 		 // both user and admin		 	todo: use Get
 	Router.Get("/matchmaking/user/recommendusers", handler.GetRecommendUsers)
 
 	Router.Post("/matchmaking/comment/insert", handler.CommentService.Insert)
@@ -46,12 +46,11 @@ func init() {
 	Router.Get("/matchmaking/follow/following", handler.GetFollowing)
 	Router.Get("/matchmaking/follow/follower", handler.GetFollower)
 
-	Router.Post("/matchmaking/goods/byid", handler.GetGoodsByID)      		 // both user and admin 		todo: use Get
 	Router.Get("/matchmaking/goods/byprice", handler.GetGoodsByPrice) 		 // both user and admin
 
 	Router.Post("/matchmaking/post/create", handler.CreatePost)
 	Router.Post("/matchmaking/post/commend", handler.CommendPost)
-	Router.Post("/matchmaking/post/delete?isadmin=false", handler.DeletePost)
+	Router.Post("/matchmaking/post/userdelete", handler.DeletePost)
 	Router.Get("/matchmaking/post/many?isreviewed=true", handler.GetReviewedPost)  		// both user and admin
 	Router.Get("/matchmaking/post/mine", handler.GetMyPost)
 
@@ -77,8 +76,9 @@ func init() {
 
 	Router.Get("/matchmaking/post/many?isreviewed=false", handler.GetUnreviewedPost)
 	Router.Post("/matchmaking/post/updatestatus", handler.UpdatePostStatus)
-	Router.Post("/matchmaking/post/delete?isadmin=true", handler.AdminDeletePost)
+	Router.Post("/matchmaking/post/admindelete", handler.AdminDeletePost)
 
+	Router.Post("/matchmaking/goods/byid", handler.GetGoodsByID)      		 //		todo: use Get
 	Router.Post("/matchmaking/goods/create", handler.CreateGoods)
 	Router.Post("/matchmaking/goods/update", handler.UpdateGoods)
 	Router.Post("/matchmaking/goods/changeimage", handler.ChangeGoodsImage)
