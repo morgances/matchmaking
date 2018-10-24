@@ -33,7 +33,7 @@ func init() {
 	Router.Post("/matchmaking/user/removephotos", handler.RemovePhotos)
 	Router.Post("/matchmaking/user/sendrose", handler.SendRose)
 	Router.Post("/matchmaking/user/album", handler.GetAlbum)           									// todo: use Get
-	Router.Post("/matchmaking/user/getuserdetail", handler.GetUserDetail) 		 // both user and admin		 	todo: use Get
+	Router.Post("/matchmaking/user/getuserdetail", handler.GetUserDetail) 		 // both user and admin	   todo: use Get
 	Router.Get("/matchmaking/user/recommendusers", handler.GetRecommendUsers)
 
 	Router.Post("/matchmaking/comment/insert", handler.CommentService.Insert)

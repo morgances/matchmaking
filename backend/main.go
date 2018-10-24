@@ -40,6 +40,19 @@ func skipper(path string) bool {
 			return true
 		}
 	}
+	if strings.Contains(path, "/avatar/") {
+		return true
+	}
+	if strings.Contains(path, "/album/") {
+		return true
+	}
+	if strings.Contains(path, "/post/") {
+		return true
+	}
+	if strings.Contains(path, "/goods/") {
+		return true
+	}
+
 	return false
 }
 
