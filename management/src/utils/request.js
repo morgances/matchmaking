@@ -56,6 +56,8 @@ const cachedSave = (response, hashcode) => {
   return response;
 };
 
+const baseURL = 'http://10.0.0.13:3000';// 联调后台 O__O "…
+
 /**
  * Requests a URL, returning a promise.
  *
@@ -73,7 +75,7 @@ export default function request(
    * Produce fingerprints based on url and parameters
    * Maybe url has the same parameters
    */
-  const fingerprint = url + (options.body ? JSON.stringify(options.body) : '');
+  const fingerprint = baseURL + url + (options.body ? JSON.stringify(options.body) : '');
   const hashcode = hash
     .sha256()
     .update(fingerprint)
@@ -119,7 +121,7 @@ export default function request(
       sessionStorage.removeItem(`${hashcode}:timestamp`);
     }
   }
-  return fetch(url, newOptions)
+  return fetch(baseURL + url, newOptions)
     .then(checkStatus)
     .then(response => cachedSave(response, hashcode))
     .then(response => {
