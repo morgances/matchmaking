@@ -8,6 +8,11 @@ let Router = require('dva/router').routerRedux.ConnectedRouter;
 
 let routes = [
   {
+    "path": "/user",
+    "redirect": "/user/login",
+    "exact": true
+  },
+  {
     "path": "/",
     "redirect": "/userpage/information",
     "exact": true

@@ -10,8 +10,8 @@ const Search = Input.Search;
 
 const popcontent = (
   <div>
-    <p>我爱吃屎</p>
-    <p>屎爱吃我</p>
+    <p>微信号：</p>
+    <p>手机号：</p>
   </div>
 )
 
@@ -26,7 +26,7 @@ class Information extends Component {
       <div>
         <Search
           className={styles.searchFrame}
-          placeholder="输入想要查询的强奸犯ID"
+          placeholder="输入想要查询的用户ID"
           enterButton
           size="large"
           onSearch={value =>console.log(value)}
@@ -38,7 +38,7 @@ class Information extends Component {
           </div>
 
           <div className={styles.buttonPosition}>
-            <Popover content={popcontent} title="修改以下病句" trigger="click">
+            <Popover content={popcontent} trigger="click">
               <Button type="primary" size="large">查看联系方式</Button>
             </Popover>
           </div>

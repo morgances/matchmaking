@@ -84,9 +84,9 @@ class BasicLayout extends React.PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch({
+    /*dispatch({
       type: 'user/fetchCurrent',
-    });
+    });*/
     dispatch({
       type: 'setting/getSetting',
     });
@@ -166,13 +166,13 @@ class BasicLayout extends React.PureComponent {
     const currRouterData = this.matchParamsPath(pathname);
 
     if (!currRouterData) {
-      return 'Ant Design Pro';
+      return '极智人科技';
     }
     const message = formatMessage({
       id: currRouterData.locale || currRouterData.name,
       defaultMessage: currRouterData.name,
     });
-    return `${message} - Ant Design Pro`;
+    return `${message} -  极智人科技`;
   };
 
   getLayoutStyle = () => {

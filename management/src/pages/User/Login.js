@@ -22,7 +22,6 @@ class LoginPage extends Component {
 
   handleSubmit = (err, values) => {
     const { type } = this.state;
-    console.log(type, 'type')
     if (!err) {
       const { dispatch } = this.props;
       dispatch({
@@ -57,14 +56,17 @@ class LoginPage extends Component {
               login.status === 'error' &&
               login.type === 'account' &&
               !submitting &&
-              this.renderMessage('账户或密码错误（admin/888888）')
+              this.renderMessage('账户或密码错误')
             }
 
-            <UserName name="account" placeholder="admin/user" />
+            <UserName
+              name="admin_account"
+              placeholder="请输入账号"
+            />
 
             <Password
-              name="password"
-              placeholder="888888/123456"
+              name="admin_password"
+              placeholder="请输入密码"
               onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)}
             />
           </Tab>

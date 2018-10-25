@@ -1,4 +1,4 @@
 
 export default {
-  noProxy = true
+  // noProxy = true
 };
