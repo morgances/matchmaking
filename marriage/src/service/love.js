@@ -1,8 +1,6 @@
-import { baseURL, token} from '../utils/requset';
+import { baseURL } from '../utils/requset';
 
-export async function homeData(){
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
+export async function homeData(){ // 恋爱圈
 	wx.request({
 		url: baseURL + '/matchmaking/post/many?isreviewed=true',
 		success: function(res){

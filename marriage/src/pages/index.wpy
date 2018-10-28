@@ -293,42 +293,42 @@
 </template>
 
 <script>
-  import wepy from 'wepy'
-  import { SwiperPicture } from '../libs/manual-content'
-  import { homeData } from '../service/home'
+import wepy from 'wepy'
+import { SwiperPicture } from '../libs/manual-content'
+// import { homeData } from '../service/love'
+import { homeData } from '../service/home'
 
-  export default class Index extends wepy.page {
-    config = {
-      navigationBarTitleText: '以婚至上'
-    }
-    components = {
+export default class Index extends wepy.page {
+  config = {
+    navigationBarTitleText: '以婚至上'
+  }
+  components = {
 
-    }
+  }
 
-    data = {
-      imgUrls: SwiperPicture,
-      circular: true,
-      autoplay: true,
-      interval: 5000,
-      duration: 1000,
-      dots: true,
-      dotsColor: '#ffffff',
-      dotsActiveColor: '#349BFF'
-    }
+  data = {
+    imgUrls: SwiperPicture,
+    circular: true,
+    autoplay: true,
+    interval: 5000,
+    duration: 1000,
+    dots: true,
+    dotsColor: '#ffffff',
+    dotsActiveColor: '#349BFF',
+    listData: []
+  }
 
-    methods = {
-      async getData() {
-        let resp = await homeData()
-        console.log(resp)
-      }
-    }
-
-    events = {
-
-    }
-
-    onLoad() {
-
+  methods = {
+    async getData() {
+      let resp = await homeData()
+      console.log(resp)
     }
   }
+
+  // async onLoad() {
+  //   let resp = await homeData()
+  //   console.log(this.data)
+  //   this.data.listData = [...resp.data]
+  // }
+}
 </script>

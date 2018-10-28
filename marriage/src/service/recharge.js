@@ -1,8 +1,6 @@
 import { baseURL, token} from '../utils/requset';
 
-export async function rechargeVip(){
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
+export async function rechargeVip(){ // 兑换 Vip
 	wx.request({
 		url: baseURL + '/matchmaking/recharge/vip',
 		header:{
@@ -19,7 +17,7 @@ export async function rechargeVip(){
 	})
 }
 
-export async function rechargeRose(){
+export async function rechargeRose(){ // 兑换 玫瑰花
 	console.log(baseURL, token,'===')
 	console.log('=====service here')
 	wx.request({

@@ -168,7 +168,7 @@
           <view class="footer-flex">
             <text class="word-goods-integral">22</text>
             <text class="tag">积分</text>
-            <text class="word-goods-integral">抽奖</text>
+            <button class="word-goods-integral">兑换</button>
           </view>
         </view>
         <view class="goods-flex">
@@ -178,7 +178,7 @@
           <view class="footer-flex">
             <text class="word-goods-integral">22</text>
             <text class="tag">积分</text>
-            <text class="word-goods-integral">抽奖</text>
+            <button class="word-goods-integral">兑换</button>
           </view>
         </view>
       </view>
@@ -190,7 +190,7 @@
           <view class="footer-flex">
             <text class="word-goods-integral">22</text>
             <text class="tag">积分</text>
-            <text class="word-goods-integral">抽奖</text>
+            <button class="word-goods-integral">兑换</button>
           </view>
         </view>
         <view class="goods-flex">
@@ -200,7 +200,7 @@
           <view class="footer-flex">
             <text class="word-goods-integral">22</text>
             <text class="tag">积分</text>
-            <text class="word-goods-integral">抽奖</text>
+            <button class="word-goods-integral">兑换</button>
           </view>
         </view>
       </view>

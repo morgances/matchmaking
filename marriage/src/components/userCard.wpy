@@ -1,0 +1,15 @@
+<style scoped>
+</style>
+
+<template>
+  <view>
+    <text>{{item.title}}</text>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Fate extends wepy.page {
+  }
+</script>
