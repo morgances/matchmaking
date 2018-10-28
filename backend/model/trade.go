@@ -56,7 +56,7 @@ func (tradeServPrvd) Insert(t *Trade) error {
 		`INSERT INTO `+conf.MMConf.Database+`.trade(open_id,goods_id,buyer_name,goods_title,cost,date_time,finished)
 					VALUES(?,?,?,?,?,NOW(),0)`,
 		t.OpenID, t.GoodsID, t.BuyerName, t.GoodsName, t.Cost,
-	);err != nil {
+	); err != nil {
 		tx.Rollback()
 		return err
 	}
@@ -73,11 +73,11 @@ func (tradeServPrvd) Cancel(t *Trade) error {
 	var rslt sql.Result
 	if rslt, err = tx.Exec(`UPDATE `+conf.MMConf.Database+`.user SET points=points+? WHERE open_id=? LIMIT 1`, t.Cost, t.OpenID); err != nil {
 		tx.Rollback()
-		return errors.New("failed to return points to user(id): "+t.OpenID)
+		return errors.New("failed to return points to user(id): " + t.OpenID)
 	}
 	if affec, err := rslt.RowsAffected(); err == nil && affec != 1 {
 		tx.Rollback()
-		return errors.New("failed to return points to user(id): "+t.OpenID)
+		return errors.New("failed to return points to user(id): " + t.OpenID)
 	}
 	rslt, err = DB.Exec(
 		`DELETE FROM `+conf.MMConf.Database+`.trade WHERE id=? AND finished=0 LIMIT 1`,

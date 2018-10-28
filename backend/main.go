@@ -9,14 +9,13 @@ package main
 
 import (
 	"net/http"
-	"strings"
-
 	"github.com/TechCatsLab/apix/http/server"
 	"github.com/TechCatsLab/apix/http/server/middleware"
+	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/conf"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/router"
-	log "github.com/TechCatsLab/logging/logrus"
+	"strings"
 )
 
 func main() {
@@ -35,22 +34,10 @@ func main() {
 }
 
 func skipper(path string) bool {
-	for i, _ := range router.Skip {
-		if strings.HasSuffix(path, router.Skip[i]) {
+	for i, _ := range router.SkipSuffix {
+		if strings.HasSuffix(path, router.SkipSuffix[i]) {
 			return true
 		}
-	}
-	if strings.Contains(path, "/avatar/") {
-		return true
-	}
-	if strings.Contains(path, "/album/") {
-		return true
-	}
-	if strings.Contains(path, "/post/") {
-		return true
-	}
-	if strings.Contains(path, "/goods/") {
-		return true
 	}
 
 	return false

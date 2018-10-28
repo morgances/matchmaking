@@ -30,9 +30,9 @@ type (
 
 func Login(this *server.Context) error {
 	var (
-		req struct{
-			Account  string `json:"account" validate:"required"`
-			Password string `json:"password" validate:"required"`
+		req struct {
+			Account  string `json:"admin_account" validate:"required"`
+			Password string `json:"admin_password" validate:"required"`
 		}
 		resp token
 	)
@@ -58,7 +58,7 @@ func Login(this *server.Context) error {
 
 func Certify(this *server.Context) error {
 	var (
-		req     targetOpenID
+		req targetOpenID
 	)
 	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["is_admin"].(bool)
 	if !ok {
@@ -85,7 +85,7 @@ func Certify(this *server.Context) error {
 
 func DatePrivilegeReduce(this *server.Context) error {
 	var (
-		req     targetOpenID
+		req targetOpenID
 	)
 	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["is_admin"].(bool)
 	if !ok {
@@ -113,7 +113,7 @@ func DatePrivilegeReduce(this *server.Context) error {
 
 func DatePrivilegeAdd(this *server.Context) error {
 	var (
-		req     targetOpenID
+		req targetOpenID
 	)
 	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["is_admin"].(bool)
 	if !ok {
@@ -142,8 +142,8 @@ func DatePrivilegeAdd(this *server.Context) error {
 
 func GetContact(this *server.Context) error {
 	var (
-		req     targetOpenID
-		resp    struct {
+		req  targetOpenID
+		resp struct {
 			Phone  string `json:"phone"`
 			Wechat string `json:"wechat"`
 		}
@@ -175,7 +175,7 @@ func GetContact(this *server.Context) error {
 
 func GetUnreviewedPost(this *server.Context) error {
 	var (
-		resp    []post
+		resp []post
 	)
 	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["is_admin"].(bool)
 	if !ok {
@@ -206,7 +206,7 @@ func GetUnreviewedPost(this *server.Context) error {
 
 func UpdatePostStatus(this *server.Context) error {
 	var (
-		req     targetID
+		req targetID
 	)
 	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["is_admin"].(bool)
 	if !ok {
@@ -234,7 +234,7 @@ func UpdatePostStatus(this *server.Context) error {
 
 func AdminDeletePost(this *server.Context) error {
 	var (
-		req     targetID
+		req targetID
 	)
 	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["is_admin"].(bool)
 	if !ok {
@@ -267,7 +267,7 @@ func AdminDeletePost(this *server.Context) error {
 
 func GetUnfinishedTrade(this *server.Context) error {
 	var (
-		resp    []tradeInfo
+		resp []tradeInfo
 	)
 	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["is_admin"].(bool)
 	if !ok {
@@ -296,7 +296,7 @@ func GetUnfinishedTrade(this *server.Context) error {
 
 func CancelTrade(this *server.Context) error {
 	var (
-		req     targetID
+		req targetID
 	)
 	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["is_admin"].(bool)
 	if !ok {
@@ -334,7 +334,7 @@ func CancelTrade(this *server.Context) error {
 
 func UpdateTradeStatus(this *server.Context) error {
 	var (
-		req     targetID
+		req targetID
 	)
 	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["is_admin"].(bool)
 	if !ok {

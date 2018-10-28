@@ -32,7 +32,7 @@ var (
 
 // Insert limit recharge project value to 'vip' and 'rose', num regard as 1 when proj='vip'
 func (rechargeServPrvd) Insert(proj, openid string, num uint32) (id uint32, err error) {
-	var fee uint32= 0
+	var fee uint32 = 0
 	switch proj {
 	case "vip":
 		fee = conf.MMConf.VIPFee
@@ -56,7 +56,7 @@ func (rechargeServPrvd) Insert(proj, openid string, num uint32) (id uint32, err 
 }
 
 func (rechargeServPrvd) FindAll() ([]Recharge, error) {
-	rows, err := DB.Query(`SELECT * FROM `+conf.MMConf.Database+`.recharge ORDER BY id DESC LOCK IN SHARE MODE`)
+	rows, err := DB.Query(`SELECT * FROM ` + conf.MMConf.Database + `.recharge ORDER BY id DESC LOCK IN SHARE MODE`)
 	if err != nil {
 		return nil, err
 	}

@@ -10,10 +10,10 @@ import (
 
 	"github.com/TechCatsLab/apix/http/server"
 	log "github.com/TechCatsLab/logging/logrus"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/zh1014/comment/response"
-	"github.com/dgrijalva/jwt-go"
 )
 
 type (

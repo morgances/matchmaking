@@ -42,5 +42,5 @@ const (
 
 	ErrSaveImage = 800
 
-	ErrNoAlbum   = 801
+	ErrNoAlbum = 801
 )

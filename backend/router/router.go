@@ -14,11 +14,13 @@ import (
 )
 
 var (
-	Router *server.Router
-	Skip   = [...]string{
+	Router     *server.Router
+	SkipSuffix = [...]string{
 		"/matchmaking/user/wechatlogin",
 		"/matchmaking/admin/login",
 		constant.NotifyUrl,
+		// skip to access to image
+		".jpg",
 	}
 )
 
@@ -32,26 +34,26 @@ func init() {
 	Router.Post("/matchmaking/user/uploadphotos", handler.UploadPhotos)
 	Router.Post("/matchmaking/user/removephotos", handler.RemovePhotos)
 	Router.Post("/matchmaking/user/sendrose", handler.SendRose)
-	Router.Post("/matchmaking/user/album", handler.GetAlbum)           									// todo: use Get
-	Router.Post("/matchmaking/user/getuserdetail", handler.GetUserDetail) 		 // both user and admin	   todo: use Get
+	Router.Post("/matchmaking/user/album", handler.GetAlbum)              // todo: use Get
+	Router.Post("/matchmaking/user/getuserdetail", handler.GetUserDetail) // both user and admin	   todo: use Get
 	Router.Get("/matchmaking/user/recommendusers", handler.GetRecommendUsers)
 
 	Router.Post("/matchmaking/comment/insert", handler.CommentService.Insert)
 	Router.Post("/matchmaking/comment/change", handler.CommentService.ChangeContent)
-	Router.Post("/matchmaking/comment/ofuser", handler.CommentService.ListCommentsByUserID) 				// todo: use Get
-	Router.Post("/matchmaking/comment/ofpost", handler.CommentService.ListCommentsByTarget) 				// todo: use Get
+	Router.Post("/matchmaking/comment/ofuser", handler.CommentService.ListCommentsByUserID) // todo: use Get
+	Router.Post("/matchmaking/comment/ofpost", handler.CommentService.ListCommentsByTarget) // todo: use Get
 
 	Router.Post("/matchmaking/follow/follow", handler.Follow)
 	Router.Post("/matchmaking/follow/unfollow", handler.Unfollow)
 	Router.Get("/matchmaking/follow/following", handler.GetFollowing)
 	Router.Get("/matchmaking/follow/follower", handler.GetFollower)
 
-	Router.Get("/matchmaking/goods/byprice", handler.GetGoodsByPrice) 		 // both user and admin
+	Router.Get("/matchmaking/goods/byprice", handler.GetGoodsByPrice) // both user and admin
 
 	Router.Post("/matchmaking/post/create", handler.CreatePost)
 	Router.Post("/matchmaking/post/commend", handler.CommendPost)
 	Router.Post("/matchmaking/post/userdelete", handler.DeletePost)
-	Router.Get("/matchmaking/post/many?isreviewed=true", handler.GetReviewedPost)  		// both user and admin
+	Router.Get("/matchmaking/post/many?isreviewed=true", handler.GetReviewedPost) // both user and admin
 	Router.Get("/matchmaking/post/mine", handler.GetMyPost)
 
 	Router.Post("/matchmaking/signin/signin", handler.Signin)
@@ -68,17 +70,17 @@ func init() {
 	Router.Post("/matchmaking/user/certifypass", handler.Certify)
 	Router.Post("/matchmaking/user/dateprivilegereduce", handler.DatePrivilegeReduce)
 	Router.Post("/matchmaking/user/dateprivilegeadd", handler.DatePrivilegeAdd)
-	Router.Post("/matchmaking/user/contacts", handler.GetContact)											 // todo: use Get ?
+	Router.Post("/matchmaking/user/contacts", handler.GetContact) 	// todo: use Get
 
 	Router.Get("/matchmaking/trade/unfinished", handler.GetUnfinishedTrade)
 	Router.Post("/matchmaking/trade/cancel", handler.CancelTrade)
 	Router.Post("/matchmaking/trade/updatestatus", handler.UpdateTradeStatus)
 
-	Router.Get("/matchmaking/post/many?isreviewed=false", handler.GetUnreviewedPost)
+	Router.Get("/matchmaking/post/unreviewedpost", handler.GetUnreviewedPost)
 	Router.Post("/matchmaking/post/updatestatus", handler.UpdatePostStatus)
 	Router.Post("/matchmaking/post/admindelete", handler.AdminDeletePost)
 
-	Router.Post("/matchmaking/goods/byid", handler.GetGoodsByID)      		 //		todo: use Get
+	Router.Post("/matchmaking/goods/byid", handler.GetGoodsByID) 		// todo: use Get
 	Router.Post("/matchmaking/goods/create", handler.CreateGoods)
 	Router.Post("/matchmaking/goods/update", handler.UpdateGoods)
 	Router.Post("/matchmaking/goods/changeimage", handler.ChangeGoodsImage)

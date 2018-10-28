@@ -13,11 +13,11 @@ import (
 
 	"github.com/TechCatsLab/apix/http/server"
 	log "github.com/TechCatsLab/logging/logrus"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/wx"
 	"github.com/zh1014/comment/response"
-	"github.com/dgrijalva/jwt-go"
 )
 
 type (
@@ -70,9 +70,9 @@ func RechargeVip(this *server.Context) error {
 
 func RechargeRose(this *server.Context) error {
 	var (
-		err            error
-		outTradeNo     uint32
-		req            struct {
+		err        error
+		outTradeNo uint32
+		req        struct {
 			RoseNum uint32 `json:"rose_num" validate:"required,gte=1"`
 		}
 		resp struct {

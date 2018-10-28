@@ -11,11 +11,11 @@ import (
 
 	"github.com/TechCatsLab/apix/http/server"
 	log "github.com/TechCatsLab/logging/logrus"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
 	"github.com/zh1014/comment/response"
-	"github.com/dgrijalva/jwt-go"
 )
 
 type (
@@ -31,7 +31,7 @@ type (
 )
 
 func CreatePost(this *server.Context) error {
-	// image_num title content
+	// req form-data: image_num title content
 	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
 	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -58,7 +58,7 @@ func CreatePost(this *server.Context) error {
 
 func GetReviewedPost(this *server.Context) error {
 	var (
-		err  error
+		err error
 		// todo: need response user information ?
 		resp []post
 	)

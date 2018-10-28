@@ -62,7 +62,7 @@ func (goodsServPrvd) FindByID(id uint32) (g *Goods, err error) {
 func (goodsServPrvd) FindByPrice() (gs []Goods, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM `+conf.MMConf.Database+`.goods ORDER BY price DESC LOCK IN SHARE MODE`,
+		`SELECT * FROM ` + conf.MMConf.Database + `.goods ORDER BY price DESC LOCK IN SHARE MODE`,
 	)
 	if err != nil {
 		return nil, err

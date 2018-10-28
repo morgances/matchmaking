@@ -12,8 +12,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/morgances/matchmaking/backend/util"
 	"github.com/morgances/matchmaking/backend/conf"
+	"github.com/morgances/matchmaking/backend/util"
 )
 
 type (

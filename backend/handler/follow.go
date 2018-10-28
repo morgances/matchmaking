@@ -8,10 +8,10 @@ package handler
 import (
 	"github.com/TechCatsLab/apix/http/server"
 	log "github.com/TechCatsLab/logging/logrus"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/zh1014/comment/response"
-	"github.com/dgrijalva/jwt-go"
 )
 
 type (
@@ -23,7 +23,7 @@ type (
 
 func Follow(this *server.Context) error {
 	var (
-		req    targetOpenID
+		req targetOpenID
 	)
 	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
 	if !ok {
@@ -77,7 +77,7 @@ func Unfollow(this *server.Context) error {
 
 func GetFollowing(this *server.Context) error {
 	var (
-		resp  struct {
+		resp struct {
 			Following []shortUserInfo `json:"following"`
 		}
 	)
@@ -102,7 +102,7 @@ func GetFollowing(this *server.Context) error {
 
 func GetFollower(this *server.Context) error {
 	var (
-		resp  []shortUserInfo
+		resp []shortUserInfo
 	)
 	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
 	if !ok {

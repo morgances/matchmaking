@@ -90,7 +90,7 @@ func (postServPrvd) FindByOpenID(oid string) (ps []Post, err error) {
 func (postServPrvd) FindUnreviewed() (ps []Post, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM `+conf.MMConf.Database+`.post WHERE reviewed=0 ORDER BY date_time DESC LOCK IN SHARE MODE`,
+		`SELECT * FROM ` + conf.MMConf.Database + `.post WHERE reviewed=0 ORDER BY date_time DESC LOCK IN SHARE MODE`,
 	)
 	if err != nil {
 		return nil, err
@@ -112,7 +112,7 @@ func (postServPrvd) FindUnreviewed() (ps []Post, err error) {
 func (postServPrvd) FindReviewed() (ps []Post, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM `+conf.MMConf.Database+`.post WHERE reviewed=1 ORDER BY date_time DESC LOCK IN SHARE MODE`,
+		`SELECT * FROM ` + conf.MMConf.Database + `.post WHERE reviewed=1 ORDER BY date_time DESC LOCK IN SHARE MODE`,
 	)
 	if err != nil {
 		return nil, err

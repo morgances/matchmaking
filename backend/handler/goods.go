@@ -12,11 +12,11 @@ import (
 
 	"github.com/TechCatsLab/apix/http/server"
 	log "github.com/TechCatsLab/logging/logrus"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
 	"github.com/zh1014/comment/response"
-	"github.com/dgrijalva/jwt-go"
 )
 
 type (
@@ -29,9 +29,10 @@ type (
 )
 
 func CreateGoods(this *server.Context) error {
+	// req form-data : price title description goods_image
 	var (
-		err     error
-		lastId  uint32
+		err    error
+		lastId uint32
 	)
 	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["is_admin"].(bool)
 	if !ok {
@@ -122,7 +123,7 @@ func GetGoodsByPrice(this *server.Context) error {
 
 func UpdateGoods(this *server.Context) error {
 	var (
-		req     struct {
+		req struct {
 			ID          uint32  `json:"id" validate:"required,gte=1"`
 			Title       string  `json:"title" validate:"required"`
 			Price       float64 `json:"price" validate:"required,gte=1"`
@@ -160,11 +161,12 @@ func UpdateGoods(this *server.Context) error {
 
 func ChangeGoodsImage(this *server.Context) error {
 	var (
-		err     error
-		gid     int
-		req     struct {
-			goodsID    uint32         // key: goods_id
-			goodsImage multipart.File // key: goods_image
+		err error
+		gid int
+		// req form-data: goods_id goods_image
+		req struct {
+			goodsID    uint32
+			goodsImage multipart.File
 		}
 	)
 	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["is_admin"].(bool)
@@ -192,7 +194,7 @@ func ChangeGoodsImage(this *server.Context) error {
 
 func DeleteGoods(this *server.Context) error {
 	var (
-		req     targetID
+		req targetID
 	)
 	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["is_admin"].(bool)
 	if !ok {

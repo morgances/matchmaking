@@ -16,8 +16,8 @@ import (
 	"github.com/morgances/matchmaking/backend/wx"
 	"github.com/zh1014/comment/response"
 
-	"github.com/silenceper/wechat/oauth"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/silenceper/wechat/oauth"
 )
 
 type (
@@ -58,7 +58,7 @@ type (
 	fillInfo struct {
 		Phone            string `json:"phone" validate:"required,numeric,len=11"`
 		Wechat           string `json:"wechat" validate:"required"`
-		Sex   			 uint8  `json:"sex" validate:"required,gte=1"`
+		Sex              uint8  `json:"sex" validate:"required,gte=1"`
 		RealName         string `json:"real_name" validate:"required"`
 		Birthday         string `json:"birthday" validate:"required,len=10,contains=-"`
 		Height           string `json:"height" validate:"required"`
@@ -137,8 +137,8 @@ func WechatLogin(this *server.Context) error {
 
 func FillInfo(this *server.Context) error {
 	var (
-		err    error
-		req    fillInfo
+		err error
+		req fillInfo
 	)
 	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
 	if !ok {
@@ -312,7 +312,7 @@ func GetAlbum(this *server.Context) error {
 		err          error
 		isAbleToLook bool
 		req          targetOpenID
-		resp []string
+		resp         []string
 	)
 	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
 	if !ok {
