@@ -3,18 +3,26 @@
 </style>
 
 <template>
-  <view>
-    <text>暂未开通</text>
-  </view>
+  <scroll-view scroll-y>
+    <repeat for="{{list}}" key="index" index="index" item="item">
+        <child :item="item"></child>
+    </repeat>
+  </scroll-view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import Child from '../../components/userCard'
 
   export default class Fate extends wepy.page {
     config = {
       navigationBarTitleText: '谁看过我'
     }
+
+    components = {
+      child: Child
+    }
+
     data = {
       list: [{id: 1, title: 'title1'}, {id: 2, title: 'title2'}]
     }

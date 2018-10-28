@@ -12,13 +12,13 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(accountLogin, payload);
-      console.log('你妈逼你出来啊', payload);
+      console.log('打印出我输入的信息：', payload);
       yield put({
         type: 'changeLoginStatus',
         payload: response,
       });
       // Login successfully
-      if (response === 'ok') {
+      if (response === true) {
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
@@ -30,7 +30,7 @@ export default {
               redirect = redirect.substr(2);
             }
           } else {
-            window.location.href = redirect;
+            window.location.href = "/userpage";
             return;
           }
         }

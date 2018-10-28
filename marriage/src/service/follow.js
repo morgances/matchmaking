@@ -1,8 +1,6 @@
 import { baseURL, token} from '../utils/requset';
 
 export async function follow(){ // 700 已经关注
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
 	wx.request({
 		url: baseURL + '/matchmaking/follow/follow',
 		header:{
@@ -21,9 +19,7 @@ export async function follow(){ // 700 已经关注
 	})
 }
 
-export async function unfollow(){
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
+export async function unfollow(){ // 取消关注
 	wx.request({
 		url: baseURL + '/matchmaking/follow/unfollow',
 		header:{
@@ -42,9 +38,7 @@ export async function unfollow(){
 	})
 }
 
-export async function following(){
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
+export async function following(){ // 关注的
 	wx.request({
 		url: baseURL + '/matchmaking/follow/following',
 		header:{
@@ -59,9 +53,7 @@ export async function following(){
 	})
 }
 
-export async function follower(){
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
+export async function follower(){ // 被关注的
 	wx.request({
 		url: baseURL + '/matchmaking/follow/follower',
 		header:{

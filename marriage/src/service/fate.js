@@ -1,8 +1,6 @@
 import { baseURL, token} from '../utils/requset';
 
-export async function fateData(){
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
+export async function fateData(){ // 推荐人列表
 	wx.request({
 		url: baseURL + '/matchmaking/user/recommendusers',
 		header:{

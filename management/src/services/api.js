@@ -12,8 +12,9 @@ export async function accountLogin(params) {
   
   const { status } = resp;
 
-  if ((status !== undefined) && (status == 0)) {
-    return 'ok'
+  if ((status !== undefined) && (status === 0)) {
+    console.log('返回的 status：', status);
+    return true
   }
   return false;
 }

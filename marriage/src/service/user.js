@@ -1,8 +1,6 @@
 import { baseURL, token} from '../utils/requset';
 
-export async function fillInfo(){
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
+export async function fillInfo(){  // 填写个人资料
 	wx.request({
 		url: baseURL + '/matchmaking/user/fillinfo',
 		header:{
@@ -30,9 +28,7 @@ export async function fillInfo(){
 	})
 }
 
-export async function modifyInfo(){
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
+export async function modifyInfo(){ // 修改个人资料
 	wx.request({
 		url: baseURL + '/matchmaking/user/modifyinfo',
 		header:{
@@ -56,9 +52,7 @@ export async function modifyInfo(){
 	})
 }
 
-export async function changeAvatar(){
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
+export async function changeAvatar(){ // 更换头像
 	wx.request({
 		url: baseURL + '/matchmaking/user/changeavatar',
 		header:{
@@ -75,9 +69,7 @@ export async function changeAvatar(){
 	})
 }
 
-export async function uploadPhotos(){
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
+export async function uploadPhotos(){ // 上传照片
 	wx.request({
 		url: baseURL + '/matchmaking/user/uploadphotos',
 		header:{
@@ -94,9 +86,7 @@ export async function uploadPhotos(){
 	})
 }
 
-export async function removePhotos(){
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
+export async function removePhotos(){ // 删除照片
 	wx.request({
 		url: baseURL + '/matchmaking/user/removephotos',
 		header:{
@@ -113,9 +103,7 @@ export async function removePhotos(){
 	})
 }
 
-export async function album(){
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
+export async function album(){ // 获取相册
 	wx.request({
 		url: baseURL + '/matchmaking/user/album',
 		header:{
@@ -134,9 +122,7 @@ export async function album(){
 	})
 }
 
-export async function create(){
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
+export async function create(){ // 发表动态
 	wx.request({
 		url: baseURL + '/matchmaking/post/create',
 		header:{
@@ -157,9 +143,7 @@ export async function create(){
 	})
 }
 
-export async function commend() {
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
+export async function commend() { // 获取评论
 	wx.request({
 		url: baseURL + '/matchmaking/post/commend',
 		header:{
@@ -178,9 +162,7 @@ export async function commend() {
 	})
 }
 
-export async function deletePost() {
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
+export async function deletePost() { // 删除动态
 	wx.request({
 		url: baseURL + '/matchmaking/post/userdelete',
 		header:{
@@ -199,9 +181,7 @@ export async function deletePost() {
 	})
 }
 
-export async function minePost() {
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
+export async function minePost() { // 我的动态
 	wx.request({
 		url: baseURL + '/matchmaking/post/mine',
 		header:{
@@ -217,8 +197,6 @@ export async function minePost() {
 }
 
 export async function signIn() {
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
 	wx.request({
 		url: baseURL + '/matchmaking/signin/signin',
 		header:{
@@ -236,8 +214,6 @@ export async function signIn() {
 }
 
 export async function myRecord() {
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
 	wx.request({
 		url: baseURL + '/matchmaking/signin/myrecord',
 		header:{
