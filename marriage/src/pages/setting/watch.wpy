@@ -13,6 +13,7 @@
 <script>
   import wepy from 'wepy'
   import Child from '../../components/userCard'
+  import { following } from '../../service/follow'
 
   export default class Fate extends wepy.page {
     config = {
@@ -23,6 +24,11 @@
     }
     data = {
       list: [{id: 1, title: 'title1'}, {id: 2, title: 'title2'}]
+    }
+    async onLoad() {
+      let resp = await following()
+      this.list = [...resp.data.data.following]
+      this.$apply()
     }
   }
 </script>

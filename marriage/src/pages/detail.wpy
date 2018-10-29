@@ -51,7 +51,19 @@
 .makeFriend {
   position: absolute;
   top: 320px;
-  right: 40px;
+  right: 20px;
+  height: 60px;
+  width: 60px;
+  color: rgb(196, 65, 65);
+  background-color: rgb(243, 232, 232);
+  border-radius: 100%;
+  text-align: center;
+}
+
+.watch {
+  position: absolute;
+  top: 320px;
+  right: 90px;
   height: 60px;
   width: 60px;
   color: rgb(196, 65, 65);
@@ -61,8 +73,22 @@
 }
 
 .makeFriend_content {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 60px;
+}
+
+.tag_container {
+  display: flex;
+}
+
+.tag {
+  display: inline-block;
+  color: rgb(196, 65, 65);
+  background-color: rgb(243, 232, 232);
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 16px;
+  margin: 5px;
 }
 </style>
 
@@ -74,7 +100,7 @@
         <text class="name">{{item.nick_name}} {{item.age}}岁</text>
       </view>
       <view>
-        <text class="detail">{{item.location}} | {{item.constellation}} | {{item.height}}cm</text>
+        <text class="detail">{{item.sex == 1 ? '男' : '女'}} | {{item.location}}</text>
       </view>
     </view>
     <view>
@@ -91,9 +117,22 @@
     </view>
     <view class="background">
       <text class="intruduce">我的标签</text>
+      <view class="tag_container">
+        <text class="tag">{{item.height}}cm</text>
+        <text class="tag">{{item.constellation}}</text>
+        <text class="tag">{{item.job}}</text>
+        <text class="tag">信仰：{{item.faith}}</text>
+      </view>
     </view>
-    <view class="makeFriend">
+    <view class="background">
+      <text class="intruduce">择偶要求</text>
+      <text class="detail">{{item.selec_criteria}}</text>
+    </view>
+    <view bindtap=flower({{item.open_id}}) class="makeFriend">
       <text class="makeFriend_content">送花</text>
+    </view>
+    <view bindtap="watch({{item.open_id}})" class="watch">
+      <text class="makeFriend_content">关注</text>
     </view>
   </view>
 </template>
@@ -101,6 +140,7 @@
 <script>
   import wepy from 'wepy'
   import { getDetail } from '../service/love'
+  import { follow } from '../service/follow'
 
   export default class Fate extends wepy.page {
     config = {
@@ -108,6 +148,14 @@
     }
     data = {
       item: {}
+    }
+    methods = {
+      async watch(userId) {
+        const resp = await follow(userId)
+        console.log(resp)
+      },
+      flower() {
+      }
     }
     async onLoad(options) {
       let resp = await getDetail(options)
