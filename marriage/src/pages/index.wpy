@@ -266,7 +266,9 @@ export default class Index extends wepy.page {
   }
 
   async onLoad() {
-    await homeData()
+    let resp = await homeData()
+    this.listData = [...resp.data.data]
+    this.$apply()
   }
 }
 </script>

@@ -23,8 +23,6 @@ export async function insert(){ // 评论
 }
 
 export async function ofPost(){ // 查看帖子的全部评论
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
 	wx.request({
 		url: baseURL + '/matchmaking/comment/ofpost',
 		header:{

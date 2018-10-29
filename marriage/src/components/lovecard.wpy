@@ -82,11 +82,11 @@
 <view>
   <view class="head-flex">
     <view class="body-flex">
-      <image class="avatar" src="{{item.avatar}}" />
+      <image class="avatar" src="https://images.pexels.com/photos/373945/pexels-photo-373945.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" />
       <view class="Id-flex">
         <view class="name-flex">
-          <text class="word-name">{{item.name}}</text>
-          <image class="icon-vip" src="{{item.vip}}" />
+          <text class="word-name">{{item.nick_name}}</text>
+          <image wx:if="{{item.vip}}" class="icon-vip" src="../assets/images/v.png" />
         </view>
         <text class="word-age">{{item.age}}</text>
       </view>
@@ -99,7 +99,7 @@
     <text class="word-content">{{item.content}}</text>
   </view>
   <view class="picture-flex">
-    <image class="picture" mode="widthFix" src="{{item.picture}}" />
+    <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/713132/pexels-photo-713132.jpeg?auto=compress&cs=tinysrgb&h=350" />
   </view>
 </view>
 </template>

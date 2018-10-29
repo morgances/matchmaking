@@ -102,8 +102,6 @@
   import { homeData } from '../service/love'
   // import ClickHeart from '../components/clickheart'
 
-  import { LoveCircle } from '../libs/manual-content'
-
   export default class Fate extends wepy.page {
     config = {
       navigationBarTitleText: '恋爱圈'
@@ -113,11 +111,14 @@
       // clickHeart: ClickHeart
     }
     data = {
-      loveCircle: LoveCircle
+      loveCircle: []
       // clickLike: ClickLike
     }
     async onLoad() {
-      await homeData()
+      let resp = await homeData()
+      console.log(resp)
+      this.loveCircle = [...resp.data.data]
+      this.$apply()
     }
 
     methods = {

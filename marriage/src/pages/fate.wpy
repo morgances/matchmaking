@@ -73,7 +73,7 @@
   <view class="layout-flex">
     <repeat for="{{list}}" key="index" index="index" item="item">
       <view>
-        <navigator url="/pages/detail?userId={{item.id}}" open-type="navigateTo">
+        <navigator url="/pages/detail?target_open_id={{item.open_id}}" open-type="navigateTo">
           <view class="single-flex">
             <view>
               <image class="picture" mode="widthFix" src="https://images.unsplash.com/photo-1506179081046-baf977dabfcc?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=0d684f66f5c542bd5ed05abf201403e3&auto=format&fit=crop&w=500&q=60" />
@@ -81,15 +81,15 @@
             <view class="message-flex">
               <view class="name-flex">
                 <text class="word-name">{{item.nick_name}}</text>
-                <image class="icon" src="../assets/images/fatevip.png" />
-                <image class="icon" src="../assets/images/fateid.png" />
+                <image wx:if="{{item.vip}}" class="icon" src="../assets/images/fatevip.png" />
+                <image wx:if="{{item.certified}}" class="icon" src="../assets/images/fateid.png" />
               </view>
               <view class="button-flex">
                 <button class="button">{{item.age}}岁</button>
-                <button class="button">{{item.loaction}}</button>
+                <button class="button">{{item.location}}</button>
                 <button class="button">{{item.job}}</button>
               </view>
-              <text class="word-brief">{{item.brief}}</text> 
+              <text class="word-brief">{{item.self_introduction}}</text> 
             </view>
           </view>
         </navigator>
@@ -107,37 +107,15 @@
       navigationBarTitleText: '缘分推荐'
     }
     data = {
-      list: [
-        {
-          id: '1',
-          nick_name: '静静',
-          age: 22,
-          loaction: '温州',
-          job: '客户服务',
-          brief: '我喜欢爱懂温暖的你，也喜欢爱我喜欢爱懂温暖的你，也喜欢爱你打游戏不回家，你信吗'
-        },
-        {
-          id: '2',
-          nick_name: '我叫静静',
-          age: 22,
-          loaction: '成都',
-          job: '游戏主播',
-          brief: '我喜欢爱懂温暖的你，也喜欢爱我喜欢爱懂温暖的你，也喜欢爱你打游戏不回家，你信吗'
-        },
-        {
-          id: '3',
-          nick_name: '静静',
-          age: 22,
-          loaction: '温州',
-          job: '客户服务',
-          brief: '我喜欢爱懂温暖的你，也喜欢爱我喜欢爱懂温暖的你，也喜欢爱你打游戏不回家，你信吗'
-        }
-      ]
+      list: []
     }
     methods = {
     }
     async onLoad() {
-      await fateData()
+      let resp = await fateData()
+      console.log(resp)
+      this.list = [...resp.data.data]
+      this.$apply()
     }
   }
 </script>

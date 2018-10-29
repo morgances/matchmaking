@@ -1,0 +1,55 @@
+<style scoped>
+.goods-flex {
+  display: flex;
+  flex-direction: column;
+  background-color: #FFFFFF;
+  padding-top: 20rpx;
+  padding-bottom: 20rpx;
+  padding-left: 30rpx;
+  padding-right: 30rpx;
+}
+.subtitle {
+  font-size: 26rpx;
+  color: #696969;
+}
+.tag {
+  font-size: 22rpx;
+  color: #999999;
+  margin-left: 6rpx;
+  margin-right: 30rpx;
+}
+.goods {
+  height: 220rpx;
+  width: 300rpx;
+}
+.footer-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.word-goods-integral {
+  font-size: 26rpx;
+  color: #65ba6b;
+}
+</style>
+<template>
+  <view class="goods-flex">
+    <text class="subtitle">{{item.title}}</text>
+    <text class="tag">{{item.description}}</text>
+    <image class="goods" src="https://images.pexels.com/photos/322207/pexels-photo-322207.jpeg?auto=compress&cs=tinysrgb&h=350" />
+    <view class="footer-flex">
+      <text class="word-goods-integral">{{item.price}}</text>
+      <text class="tag">积分</text>
+      <button class="word-goods-integral">兑换</button>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class GoodsCard extends wepy.component {
+  props = {
+    item: Object
+  }
+}
+</script>

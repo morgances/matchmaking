@@ -47,7 +47,7 @@
         <view class="Id-flex">
           <view class="name-flex">
             <text class="word-name">{{item.nick_name}}</text>
-            <image class="icon-vip" src="../assets/images/v.png" />
+            <image class="icon-vip" src="../../../assets/images/v.png" />
           </view>
           <text class="word-age">{{item.age}}岁 · {{item.location}} · {{item.height}}cm · {{item.constellation}}</text>
         </view>
@@ -61,11 +61,11 @@
     </view>
     <view class="footer-flex">
       <view class="icon-flex">
-        <image class="icon" src="../assets/images/hands.png" />
+        <image class="icon" src="../../../assets/images/hands.png" />
         <text class="word-icon">2</text>
       </view>
       <view class="icon-flex">
-        <image class="icon" src="../assets/images/like.png" />
+        <image class="icon" src="../../../assets/images/like.png" />
         <text class="word-icon">pick</text>
       </view>
     </view>

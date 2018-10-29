@@ -49,7 +49,7 @@
 }
 
 .makeFriend {
-  position: fixed;
+  position: absolute;
   top: 320px;
   right: 40px;
   height: 60px;
@@ -71,10 +71,10 @@
     <image class="banner" src="https://images.unsplash.com/photo-1507402086209-7bc75ccf5369?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=76da8cd3566839e142eeace5c2823fb7&auto=format&fit=crop&w=500&q=60" />
     <view class="container">
       <view>
-        <text class="name">童话 28岁</text>
+        <text class="name">{{item.nick_name}} {{item.age}}岁</text>
       </view>
       <view>
-        <text class="detail">保定 | 期望两年内结婚</text>
+        <text class="detail">{{item.location}} | {{item.constellation}} | {{item.height}}cm</text>
       </view>
     </view>
     <view>
@@ -87,7 +87,10 @@
     </view>
     <view class="background">
       <text class="intruduce">自我介绍</text>
-      <text class="detail">无畏造英雄</text>
+      <text class="detail">{{item.self_introduction}}</text>
+    </view>
+    <view class="background">
+      <text class="intruduce">我的标签</text>
     </view>
     <view class="makeFriend">
       <text class="makeFriend_content">送花</text>
@@ -97,16 +100,20 @@
 
 <script>
   import wepy from 'wepy'
+  import { getDetail } from '../service/love'
 
   export default class Fate extends wepy.page {
     config = {
       navigationBarTitleText: '个人介绍'
     }
     data = {
-      list: [{id: 1, title: 'title1'}, {id: 2, title: 'title2'}]
+      item: {}
     }
-    onLoad(options) {
-      console.log(options)
+    async onLoad(options) {
+      let resp = await getDetail(options)
+      console.log(resp)
+      this.item = resp.data.data
+      this.$apply()
     }
   }
 </script>

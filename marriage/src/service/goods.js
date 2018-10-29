@@ -1,7 +1,7 @@
 import { baseURL, token} from '../utils/requset';
 
 export async function byprice(){ // 积分兑换商品列表
-	wx.request({
+	return await wx.request({
 		url: baseURL + '/matchmaking/goods/byprice',
 		header:{
 			"Authorization": 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfaWQiOiJ0ZXN0YWNpZCIsImV4cCI6MTU0MjM0MTI2MiwiaXNfYWRtaW4iOmZhbHNlLCJvcGVuX2lkIjoiMTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3OCIsInNleCI6MX0.-xCeuXQSffiYD5bbDT36cRP2gVgpwoJYYwROi1-TW9E'

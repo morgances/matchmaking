@@ -18,11 +18,9 @@
     config = {
       navigationBarTitleText: '谁关注我'
     }
-
     components = {
       child: Child
     }
-    
     data = {
       list: [{id: 1, title: 'title1'}, {id: 2, title: 'title2'}]
     }
