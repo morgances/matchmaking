@@ -143,7 +143,7 @@ export async function create(){ // 发表动态
 	})
 }
 
-export async function commend() { // 获取评论
+export async function commend() { // 点赞
 	wx.request({
 		url: baseURL + '/matchmaking/post/commend',
 		header:{
@@ -196,7 +196,7 @@ export async function minePost() { // 我的动态
 	})
 }
 
-export async function signIn() {
+export async function signIn() { // 签到
 	wx.request({
 		url: baseURL + '/matchmaking/signin/signin',
 		header:{
@@ -213,7 +213,7 @@ export async function signIn() {
 	})
 }
 
-export async function myRecord() {
+export async function myRecord() { //签到记录
 	wx.request({
 		url: baseURL + '/matchmaking/signin/myrecord',
 		header:{

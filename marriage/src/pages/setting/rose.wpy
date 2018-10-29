@@ -1,0 +1,59 @@
+<style scoped>
+.image {
+  height: 400rpx;
+  background-color: gray;
+  width: 100%;
+}
+
+.banner {
+  margin: 0 auto;
+  margin-top: 20px;
+  width: 400rpx;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.banner_title {
+  font-size: 20px;
+}
+
+.charge {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.chargeButton {
+  width: 80%;
+  margin-top: 50px;
+  color: rgb(196, 65, 65);
+  background-color: rgb(243, 232, 232);
+}
+</style>
+
+<template>
+  <view>
+    <image class="image" src="" />
+    <view class="banner">
+      <text class="banner_title">1 朵玫瑰 = 1 人民币</text>
+    </view>
+    <view class="charge">
+      <text>请输入想兑换的数量:</text>
+      <input />
+    </view>
+    <view>
+      <button class="chargeButton">确认兑换</button>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Fate extends wepy.page {
+    config = {
+      navigationBarTitleText: '充值玫瑰'
+    }
+    data = {
+      list: [{id: 1, title: 'title1'}, {id: 2, title: 'title2'}]
+    }
+  }
+</script>

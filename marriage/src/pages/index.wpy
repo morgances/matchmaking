@@ -228,66 +228,9 @@
         <text bindtap="getData" class="word-circle">换一批</text>
       </view>
     </view>
-    <view class="belly-flex">
-      <view class="head-flex">
-        <view class="body-flex">
-          <image class="avatar" src="https://images.pexels.com/photos/373945/pexels-photo-373945.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" />
-          <view class="Id-flex">
-            <view class="name-flex">
-              <text class="word-name">我想静静</text>
-              <image class="icon-vip" src="../assets/images/v.png" />
-            </view>
-            <text class="word-age">28岁 · 北京 · 165cm ·双子座</text>
-          </view>
-        </view>
-      </view>
-      <view class="content-flex">
-        <text class="word-content">我更新了相册，快来看看吧！</text>
-      </view>
-      <view class="picture-flex">
-        <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/713132/pexels-photo-713132.jpeg?auto=compress&cs=tinysrgb&h=350" />
-      </view>
-      <view class="footer-flex">
-        <view class="icon-flex">
-          <image class="icon" src="../assets/images/hands.png" />
-          <text class="word-icon">2</text>
-        </view>
-        <view class="icon-flex">
-          <image class="icon" src="../assets/images/like.png" />
-          <text class="word-icon">pick</text>
-        </view>
-      </view>
-    </view>
-    <view class="belly-flex">
-      <view class="head-flex">
-        <view class="body-flex">
-          <image class="avatar" src="https://images.pexels.com/photos/373945/pexels-photo-373945.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" />
-          <view class="Id-flex">
-            <view class="name-flex">
-              <text class="word-name">我想静静</text>
-              <image class="icon-vip" src="../assets/images/v.png" />
-            </view>
-            <text class="word-age">28岁 · 北京 · 165cm ·双子座</text>
-          </view>
-        </view>
-      </view>
-      <view class="content-flex">
-        <text class="word-content">我更新了相册，快来看看吧！</text>
-      </view>
-      <view class="picture-flex">
-        <image class="picture" mode="widthFix" src="https://images.pexels.com/photos/713132/pexels-photo-713132.jpeg?auto=compress&cs=tinysrgb&h=350" />
-      </view>
-      <view class="footer-flex">
-        <view class="icon-flex">
-          <image class="icon" src="../assets/images/hands.png" />
-          <text class="word-icon">2</text>
-        </view>
-        <view class="icon-flex">
-          <image class="icon" src="../assets/images/like.png" />
-          <text class="word-icon">pick</text>
-        </view>
-      </view>
-    </view>
+    <repeat for="{{listData}}" key="index" index="index" item="item">
+      <child :item="item"></child>
+    </repeat>
   </view>
 </view>
 </template>
@@ -295,15 +238,16 @@
 <script>
 import wepy from 'wepy'
 import { SwiperPicture } from '../libs/manual-content'
-// import { homeData } from '../service/love'
-import { homeData } from '../service/home'
+import { homeData } from '../service/love'
+import Child from './home/components/userCard'
 
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '以婚至上'
   }
-  components = {
 
+  components = {
+    child: Child
   }
 
   data = {
@@ -319,16 +263,10 @@ export default class Index extends wepy.page {
   }
 
   methods = {
-    async getData() {
-      let resp = await homeData()
-      console.log(resp)
-    }
   }
 
-  // async onLoad() {
-  //   let resp = await homeData()
-  //   console.log(this.data)
-  //   this.data.listData = [...resp.data]
-  // }
+  async onLoad() {
+    await homeData()
+  }
 }
 </script>

@@ -146,7 +146,9 @@
         <text class="word-how">如何获取更多积分</text>
       </view>
       <view class="button-flex">
-        <button class="button">兑换记录</button>
+        <navigator url="/pages/mall/history" open-type="navigateTo">
+          <button class="button">兑换记录</button>
+        </navigator>
       </view>
     </view>
     <view class="tab">
@@ -216,6 +218,7 @@
 <script>
   import wepy from 'wepy'
   import { SwiperPhoto } from '../libs/manual-content'
+  import { byprice } from '../service/goods'
 
   export default class Fate extends wepy.page {
     config = {
@@ -239,6 +242,9 @@
         self.currentTargetId = e.currentTarget.id
         self.type = self.tab[self.currentTargetId]
       }
+    }
+    async onLoad() {
+      await byprice()
     }
   }
 </script>

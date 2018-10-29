@@ -171,10 +171,15 @@
 }
 .redwoman {
   position: fixed;
-  top: 30rpx;
+  top: 20rpx;
   right: 30rpx;
   height: 100rpx;
-  width: 100rpx;
+  width: 200rpx;
+  border-radius: 100%;
+  font-size: 28rpx;
+  line-height: 100rpx;
+  color: rgb(196, 65, 65);
+  background-color: rgb(243, 232, 232);
 }
 </style>
 
@@ -277,7 +282,9 @@
         </view>
       </view>
     </view>
-    <image class="redwoman" src="../assets/images/woman.png" />
+    <navigator url="/pages/setting/rose" open-type="navigateTo">
+      <button class="redwoman">充值玫瑰</button>
+    </navigator>
   </view>
 </template>
 

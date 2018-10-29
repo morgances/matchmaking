@@ -20,8 +20,9 @@
     "axios": "^0.18.0",
     "http": "0.0.0",
     "wepy": "^1.6.0",
-    "wepy-async-function": "^1.4.4",
-    "wepy-com-toast": "^1.0.2"
+    "wepy-async-function": "^1.4.6",
+    "wepy-com-toast": "^1.0.2",
+    "wx": "0.0.36"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.1",

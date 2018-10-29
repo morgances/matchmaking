@@ -1,8 +1,6 @@
 import { baseURL, token} from '../utils/requset';
 
 export async function insert(){ // 评论
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
 	wx.request({
 		url: baseURL + '/matchmaking/comment/insert',
 		header:{

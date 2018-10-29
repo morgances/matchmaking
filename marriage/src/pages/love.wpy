@@ -67,24 +67,25 @@
 <template>
   <view class="layout-flex">
     <repeat for="{{loveCircle}}" key="index" index="index" item="item">
-      <view @tap="know" id="{{index}}">
-        <loveCard :item="item"></loveCard>
-      </view>
-      <view class="footer-flex">
-      <!-- <repeat for="{{clickLike}}" key="index" index="index" item="item">
-        <view @tap="knows" id="{{index}}">
-          <clickHeart :item="item"></clickHeart>
+      <view>
+        <view @tap="know" id="{{index}}">
+          <loveCard :item="item"></loveCard>
         </view>
-      </repeat> -->
-        <view class="icon-flex">
-          <image class="click-icon" src="../assets/images/clickhand.png" />
-          <text class="word-icon">222</text>
+        <view class="footer-flex">
+        <!-- <repeat for="{{clickLike}}" key="index" index="index" item="item">
+          <view @tap="knows" id="{{index}}">
+            <clickHeart :item="item"></clickHeart>
+          </view>
+        </repeat> -->
+          <view class="icon-flex">
+            <image class="click-icon" src="../assets/images/clickhand.png" />
+          </view>
+          <view bindtap="commend({{item.id}})" class="icon-flex">
+            <image class="icon" src="../assets/images/comment1.png" />
+            <text class="word-icon">私密评论</text>
+          </view>
+          <button bindtap="giveRose({{item.id}})" class="flower">送花</button>
         </view>
-        <view class="icon-flex">
-          <image class="icon" src="../assets/images/comment1.png" />
-          <text class="word-icon">私密评论</text>
-        </view>
-        <button @tap="give" class="flower">送花</button>
       </view>
     </repeat>
     <navigator url="/pages/love/publish" open-type="navigateTo">
@@ -98,6 +99,7 @@
 <script>
   import wepy from 'wepy'
   import LoveCard from '../components/lovecard'
+  import { homeData } from '../service/love'
   // import ClickHeart from '../components/clickheart'
 
   import { LoveCircle } from '../libs/manual-content'
@@ -113,6 +115,18 @@
     data = {
       loveCircle: LoveCircle
       // clickLike: ClickLike
+    }
+    async onLoad() {
+      await homeData()
+    }
+
+    methods = {
+      giveRose: function (id) {
+        console.log(id)
+      },
+      commend: function () {
+
+      }
     }
   }
 </script>

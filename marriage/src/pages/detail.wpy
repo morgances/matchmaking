@@ -47,6 +47,23 @@
   margin-right: 10px;
   display: inline-block;
 }
+
+.makeFriend {
+  position: fixed;
+  top: 320px;
+  right: 40px;
+  height: 60px;
+  width: 60px;
+  color: rgb(196, 65, 65);
+  background-color: rgb(243, 232, 232);
+  border-radius: 100%;
+  text-align: center;
+}
+
+.makeFriend_content {
+  font-size: 18px;
+  line-height: 60px;
+}
 </style>
 
 <template>
@@ -72,6 +89,9 @@
       <text class="intruduce">自我介绍</text>
       <text class="detail">无畏造英雄</text>
     </view>
+    <view class="makeFriend">
+      <text class="makeFriend_content">送花</text>
+    </view>
   </view>
 </template>
 
@@ -84,6 +104,9 @@
     }
     data = {
       list: [{id: 1, title: 'title1'}, {id: 2, title: 'title2'}]
+    }
+    onLoad(options) {
+      console.log(options)
     }
   }
 </script>

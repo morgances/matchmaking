@@ -18,8 +18,6 @@ export async function rechargeVip(){ // 兑换 Vip
 }
 
 export async function rechargeRose(){ // 兑换 玫瑰花
-	console.log(baseURL, token,'===')
-	console.log('=====service here')
 	wx.request({
 		url: baseURL + '/matchmaking/recharge/rose',
 		header:{
