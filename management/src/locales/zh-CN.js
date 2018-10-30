@@ -2,6 +2,7 @@
 
 export default {
   'navbar.lang': 'English',
+  'menu.home': '首页',
   'menu.userpage': '用户页',
   'menu.userpage': '用户管理',
   'menu.userpage.information': '用户信息',

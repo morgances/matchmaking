@@ -1,49 +1,46 @@
 import React, { Component } from 'react';
-import { Tag, Button, Avatar, Modal } from 'antd';
 import { connect } from 'dva';
+import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 import Post from '../../components/Post/index';
-import styles from './DynamicPost.less';
-
-const confirm = Modal.confirm;
 
 class DynamicPost extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
   }
 
-  showConfirm() {
-    confirm({
-      title: 'Are you sure delete this task?',
-      content: 'Some descriptions',
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
-      onOk() {
-        console.log('OK');
-      },
-      onCancel() {
-        console.log('Cancel');
-      },
-    });
+  getData = async() => {
+    const { dispatch } = this.props;
+    await dispatch({
+      type: 'post/fetchPost',
+    })
+  }
+
+  componentDidMount() {
+    this.getData();
   }
 
   render() {
+    const dispatch = this.props.dispatch;
+
     return (
-      <div>
-        <Post item={this.props.dynamic[0]} />
-        <Post item={this.props.dynamic[1]} />
-        <Post item={this.props.dynamic[2]} />
-        <Post item={this.props.dynamic[3]} />
-        <Post item={this.props.dynamic[4]} />
-        <Post item={this.props.dynamic[5]} />
-        <Post item={this.props.dynamic[6]} />
-      </div>
+      <PageHeaderWrapper>
+        {
+          this.props.post.map((item) => {
+            item.dispatch = dispatch;
+            return (
+              <Post
+                key={item.id}
+                item={item}
+              />
+            );
+          })
+        }
+      </PageHeaderWrapper>
     );
   }
 }
 
 export default connect(({ post }) => ({
-  dynamic: post.dynamic,
+  ...post,
 }))(DynamicPost);

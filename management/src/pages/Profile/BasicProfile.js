@@ -1,111 +1,117 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Badge, Table, Divider } from 'antd';
+import { Card, Table, Divider, Button } from 'antd';
+
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+
 import styles from './BasicProfile.less';
 
-const progressColumns = [
-  {
-    title: '订单ID',
-    dataIndex: 'id',
-    key: 'id',
-  },
-  {
-    title: '用户ID',
-    dataIndex: 'open_id',
-    key: 'open_id',
-  },
-  {
-    title: '商品ID',
-    dataIndex: 'goods_id',
-    key: 'goods_id',
-  },
-  {
-    title: '买家姓名',
-    dataIndex: 'buyer_name',
-    key: 'buyer_name',
-  },
-  {
-    title: '商品名称',
-    dataIndex: 'goods_name',
-    key: 'goods_name',
-  },
-  {
-    title: '兑换时间',
-    dataIndex: 'date_time',
-    key: 'date_time',
-  },
-  {
-    title: '使用积分',
-    dataIndex: 'cost',
-    key: 'cost',
-  },
-  {
-    title: '订单状态',
-    dataIndex: 'finished',
-    key: 'finished',
-    render: text =>
-      text === 'success' ? (
-        <Badge status="success" text="成功" />
-      ) : (
-        <Badge status="processing" text="进行中" />
-      ),
-  },
-];
-
-@connect(({ profile, loading }) => ({
-  profile,
-  loading: loading.effects['profile/fetchBasic'],
+@connect(({ profile }) => ({
+  ...profile,
 }))
 
 class BasicProfile extends Component {
-  componentDidMount() {
+  constructor(props) {
+    super(props);
+  }
+
+  success = (id) => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'profile/fetchBasic',
-    });
+      type: 'profile/successProfile',
+      payload: {
+        target_id: id,
+      }
+    })
+  }
+
+  failure = (id) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'profile/failureProfile',
+      payload: {
+        target_id: id,
+      }
+    })
+  }
+
+  componentDidMount() {
+    this.getData();
+  }
+
+  getData = async () => {
+    const { dispatch } = this.props;
+    await dispatch({
+      type: 'profile/fetchProfile',
+    })
   }
 
   render() {
-    const { profile, loading } = this.props;
-    const { basicGoods, basicProgress } = profile;
-    let goodsData = [];
-    if (basicGoods.length) {
-      let num = 0;
-      let amount = 0;
-      basicGoods.forEach(item => {
-        num += Number(item.num);
-        amount += Number(item.amount);
-      });
-      goodsData = basicGoods.concat({
-        id: '总计',
-        num,
-        amount,
-      });
-    }
+    const columns = [{
+        title: '订单ID',
+        key: 'id',
+        dataIndex: 'id',
+      },{
+        title: '用户ID',
+        key: 'open_id',
+        dataIndex: 'open_id',
+      },{
+        title: '商品ID',
+        key: 'goods_id',
+        dataIndex: 'goods_id',
+      },{
+        title: '买家姓名',
+        key: 'buyer_name',
+        dataIndex: 'buyer_name',
+      },{
+        title: '商品名称',
+        key: 'goods_name',
+        dataIndex: 'goods_name',
+      },{
+        title: '兑换时间',
+        key: 'date_time',
+        dataIndex: 'date_time',
+      },{
+        title: '使用积分',
+        key: 'cost',
+        dataIndex: 'cost',
+      },{
+        title: '订单状态',
+        key: 'finished',
+        dataIndex: 'finished',
+        render: (text, record) => (
+          <div>
+            <Button
+              onClick={() => this.success(record.id)}
+              type="primary"
+            >
+              确认
+            </Button>
 
-    const renderContent = (value, row, index) => {
-      const obj = {
-        children: value,
-        props: {},
-      };
-      if (index === basicGoods.length) {
-        obj.props.colSpan = 0;
+            <Divider type="vertical" />
+
+            <Button
+              onClick={() => this.failure(record.id)}
+              type="danger"
+            >
+              取消
+            </Button>
+          </div>
+        )
       }
-      return obj;
-    };
+    ];
 
     return (
       <PageHeaderWrapper>
-        <Card bordered={false}>
+        <Card bordered>
           <Divider style={{ marginBottom: 32 }} />
+
           <div className={styles.title}>积分交易处理</div>
+
           <Table
             style={{ marginBottom: 16 }}
-            pagination={false}
-            loading={loading}
-            dataSource={basicProgress}
-            columns={progressColumns}
+            columns={columns}
+            dataSource={this.props.basicGoods}
           />
         </Card>
       </PageHeaderWrapper>

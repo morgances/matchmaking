@@ -1,281 +1,187 @@
-import React, { PureComponent } from 'react';
-import { findDOMNode } from 'react-dom';
-import moment from 'moment';
+import React, { Component } from 'react';
 import { connect } from 'dva';
-import {
-  List,
-  Card,
-  Row,
-  Col,
-  Radio,
-  Input,
-  Progress,
-  Button,
-  Icon,
-  Dropdown,
-  Menu,
-  Avatar,
-  Modal,
-  Form,
-  DatePicker,
-  Select,
-} from 'antd';
+import { Card, Table, Button, Divider, Input, Form, Modal, Popconfirm } from 'antd';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import Result from '@/components/Result';
 
-import styles from './BasicList.less';
+// const Search = Input.Search;
 
 const FormItem = Form.Item;
-const { Search, TextArea } = Input;
 
-@connect(({ list, loading }) => ({
-  list,
-  loading: loading.models.list,
+const CollectionCreateForm = Form.create()(
+  class extends React.Component {
+    render() {
+      const { visible, onCancel, onCreate, form } = this.props;
+
+      const { getFieldDecorator } = form;
+
+      return (
+        <Modal
+          visible={visible}
+          onCancel={onCancel}
+          onOk={onCreate}
+          title="创建商品信息"
+          okText="确认"
+        >
+          <Form layout="vertical">
+            <FormItem label="商品标题">
+              {getFieldDecorator('title')(<Input placeholder="请输入标题" />)}
+            </FormItem>
+
+            <FormItem label="商品价格">
+              {getFieldDecorator('price')(<Input placeholder="请输入价格"/>)}
+            </FormItem>
+
+            <FormItem label="商品描述">
+              {getFieldDecorator('description')(<Input type="textarea" placeholder="请输入描述内容" />)}
+            </FormItem>
+          </Form>
+        </Modal>
+      );
+    }
+  }
+);
+
+@connect(({ list }) => ({
+  ...list,
 }))
-@Form.create()
-class BasicList extends PureComponent {
-  state = { visible: false, done: false };
 
-  formLayout = {
-    labelCol: { span: 7 },
-    wrapperCol: { span: 13 },
-  };
+class BasicList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      visible: false,
+    };
+  }
 
   componentDidMount() {
+    this.getData();
+  }
+
+  getData = async () => {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'list/fetch',
-      payload: {
-        count: 5,
-      },
-    });
+    await dispatch({
+      type: 'list/queryList',
+    })
   }
 
   showModal = () => {
     this.setState({
       visible: true,
-      current: undefined,
-    });
-  };
-
-  showEditModal = item => {
-    this.setState({
-      visible: true,
-      current: item,
-    });
-  };
-
-  handleDone = () => {
-    setTimeout(() => this.addBtn.blur(), 0);
-    this.setState({
-      done: false,
-      visible: false,
-    });
-  };
+    })
+  }
 
   handleCancel = () => {
-    setTimeout(() => this.addBtn.blur(), 0);
     this.setState({
       visible: false,
     });
-  };
+  }
 
-  handleSubmit = e => {
-    e.preventDefault();
-    const { dispatch, form } = this.props;
-    const { current } = this.state;
-    const id = current ? current.id : '';
-
-    setTimeout(() => this.addBtn.blur(), 0);
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
+  handleCreate = () => {
+    const form = this.formRef.props.form;
+    form.validateFields(async (err, values) => {
+      if (err) {
+        return;
+      }
+      console.log('给后台传入的数据：', values);
+      values.price = +values.price
+      const { dispatch } = this.props;
+      await dispatch({
+        type: 'list/addList',
+        payload: {
+          ...values,
+        }
+      })
+      form.resetFields();
       this.setState({
-        done: true,
-      });
-      dispatch({
-        type: 'list/submit',
-        payload: { id, ...fieldsValue },
+        visible: false,
       });
     });
-  };
+  }
 
-  deleteItem = id => {
+  saveFormRef = (formRef) => {
+    this.formRef = formRef;
+  }
+
+  deleteConfirm = (itemId) => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'list/submit',
-      payload: { id },
-    });
-  };
+      type: 'list/removeList',
+      payload: {
+        target_id: itemId,
+      },
+    })
+  }
 
   render() {
-    const {
-      list: { list },
-      loading,
-    } = this.props;
-    const {
-      form: { getFieldDecorator },
-    } = this.props;
-    const { visible, done, current = {} } = this.state;
-
-    const editAndDelete = (currentItem) => {
-      Modal.confirm({
-        title: '删除任务',
-        content: '确定删除该任务吗？',
-        okText: '确认',
-        cancelText: '取消',
-        onOk: () => this.deleteItem(currentItem.id),
-      });
-    };
-
-    const modalFooter = done
-      ? { footer: null, onCancel: this.handleDone }
-      : { okText: '保存', onOk: this.handleSubmit, onCancel: this.handleCancel };
-
-    const extraContent = (
-      <div className={styles.extraContent}>
-        <Search className={styles.extraContentSearch} placeholder="请输入甘霖娘鸡掰的商品" onSearch={() => ({})} />
-      </div>
-    );
-
-    const paginationProps = {
-      showSizeChanger: true,
-      showQuickJumper: true,
-      pageSize: 5,
-      total: 50,
-    };
-
-    const ListContent = ({ data: { prices } }) => (
-      <div className={styles.listContent}>
-        <div className={styles.listContentItem}>
-          <span>商品积分价格</span>
-          <p>{prices}</p>
-        </div>
-      </div>
-    );
-
-    const MoreBtn = props => (
-      <Dropdown
-        overlay={
-          <Menu onClick={() => editAndDelete(props.current)}>
-            <Menu.Item>删除</Menu.Item>
-          </Menu>
-        }
-      >
-        <a>
-          更多 <Icon type="down" />
-        </a>
-      </Dropdown>
-    );
-
-    const getModalContent = () => {
-      if (done) {
-        return (
-          <Result
-            type="success"
-            title="操作成功"
-            description="一系列的信息描述，很短同样也可以带标点。"
-            actions={
-              <Button type="primary" onClick={this.handleDone}>
-                知道了
-              </Button>
-            }
-            className={styles.formResult}
-          />
-        );
-      }
-      return (
-        <Form onSubmit={this.handleSubmit}>
-          <FormItem label="商品名称" {...this.formLayout}>
-            {getFieldDecorator('title', {
-              rules: [{ required: true, message: '请输入名称' }],
-              initialValue: current.title,
-            })(<Input placeholder="请输入" />)}
-          </FormItem>
-          <FormItem label="商品积分价格" {...this.formLayout}>
-            {getFieldDecorator('prices', {
-              rules: [{ required: true, message: '请输入价格' }],
-              initialValue: current.prices,
-            })(<Input placeholder="请输入" />)}
-          </FormItem>
-          <FormItem label="商品描述" {...this.formLayout}>
-            {getFieldDecorator('subDescription', {
-              rules: [{ message: '请输入至少五个字符的描述！', min: 5 }],
-              initialValue: current.subDescription,
-            })(<TextArea rows={4} placeholder="请输入至少五个字符" />)}
-          </FormItem>
-        </Form>
-      );
-    };
+    const columns = [{
+      title: '商品 ID',
+      dataIndex: 'id',
+    },{
+      title: '商品标题',
+      dataIndex: 'title',
+    },{
+      title: '商品价格',
+      dataIndex: 'price',
+    },{
+      title: '商品描述',
+      dataIndex: 'description',
+    },{
+      title: '操作',
+      dataIndex: 'operation',
+      render: (text, record) => (
+        this.props.list.length >= 1
+        ? (
+          <Popconfirm
+            title="确定删除？"
+            onConfirm={() => this.deleteConfirm(record.id)}
+            okText="确认"
+            cancelText="取消"
+          >
+            <Button type="danger" ghost>删除</Button>
+          </Popconfirm>
+        ) : null
+      )
+    }];
 
     return (
       <PageHeaderWrapper>
-        <div className={styles.standardList}>
-          <Card
-            className={styles.listCard}
-            bordered={false}
-            title="标准列表"
-            style={{ marginTop: 24 }}
-            bodyStyle={{ padding: '0 32px 40px 32px' }}
-            extra={extraContent}
-          >
+        <Card bordered>
+          {/* <Search
+            enterButton
+            placeholder="输入商品名称"
+          /> */}
+          <h1>标准商品列表</h1>
+
+          <Divider style={{ marginBottom: 32 }} />
+
+          <div>
             <Button
-              ghost
-              type="primary"
-              style={{ width: '100%', marginBottom: 8 }}
+              block
               icon="plus"
+              type="primary"
+              size="large"
               onClick={this.showModal}
-              ref={component => {
-                /* eslint-disable */
-                this.addBtn = findDOMNode(component);
-                /* eslint-enable */
-              }}
             >
-              添加
+              添加商品
             </Button>
 
-            <List
-              size="large"
-              rowKey="id"
-              loading={loading}
-              pagination={paginationProps}
-              dataSource={list}
-              renderItem={item => (
-                <List.Item
-                  actions={[
-                    // <a
-                    //   onClick={e => {
-                    //     e.preventDefault();
-                    //     this.showEditModal(item);
-                    //   }}
-                    // >
-                    //   编辑
-                    // </a>,
-                    <MoreBtn current={item} />,
-                  ]}
-                >
-                  <List.Item.Meta
-                    avatar={<Avatar src={item.logo} shape="square" size="large" />}
-                    title={<a>{item.title}</a>}
-                    description={item.subDescription}
-                  />
-                  <ListContent data={item} />
-                </List.Item>
-              )}
+            <CollectionCreateForm
+              wrappedComponentRef={this.saveFormRef}
+              visible={this.state.visible}
+              onCancel={this.handleCancel}
+              onCreate={this.handleCreate}
             />
-          </Card>
-        </div>
-        <Modal
-          title={done ? null : `任务${current ? '编辑' : '添加'}`}
-          className={styles.standardListForm}
-          width={640}
-          bodyStyle={done ? { padding: '72px 0' } : { padding: '28px 0 0' }}
-          destroyOnClose
-          visible={visible}
-          {...modalFooter}
-        >
-          {getModalContent()}
-        </Modal>
+          </div>
+
+          <br/>
+
+          <Table
+            style={{ marginBottom: 16 }}
+            columns={columns}
+            dataSource={this.props.list}
+          />
+        </Card>
       </PageHeaderWrapper>
     );
   }
