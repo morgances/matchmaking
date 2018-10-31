@@ -5,7 +5,7 @@
 <template>
   <scroll-view scroll-y>
     <repeat for="{{list}}" key="index" index="index" item="item">
-        <child :item="item"></child>
+      <child :item="item"></child>
     </repeat>
   </scroll-view>
 </template>

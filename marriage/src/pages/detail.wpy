@@ -47,6 +47,49 @@
   margin-right: 10px;
   display: inline-block;
 }
+
+.makeFriend {
+  position: absolute;
+  top: 320px;
+  right: 20px;
+  height: 60px;
+  width: 60px;
+  color: rgb(196, 65, 65);
+  background-color: rgb(243, 232, 232);
+  border-radius: 100%;
+  text-align: center;
+}
+
+.watch {
+  position: absolute;
+  top: 320px;
+  right: 90px;
+  height: 60px;
+  width: 60px;
+  color: rgb(196, 65, 65);
+  background-color: rgb(243, 232, 232);
+  border-radius: 100%;
+  text-align: center;
+}
+
+.makeFriend_content {
+  font-size: 16px;
+  line-height: 60px;
+}
+
+.tag_container {
+  display: flex;
+}
+
+.tag {
+  display: inline-block;
+  color: rgb(196, 65, 65);
+  background-color: rgb(243, 232, 232);
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 16px;
+  margin: 5px;
+}
 </style>
 
 <template>
@@ -54,10 +97,10 @@
     <image class="banner" src="https://images.unsplash.com/photo-1507402086209-7bc75ccf5369?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=76da8cd3566839e142eeace5c2823fb7&auto=format&fit=crop&w=500&q=60" />
     <view class="container">
       <view>
-        <text class="name">童话 28岁</text>
+        <text class="name">{{item.nick_name}} {{item.age}}岁</text>
       </view>
       <view>
-        <text class="detail">保定 | 期望两年内结婚</text>
+        <text class="detail">{{item.sex == 1 ? '男' : '女'}} | {{item.location}}</text>
       </view>
     </view>
     <view>
@@ -70,20 +113,55 @@
     </view>
     <view class="background">
       <text class="intruduce">自我介绍</text>
-      <text class="detail">无畏造英雄</text>
+      <text class="detail">{{item.self_introduction}}</text>
+    </view>
+    <view class="background">
+      <text class="intruduce">我的标签</text>
+      <view class="tag_container">
+        <text class="tag">{{item.height}}cm</text>
+        <text class="tag">{{item.constellation}}</text>
+        <text class="tag">{{item.job}}</text>
+        <text class="tag">信仰：{{item.faith}}</text>
+      </view>
+    </view>
+    <view class="background">
+      <text class="intruduce">择偶要求</text>
+      <text class="detail">{{item.selec_criteria}}</text>
+    </view>
+    <view bindtap=flower({{item.open_id}}) class="makeFriend">
+      <text class="makeFriend_content">送花</text>
+    </view>
+    <view bindtap="watch({{item.open_id}})" class="watch">
+      <text class="makeFriend_content">关注</text>
     </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import { getDetail } from '../service/love'
+  import { follow } from '../service/follow'
 
   export default class Fate extends wepy.page {
     config = {
       navigationBarTitleText: '个人介绍'
     }
     data = {
-      list: [{id: 1, title: 'title1'}, {id: 2, title: 'title2'}]
+      item: {}
+    }
+    methods = {
+      async watch(userId) {
+        const resp = await follow(userId)
+        console.log(resp)
+      },
+      flower() {
+      }
+    }
+    async onLoad(options) {
+      let resp = await getDetail(options)
+      console.log(resp)
+      this.item = resp.data.data
+      this.$apply()
     }
   }
 </script>

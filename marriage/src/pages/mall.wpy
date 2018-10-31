@@ -146,7 +146,9 @@
         <text class="word-how">如何获取更多积分</text>
       </view>
       <view class="button-flex">
-        <button class="button">兑换记录</button>
+        <navigator url="/pages/mall/history" open-type="navigateTo">
+          <button class="button">兑换记录</button>
+        </navigator>
       </view>
     </view>
     <view class="tab">
@@ -161,48 +163,9 @@
     </view>
     <view wx:if="{{currentTargetId == 0}}">
       <view class="card-flex">
-        <view class="goods-flex">
-          <text class="subtitle">传奇世界H5游戏大礼包</text>
-          <text class="tag">用户专享</text>
-          <image class="goods" src="https://images.pexels.com/photos/322207/pexels-photo-322207.jpeg?auto=compress&cs=tinysrgb&h=350" />
-          <view class="footer-flex">
-            <text class="word-goods-integral">22</text>
-            <text class="tag">积分</text>
-            <button class="word-goods-integral">兑换</button>
-          </view>
-        </view>
-        <view class="goods-flex">
-          <text class="subtitle">传奇世界H5游戏大礼包</text>
-          <text class="tag">用户专享</text>
-          <image class="goods" src="https://images.pexels.com/photos/322207/pexels-photo-322207.jpeg?auto=compress&cs=tinysrgb&h=350" />
-          <view class="footer-flex">
-            <text class="word-goods-integral">22</text>
-            <text class="tag">积分</text>
-            <button class="word-goods-integral">兑换</button>
-          </view>
-        </view>
-      </view>
-      <view class="card-flex">
-        <view class="goods-flex">
-          <text class="subtitle">传奇世界H5游戏大礼包</text>
-          <text class="tag">用户专享</text>
-          <image class="goods" src="https://images.pexels.com/photos/322207/pexels-photo-322207.jpeg?auto=compress&cs=tinysrgb&h=350" />
-          <view class="footer-flex">
-            <text class="word-goods-integral">22</text>
-            <text class="tag">积分</text>
-            <button class="word-goods-integral">兑换</button>
-          </view>
-        </view>
-        <view class="goods-flex">
-          <text class="subtitle">传奇世界H5游戏大礼包</text>
-          <text class="tag">用户专享</text>
-          <image class="goods" src="https://images.pexels.com/photos/322207/pexels-photo-322207.jpeg?auto=compress&cs=tinysrgb&h=350" />
-          <view class="footer-flex">
-            <text class="word-goods-integral">22</text>
-            <text class="tag">积分</text>
-            <button class="word-goods-integral">兑换</button>
-          </view>
-        </view>
+        <repeat for="{{goods}}" key="index" index="index" item="item">
+          <child :item="item"></child>
+        </repeat>
       </view>
     </view>
     <view wx:if="{{currentTargetId == 1}}">
@@ -216,10 +179,15 @@
 <script>
   import wepy from 'wepy'
   import { SwiperPhoto } from '../libs/manual-content'
+  import { byprice } from '../service/goods'
+  import goodsCard from '../components/goodsCard'
 
   export default class Fate extends wepy.page {
     config = {
       navigationBarTitleText: '积分商城'
+    }
+    components = {
+      child: goodsCard
     }
     data = {
       imgUrl: SwiperPhoto,
@@ -231,7 +199,8 @@
       dotsColor: '#ffffff',
       dotsActiveColor: '#349BFF',
       tab: ['线上商品', '线下商品'],
-      currentTargetId: 0
+      currentTargetId: 0,
+      goods: []
     }
     methods = {
       tap(e) {
@@ -239,6 +208,11 @@
         self.currentTargetId = e.currentTarget.id
         self.type = self.tab[self.currentTargetId]
       }
+    }
+    async onLoad() {
+      let resp = await byprice()
+      this.goods = [...resp.data]
+      this.$apply()
     }
   }
 </script>

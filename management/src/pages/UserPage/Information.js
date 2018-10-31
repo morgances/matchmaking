@@ -1,49 +1,61 @@
 import React, { Component } from 'react';
 import { Input, Button, Popover } from 'antd';
 import { connect } from 'dva';
-
+import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import UserPage from '../../components/UserInformation/index.js';
 
 import styles from './Information.less';
 
 const Search = Input.Search;
 
-const popcontent = (
-  <div>
-    <p>微信号：</p>
-    <p>手机号：</p>
-  </div>
-)
-
 class Information extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      value: '',
+      information: {},
+    };
   }
 
+  handleChange = (input) => {
+    this.setState({
+      value: input
+    })
+    const data = {
+      "target_open_id": input
+    }
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'userinformation/userInformation',
+      payload: {
+        ...data,
+      },
+    }).then((result) => {
+      this.setState({
+        information: result
+      })
+    }).catch((err) => {
+      console.log(err);
+      return false
+    });
+  }
+  
   render() {
     return (
-      <div>
+      <PageHeaderWrapper>
         <Search
+          ref="search"
           className={styles.searchFrame}
           placeholder="输入想要查询的用户ID"
           enterButton
           size="large"
-          onSearch={value =>console.log(value)}
+          onSearch={this.handleChange}
         />
 
-        <div className={styles.showDetails}>
-          <div>
-            <UserPage item={this.props.information[0]} />
-          </div>
-
-          <div className={styles.buttonPosition}>
-            <Popover content={popcontent} trigger="click">
-              <Button type="primary" size="large">查看联系方式</Button>
-            </Popover>
-          </div>
+        <div className={styles.selfComponent}>
+          <UserPage item={this.state.information} />
         </div>
-      </div>
+      </PageHeaderWrapper>
     );
   }
 }

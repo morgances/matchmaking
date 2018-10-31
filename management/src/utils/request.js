@@ -56,7 +56,7 @@ const cachedSave = (response, hashcode) => {
   return response;
 };
 
-const baseURL = 'http://10.0.0.13:3000';// 联调后台 O__O "…
+const baseURL = 'http://10.0.0.7:3000';// 联调后台 O__O "…
 
 /**
  * Requests a URL, returning a promise.

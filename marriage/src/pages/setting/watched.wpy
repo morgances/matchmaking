@@ -3,20 +3,35 @@
 </style>
 
 <template>
-  <view>
-    <text>暂未开通</text>
-  </view>
+  <scroll-view scroll-y>
+    <view wx:if="{{list.length > 0}}">
+      <repeat for="{{list}}" key="index" index="index" item="item">
+          <child :item="item"></child>
+      </repeat>
+    </view>
+    <text wx:if="{{list.length === 0}}">没有人关注你哦</text>
+  </scroll-view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import Child from '../../components/userCard'
+  import { follower } from '../../service/follow'
 
   export default class Fate extends wepy.page {
     config = {
       navigationBarTitleText: '谁关注我'
     }
+    components = {
+      child: Child
+    }
     data = {
-      list: [{id: 1, title: 'title1'}, {id: 2, title: 'title2'}]
+      list: []
+    }
+    async onLoad() {
+      let resp = await follower()
+      this.list = [...resp.data.data]
+      this.$apply()
     }
   }
 </script>

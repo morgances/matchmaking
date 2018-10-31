@@ -1,0 +1,46 @@
+<style scoped>
+.card {
+  position: relative;
+  padding: 10px;
+  height: 60px;
+  border-bottom: 1px solid gray;
+}
+
+.card_title {
+  position: absolute;
+  left: 10px;
+  top: 20px;
+}
+
+.card_title_content {
+  font-size: 20px;
+}
+
+.card_points {
+  position: absolute;
+  right: 10px;
+  top: 20px;
+}
+
+.card_points_content {
+  font-size: 14px;
+}
+</style>
+
+<template>
+  <view class="card">
+    <view class="card_title">
+      <text class="card_title_content">{{item.title}}</text>
+    </view>
+    <view class="card_points">
+      <text class="card_points_content">{{item.points}}积分</text>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Fate extends wepy.page {
+  }
+</script>

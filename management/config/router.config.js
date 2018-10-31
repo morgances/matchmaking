@@ -13,8 +13,8 @@ export default [
   {
     path: '/',
     component: '../layouts/BasicLayout',
-    Routes: ['src/pages/Authorized'],
-    authority: ['admin', 'user'],
+    // Routes: ['src/pages/Authorized'],
+    // authority: ['admin', 'user'],
     routes: [
       // userpage
       { path: '/', redirect: '/userpage/information' },
@@ -69,12 +69,6 @@ export default [
             path: '/profile/basic',
             name: 'basic',
             component: './Profile/BasicProfile',
-          },
-          {
-            path: '/profile/advanced',
-            name: 'advanced',
-            authority: ['admin'],
-            component: './Profile/AdvancedProfile',
           },
         ],
       },

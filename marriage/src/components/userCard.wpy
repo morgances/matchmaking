@@ -1,10 +1,82 @@
 <style scoped>
+.layout-flex {
+  background-color: #F8F8F8;
+  padding-top: 10rpx;
+  padding-bottom: 10rpx
+}
+.single-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 10rpx;
+  margin-right: 10rpx;
+  margin-bottom: 10rpx;
+  padding-top: 20rpx;
+  padding-left: 20rpx;
+  padding-bottom: 20rpx;
+  padding-right: 20rpx;
+  background-color: #FFFFFF;
+}
+.message-flex {
+  display: flex;
+  flex-direction: column;
+  height: 150rpx;
+  padding-left: 30rpx;
+}
+.name-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.button-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 360rpx;
+  margin-top: 6rpx;
+  margin-bottom: 20rpx;
+}
+.picture {
+  height: 180rpx;
+  width: 200rpx;
+  border-radius: 6rpx;
+}
+.word-name {
+  font-size: 18px;
+  margin-right: 10rpx;
+}
+.icon {
+  height: 30rpx;
+  width: 30rpx;
+  margin-right: 10rpx;
+}
+.button {
+  font-size: 20rpx;
+}
+.word-brief {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  font-weight: 300;
+  font-size: 24rpx;
+}
 </style>
 
 <template>
-  <view>
-    <text>{{item.title}}</text>
-  </view>
+  <navigator url="/pages/detail?target_open_id={{item.open_id}}" open-type="navigateTo">
+    <view class="single-flex">
+      <view>
+        <image class="picture" mode="widthFix" src="https://images.unsplash.com/photo-1507402086209-7bc75ccf5369?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=76da8cd3566839e142eeace5c2823fb7&auto=format&fit=crop&w=500&q=60" />
+      </view>
+      <view class="message-flex">
+        <view class="name-flex">
+          <text class="word-name">{{item.nick_name}}</text>
+        </view>
+      </view>
+    </view>
+  </navigator>
 </template>
 
 <script>

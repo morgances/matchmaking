@@ -1,0 +1,53 @@
+<style scoped>
+
+</style>
+
+<template>
+  <scroll-view scroll-y>
+    <repeat for="{{list}}" key="index" index="index" item="item">
+        <child :item="item"></child>
+    </repeat>
+  </scroll-view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import Child from '../../components/giftCard'
+
+  // import { myTrades } from '../../service/goods'
+
+  export default class Mall extends wepy.page {
+    config = {
+      navigationBarTitleText: '兑换记录'
+    }
+
+    components = {
+      child: Child
+    }
+
+    data = {
+      list: [
+        {
+          title: '游戏礼包',
+          points: 22
+        },
+        {
+          title: '游戏礼包',
+          points: 22
+        }
+      ]
+    }
+
+    methods = {
+    }
+
+    onLoad() {
+      // let that = this
+      // myTrades().then((resp) => {
+      //   console.log(resp, '---')
+      //   that.list = [...resp.data]
+      //   this.$apply()
+      // })
+    }
+  }
+</script>

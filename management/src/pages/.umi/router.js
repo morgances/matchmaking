@@ -34,11 +34,6 @@ let routes = [
   {
     "path": "/",
     "component": dynamic({ loader: () => import('../../layouts/BasicLayout'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-    "Routes": [require('../Authorized').default],
-    "authority": [
-      "admin",
-      "user"
-    ],
     "routes": [
       {
         "path": "/userpage",
@@ -97,15 +92,6 @@ let routes = [
             "path": "/profile/basic",
             "name": "basic",
             "component": dynamic({ loader: () => import('../Profile/BasicProfile'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
-            "exact": true
-          },
-          {
-            "path": "/profile/advanced",
-            "name": "advanced",
-            "authority": [
-              "admin"
-            ],
-            "component": dynamic({ loader: () => import('../Profile/AdvancedProfile'), loading: require('/Users/a11/Github/group-matchmaking/management/src/components/PageLoading/index').default  }),
             "exact": true
           },
           {
