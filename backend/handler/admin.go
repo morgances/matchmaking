@@ -185,7 +185,7 @@ func GetUnreviewedPost(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
-	rawPosts, err := model.PostService.FindUnreviewed()
+	rawPosts, err := model.PostService.FindMany(false)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
@@ -194,10 +194,15 @@ func GetUnreviewedPost(this *server.Context) error {
 		post := post{}
 		post.ID = rawPost.ID
 		post.OpenID = rawPost.OpenID
-		post.Title = rawPost.Title
 		post.Content = rawPost.Content
 		post.Date = rawPost.DateTime
 		post.Commend = rawPost.Commend
+		post.NickName = rawPost.NickName
+		post.VIP = rawPost.VIP
+		post.Age = rawPost.Age
+		post.Location = rawPost.Location
+		post.Height = rawPost.Height
+		post.Constellation = rawPost.Constellation
 		post.Images, _ = util.GetImages("./post/" + strconv.Itoa(int(post.ID)))
 		resp = append(resp, post)
 	}

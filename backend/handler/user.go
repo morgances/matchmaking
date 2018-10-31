@@ -8,6 +8,8 @@
 package handler
 
 import (
+	"strings"
+
 	"github.com/TechCatsLab/apix/http/server"
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/constant"
@@ -46,13 +48,15 @@ type (
 		Faith            string  `json:"faith"`
 		Constellation    string  `json:"constellation"`
 		SelfIntroduction string  `json:"self_introduction"`
-		SelecCriteria    string  `json:"selec_criteria"`
+		SelecCriteria    []string  `json:"selec_criteria"`
 		Certified        bool    `json:"certified"`
 		Vip              bool    `json:"vip"`
 		Points           float64 `json:"points"`
 		Rose             uint32  `json:"rose"`
 		Charm            uint32  `json:"charm"`
 		DatePrivilege    uint32  `json:"date_privilege"`
+
+		HasFollowed bool `json:"has_followed"`
 	}
 
 	fillInfo struct {
@@ -65,14 +69,14 @@ type (
 		Job              string `json:"job" validate:"required"`
 		Faith            string `json:"faith" validate:"required"`
 		SelfIntroduction string `json:"self_introduction" validate:"required"`
-		SelecCriteria    string `json:"selec_criteria" validate:"required"`
+		SelecCriteria    []string `json:"selec_criteria" validate:"required"`
 	}
 
 	changeInfo struct {
 		NickName         string `json:"nick_name" validate:"required"`
 		Faith            string `json:"faith" validate:"required"`
 		SelfIntroduction string `json:"self_introduction" validate:"required"`
-		SelecCriteria    string `json:"selec_criteria" validate:"required"`
+		SelecCriteria    []string `json:"selec_criteria" validate:"required"`
 		Phone            string `json:"phone" validate:"required,numeric,len=11"`
 		Wechat           string `json:"wechat" validate:"required"`
 	}
@@ -91,40 +95,44 @@ var auth = wx.NewOauth()
 // WechatLogin
 func WechatLogin(this *server.Context) error {
 	var (
+		err 	   error
 		wechatCode wechatCode
 		wechatData oauth.ResAccessToken
 		userData   oauth.UserInfo
 		resp       token
 	)
 
-	var err error
+	// fetch param wechat code
 	if err = this.JSONBody(&wechatCode); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
-
 	if err = this.Validate(&wechatCode); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
+	// fetch response after send code to wechat
 	wechatData, err = auth.GetUserAccessToken(wechatCode.Code)
 	if err != nil {
 		log.Error("Error get user accessToken:", err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrWechatAuth, nil)
 	}
 
+	// fetch response after send accesstoken and openid to wechat
 	userData, err = auth.GetUserInfo(wechatData.AccessToken, wechatData.OpenID)
 	if err != nil {
 		log.Error("Error get user information:", err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrWechatAuth, nil)
 	}
 
+	// register if needed
 	err = model.UserService.WeChatLogin(userData.OpenID, userData.Nickname, userData.City, uint8(userData.Sex))
 	if err != nil {
 		log.Error("wechat login failed: ", err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
+	// set wechat avatar as init avatar
 	util.SaveWechatAvatar(userData.OpenID, userData.HeadImgURL)
 
 	resp.Token, err = util.NewToken(wechatData.OpenID, uint8(userData.Sex), false)
@@ -140,10 +148,13 @@ func FillInfo(this *server.Context) error {
 		err error
 		req fillInfo
 	)
+
+	// fetch param in jwt
 	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
 	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
+	// fetch param in request body
 	if err = this.JSONBody(&req); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
@@ -152,6 +163,7 @@ func FillInfo(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
+
 	userp, err := model.UserService.FindByOpenID(openid)
 	if err != nil {
 		log.Error(err)
@@ -172,7 +184,7 @@ func FillInfo(this *server.Context) error {
 	userp.RealName = req.RealName
 	userp.Faith = req.Faith
 	userp.SelfIntroduction = req.SelfIntroduction
-	userp.SelecCriteria = req.SelecCriteria
+	userp.SelecCriteria = strings.Join(req.SelecCriteria, "&&&")
 	userp.Age = age
 
 	if err = model.UserService.Update(userp); err != nil {
@@ -210,7 +222,7 @@ func UserChangeInfo(this *server.Context) error {
 	userp.NickName = req.NickName
 	userp.Faith = req.Faith
 	userp.SelfIntroduction = req.SelfIntroduction
-	userp.SelecCriteria = req.SelecCriteria
+	userp.SelecCriteria = strings.Join(req.SelecCriteria, "&&&")
 	userp.Phone = req.Phone
 	userp.Wechat = req.Wechat
 
@@ -223,11 +235,22 @@ func UserChangeInfo(this *server.Context) error {
 
 func GetUserDetail(this *server.Context) error {
 	var (
-		err   error
-		req   targetOpenID
-		userp *model.User
-		resp  detailUserInfo
+		err     error
+		req     targetOpenID
+		isAdmin bool
+		userp   *model.User
+		resp    detailUserInfo
 	)
+
+	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
+	if !ok {
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
+	}
+	isAdmin, ok = this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["is_admin"].(bool)
+	if !ok {
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
+	}
+
 	if err = this.JSONBody(&req); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
@@ -247,7 +270,7 @@ func GetUserDetail(this *server.Context) error {
 	resp.RealName = userp.RealName
 	resp.Job = userp.Job
 	resp.Height = userp.Height
-	resp.SelecCriteria = userp.SelecCriteria
+	resp.SelecCriteria = strings.SplitN(userp.SelecCriteria, "&&&", -1)
 	resp.SelfIntroduction = userp.SelfIntroduction
 	resp.Age = userp.Age
 	resp.NickName = userp.NickName
@@ -261,6 +284,13 @@ func GetUserDetail(this *server.Context) error {
 	resp.Location = userp.Location
 	resp.Faith = userp.Faith
 	resp.DatePrivilege = userp.DatePrivilege
+	if !isAdmin {
+		resp.HasFollowed, err = model.FollowService.FollowExist(openid, req.TargetOpenID)
+		if err != nil {
+			log.Error(err)
+			return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
+		}
+	}
 
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
@@ -310,14 +340,22 @@ func GetRecommendUsers(this *server.Context) error {
 func GetAlbum(this *server.Context) error {
 	var (
 		err          error
+		isAdmin      bool
 		isAbleToLook bool
 		req          targetOpenID
 		resp         []string
 	)
+
+	// get information in token
 	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
 	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
+	isAdmin, ok = this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["is_admin"].(bool)
+	if !ok {
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
+	}
+
 	if err = this.JSONBody(&req); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
@@ -326,14 +364,16 @@ func GetAlbum(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
-	if openid != req.TargetOpenID {
+
+	//Is able to get album ?
+	if openid == req.TargetOpenID || isAdmin {
+		isAbleToLook = true
+	} else {
 		isAbleToLook, err = model.FollowService.FollowExist(openid, req.TargetOpenID)
 		if err != nil {
 			log.Error(err)
 			return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 		}
-	} else {
-		isAbleToLook = true
 	}
 
 	if !isAbleToLook {

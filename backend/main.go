@@ -9,13 +9,14 @@ package main
 
 import (
 	"net/http"
+	"strings"
+
 	"github.com/TechCatsLab/apix/http/server"
 	"github.com/TechCatsLab/apix/http/server/middleware"
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/conf"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/router"
-	"strings"
 )
 
 func main() {

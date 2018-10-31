@@ -62,7 +62,7 @@ func (followServPrvd) FindFollowing(oid string) (us []User, err error) {
 		}
 		us = append(us, user)
 	}
-	return us, nil
+	return us, rows.Err()
 }
 
 func (followServPrvd) FindFollower(oid string) (us []User, err error) {
@@ -85,7 +85,7 @@ func (followServPrvd) FindFollower(oid string) (us []User, err error) {
 		}
 		us = append(us, user)
 	}
-	return us, nil
+	return us, rows.Err()
 }
 
 func (followServPrvd) Delete(fan, idol string) error {

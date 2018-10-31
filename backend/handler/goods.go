@@ -17,6 +17,7 @@ import (
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
 	"github.com/zh1014/comment/response"
+	"net/http"
 )
 
 type (
@@ -29,11 +30,15 @@ type (
 )
 
 func CreateGoods(this *server.Context) error {
-	// req form-data : price title description goods_image
+	// req form-data : price title(unique) description goods_image
 	var (
 		err    error
 		lastId uint32
+		resp   struct {
+			GoodsID uint32 `json:"goods_id"`
+		}
 	)
+
 	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["is_admin"].(bool)
 	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -50,23 +55,28 @@ func CreateGoods(this *server.Context) error {
 	}
 	goods.Title = this.FormValue("title")
 	goods.Description = this.FormValue("description")
+
 	lastId, err = model.GoodsService.Insert(goods)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
+	resp.GoodsID = lastId
 
 	image, _, err := this.Request().FormFile("goods_image")
 	if err != nil {
+		if err == http.ErrMissingFile {
+			return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
+		}
 		log.Error(err)
-		return response.WriteStatusAndDataJSON(this, constant.ErrSaveImage, nil)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, resp)
 	}
 	if err = util.SaveImage(fmt.Sprintf("./goods/%d.jpg", lastId), image); err != nil {
 		log.Error(err)
-		return response.WriteStatusAndDataJSON(this, constant.ErrSaveImage, nil)
+		return response.WriteStatusAndDataJSON(this, constant.ErrSaveImage, resp)
 	}
 
-	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 
 func GetGoodsByID(this *server.Context) error {

@@ -104,7 +104,6 @@ func initTable() error {
 		`CREATE TABLE IF NOT EXISTS post(
 					id BIGINT AUTO_INCREMENT,
 					open_id VARCHAR(35) NOT NULL,
-					title VARCHAR(50) NOT NULL,
 					content VARCHAR(255) DEFAULT 'null',
 					date_time DATETIME NOT NULL,
 					commend INT UNSIGNED DEFAULT 0,

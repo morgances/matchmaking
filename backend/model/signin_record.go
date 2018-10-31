@@ -61,5 +61,5 @@ func (signInServPrvd) FindByOpenID(oid string) (dates []string, err error) {
 		}
 		dates = append(dates, signDate[:10])
 	}
-	return dates, nil
+	return dates, rows.Err()
 }

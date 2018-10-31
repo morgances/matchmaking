@@ -134,7 +134,7 @@ func (userServPrvd) RecommendByCharm(sex uint8) (us []User, err error) {
 			return nil, err
 		}
 	}
-	return us, nil
+	return us, rows.Err()
 }
 
 func (userServPrvd) GetContact(oid string) (phone, wechat string, err error) {

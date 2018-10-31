@@ -22,11 +22,17 @@ type (
 	post struct {
 		ID      uint32    `json:"id"`
 		OpenID  string    `json:"open_id"`
-		Title   string    `json:"title"`
 		Content string    `json:"content"`
 		Date    time.Time `json:"date"`
 		Commend uint32    `json:"commend"`
 		Images  []string  `json:"Images"`
+
+		NickName      string `json:"nick_name"`
+		VIP           bool   `json:"vip"`
+		Age           uint8  `json:"age"`
+		Location      string `json:"location"`
+		Height        string `json:"height"`
+		Constellation string `json:"constellation"`
 	}
 )
 
@@ -36,11 +42,9 @@ func CreatePost(this *server.Context) error {
 	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	title := this.FormValue("title")
 	content := this.FormValue("content")
 	post := &model.Post{
 		OpenID:  openid,
-		Title:   title,
 		Content: content,
 	}
 	postId, err := model.PostService.Insert(post)
@@ -58,11 +62,10 @@ func CreatePost(this *server.Context) error {
 
 func GetReviewedPost(this *server.Context) error {
 	var (
-		err error
-		// todo: need response user information ?
+		err  error
 		resp []post
 	)
-	rawPosts, err := model.PostService.FindReviewed()
+	rawPosts, err := model.PostService.FindMany(true)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
@@ -71,10 +74,15 @@ func GetReviewedPost(this *server.Context) error {
 		post := post{}
 		post.ID = rawPost.ID
 		post.OpenID = rawPost.OpenID
-		post.Title = rawPost.Title
 		post.Content = rawPost.Content
 		post.Date = rawPost.DateTime
 		post.Commend = rawPost.Commend
+		post.NickName = rawPost.NickName
+		post.VIP = rawPost.VIP
+		post.Age = rawPost.Age
+		post.Location = rawPost.Location
+		post.Height = rawPost.Height
+		post.Constellation = rawPost.Constellation
 		post.Images, _ = util.GetImages("./post/" + strconv.Itoa(int(post.ID)))
 		resp = append(resp, post)
 	}
@@ -99,7 +107,6 @@ func GetMyPost(this *server.Context) error {
 		post := post{}
 		post.ID = rawPost.ID
 		post.OpenID = rawPost.OpenID
-		post.Title = rawPost.Title
 		post.Content = rawPost.Content
 		post.Date = rawPost.DateTime
 		post.Commend = rawPost.Commend

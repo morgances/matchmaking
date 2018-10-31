@@ -49,7 +49,7 @@ func Follow(this *server.Context) error {
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
-// Unfollow if exist
+// Unfollow if has followed
 func Unfollow(this *server.Context) error {
 	var (
 		req targetOpenID
@@ -101,9 +101,8 @@ func GetFollowing(this *server.Context) error {
 }
 
 func GetFollower(this *server.Context) error {
-	var (
-		resp []shortUserInfo
-	)
+	resp := make([]shortUserInfo, 0)
+
 	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
 	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -120,5 +119,6 @@ func GetFollower(this *server.Context) error {
 		shortUserInfo.NickName = user.NickName
 		resp = append(resp, shortUserInfo)
 	}
+
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }

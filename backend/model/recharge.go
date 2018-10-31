@@ -73,7 +73,7 @@ func (rechargeServPrvd) FindAll() ([]Recharge, error) {
 		}
 		rchgs = append(rchgs, rchg)
 	}
-	return rchgs, nil
+	return rchgs, rows.Err()
 }
 
 func (rechargeServPrvd) Success(id uint32, transid string) error {

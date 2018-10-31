@@ -16,10 +16,6 @@ import (
 	"github.com/morgances/matchmaking/backend/conf"
 )
 
-var (
-	ErrMakeTrade = errors.New("error make a trade")
-)
-
 type (
 	tradeServPrvd struct{}
 
@@ -128,13 +124,13 @@ func (tradeServPrvd) FindByOpenID(oid string) (ts []Trade, err error) {
 			return nil, err
 		}
 	}
-	return ts, nil
+	return ts, rows.Err()
 }
 
 func (tradeServPrvd) FindUnfinishedTrade() (ts []Trade, err error) {
 	var rows *sql.Rows
 	rows, err = DB.Query(
-		`SELECT * FROM ` + conf.MMConf.Database + `.trade WHERE finished=0 ORDER BY date_time DESC LOCK IN SHARE MODE`,
+		`SELECT * FROM ` + conf.MMConf.Database + `.trade WHERE finished=0 ORDER BY date_time ASC LOCK IN SHARE MODE`,
 	)
 	if err != nil {
 		return nil, err
@@ -150,7 +146,7 @@ func (tradeServPrvd) FindUnfinishedTrade() (ts []Trade, err error) {
 			return nil, err
 		}
 	}
-	return ts, nil
+	return ts, rows.Err()
 }
 
 func (tradeServPrvd) UpdateTradeStatus(id uint32) error {
@@ -158,8 +154,5 @@ func (tradeServPrvd) UpdateTradeStatus(id uint32) error {
 		`UPDATE `+conf.MMConf.Database+`.trade SET finished=1 WHERE id=? LIMIT 1`,
 		id,
 	)
-	if err != nil {
-		return errors.New(fmt.Sprintf("failed to update status of trade: %d", id))
-	}
-	return nil
+	return err
 }

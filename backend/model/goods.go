@@ -78,7 +78,7 @@ func (goodsServPrvd) FindByPrice() (gs []Goods, err error) {
 			return nil, err
 		}
 	}
-	return gs, nil
+	return gs, rows.Err()
 }
 
 func (goodsServPrvd) Update(g *Goods) error {

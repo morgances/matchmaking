@@ -92,9 +92,11 @@ func RemoveGoodsImage(goodsid uint32) error {
 
 func SaveImages(dir string, r *http.Request) error {
 	numString := r.FormValue("image_num")
-	if numString == "" { // no image
+	// return nil when there is no image
+	if numString == "" {
 		return nil
 	}
+
 	num, err := strconv.Atoi(numString)
 	if err != nil {
 		return errors.New("Save images: " + err.Error())
@@ -120,7 +122,7 @@ func SaveImages(dir string, r *http.Request) error {
 	return nil
 }
 
-// SaveImage cover image if it already exist
+// SaveImage will cover origin image when name is the same
 func SaveImage(name string, image multipart.File) error {
 	localImage, err := os.Create(name)
 	defer localImage.Close()
