@@ -98,7 +98,7 @@ export default (props) => {
 
         <div className={styles.line}>
           <p className={styles.lineTitle}>联系方式：</p>
-          <p className={styles.lineContent}>保密(*^__^*)</p>
+          <p className={styles.lineContent}>暂未开通</p>
         </div>
       </div>
     </div>

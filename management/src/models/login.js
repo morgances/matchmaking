@@ -10,13 +10,8 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(accountLogin, payload);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: response,
-      });
-      // Login successfully
       if (response === true) {
-        window.location.href = "http://localhost:8000/userpage/information";
+        window.location.href = "http://localhost:8001/userpage/information";
         return;
       }
     },
