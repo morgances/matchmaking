@@ -13,7 +13,6 @@ class Information extends Component {
     super(props);
     this.state = {
       value: '',
-      information: {},
     };
   }
 
@@ -26,18 +25,11 @@ class Information extends Component {
     }
     const { dispatch } = this.props;
     dispatch({
-      type: 'userinformation/userInformation',
+      type: 'information/fetchInformation',
       payload: {
         ...data,
       },
-    }).then((result) => {
-      this.setState({
-        information: result
-      })
-    }).catch((err) => {
-      console.log(err);
-      return false
-    });
+    })
   }
   
   render() {
@@ -53,13 +45,13 @@ class Information extends Component {
         />
 
         <div className={styles.selfComponent}>
-          <UserPage item={this.state.information} />
+          <UserPage item={this.props.information} />
         </div>
       </PageHeaderWrapper>
     );
   }
 }
 
-export default connect (({ userinformation }) => ({
-  information: userinformation.information,
+export default connect (({ information }) => ({
+  information: information.information,
 }))(Information);

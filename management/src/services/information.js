@@ -1,7 +1,7 @@
 import request from '@/utils/request';
 import { getToken } from './token';
 
-export async function information(params) {
+export async function submitInformation(params) {
   let resp = await request('/matchmaking/user/getuserdetail', {
     method: 'POST',
     headers: {
@@ -12,6 +12,7 @@ export async function information(params) {
       method: 'post',
     }
   });
+
   const { status } = resp
 
   if (status !== 0) return false

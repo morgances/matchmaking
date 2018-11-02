@@ -10,7 +10,7 @@ export async function accountLogin(params) {
       method: 'post',
     }
   });
-  
+
   const { status } = resp;
 
   if ((status !== undefined) && (status === 0)) {
