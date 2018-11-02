@@ -20,6 +20,11 @@ import (
 	"github.com/193Eric/go-wechat"
 )
 
+var (
+	// TODO: use https
+	notifyURL = "http://" + conf.MMConf.Address + ":" + conf.MMConf.Port + constant.NotifyUrl
+)
+
 type OrderInfo struct {
 	AppID          string
 	Body           string
@@ -34,6 +39,7 @@ type OrderInfo struct {
 	Key            string
 }
 
+// VipOrderInfo create a OrderInfo instance for recharge vip
 func VipOrderInfo(spbillCreateIP, outTradeNo, openID string) *OrderInfo {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	return &OrderInfo{
@@ -41,7 +47,7 @@ func VipOrderInfo(spbillCreateIP, outTradeNo, openID string) *OrderInfo {
 		Body:      constant.RechargeVIPBody,
 		MchID:     conf.MMConf.MchID,
 		TotalFee:  conf.MMConf.VIPFee,
-		NotifyUrl: "https://" + conf.MMConf.Address + ":" + conf.MMConf.Port + constant.NotifyUrl,
+		NotifyUrl: notifyURL,
 		TradeType: constant.TradeType,
 		Key:       conf.MMConf.AppOrderKey,
 
@@ -52,6 +58,7 @@ func VipOrderInfo(spbillCreateIP, outTradeNo, openID string) *OrderInfo {
 	}
 }
 
+// RoseOrder create a OrderInfo instance for recharge rose
 func RoseOrder(spbillCreateIP, outTradeNo, openID string, num uint32) *OrderInfo {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	return &OrderInfo{
@@ -59,7 +66,7 @@ func RoseOrder(spbillCreateIP, outTradeNo, openID string, num uint32) *OrderInfo
 		Body:      constant.RechargeRoseBody,
 		MchID:     conf.MMConf.MchID,
 		TotalFee:  num * 100,
-		NotifyUrl: "https://" + conf.MMConf.Address + ":" + conf.MMConf.Port + constant.NotifyUrl,
+		NotifyUrl: notifyURL,
 		TradeType: constant.TradeType,
 		Key:       conf.MMConf.AppOrderKey,
 
@@ -70,20 +77,22 @@ func RoseOrder(spbillCreateIP, outTradeNo, openID string, num uint32) *OrderInfo
 	}
 }
 
+// SetOrder send a request to wechat for creating order
 func SetOrder(orderinfo *OrderInfo) (*wechat.UnifyOrderResp, error) {
 	return wechat.SetOrder(orderinfo.AppID, orderinfo.Body, orderinfo.MchID, orderinfo.NonceStr, orderinfo.SpbillCreateIP,
 		int(orderinfo.TotalFee), orderinfo.OutTradeNo, orderinfo.NotifyUrl, orderinfo.TradeType, orderinfo.OpenID, orderinfo.Key)
 }
 
-// f(Out_trade_no,Transaction_id,Result_code)
+// PayCallback handle the response from wechat, call f(Out_trade_no,Transaction_id,Result_code) if sign is right
 func PayCallback(ctx *server.Context, f func(string, string, string)) (string, string) {
 	return wechat.WxpayCallback(ctx.Response(), ctx.Request(), f, conf.MMConf.AppOrderKey)
 }
 
+// HandleRecharge used as the second
 func HandleRecharge(outTradeNo, transactionID, resultCode string) {
 	outNum, err := strconv.Atoi(outTradeNo)
 	if err != nil {
-		log.Error("HandleRecharge convert out_trade_no to number: " + err.Error())
+		log.Error("convert out_trade_no to number: " + err.Error())
 	}
 	switch resultCode {
 	case "SUCCESS":
@@ -97,6 +106,6 @@ func HandleRecharge(outTradeNo, transactionID, resultCode string) {
 			log.Error("HandleRecharge: ", err)
 		}
 	default:
-		log.Error("HandleRecharge unknown resultCode " + resultCode)
+		log.Error("unknown resultCode " + resultCode)
 	}
 }

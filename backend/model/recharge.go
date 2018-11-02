@@ -79,7 +79,7 @@ func (rechargeServPrvd) FindAll() ([]Recharge, error) {
 func (rechargeServPrvd) Success(id uint32, transid string) error {
 	info, err := RechargeService.findByID(id)
 	if err != nil {
-		return errors.New("Success: " + err.Error())
+		return err
 	}
 	switch info.Project {
 	case "vip":
@@ -87,7 +87,7 @@ func (rechargeServPrvd) Success(id uint32, transid string) error {
 	case "rose":
 		return rechargeRose(info.ID, info.Num, info.OpenID, transid)
 	default:
-		return errors.New("Success: unknown recharge project " + info.Project)
+		return errors.New("unknown recharge project: " + info.Project)
 	}
 }
 
@@ -113,7 +113,8 @@ func upgradeVip(id uint32, openid, transid string) error {
 	var tx *sql.Tx
 	tx, err := DB.Begin()
 	if err != nil {
-		return errors.New("upgradeVip: " + err.Error())
+		tx.Rollback()
+		return err
 	}
 	_, err = tx.Exec(
 		`UPDATE `+conf.MMConf.Database+`.user SET vip=1,points=points+520,rose=rose+520,date_privilege=date_privilege+1 WHERE open_id=? LIMIT 1`,
@@ -121,7 +122,7 @@ func upgradeVip(id uint32, openid, transid string) error {
 	)
 	if err != nil {
 		tx.Rollback()
-		return errors.New("upgradeVip: " + err.Error())
+		return err
 	}
 	var rslt sql.Result
 	rslt, err = tx.Exec(
@@ -130,7 +131,7 @@ func upgradeVip(id uint32, openid, transid string) error {
 	)
 	if err != nil {
 		tx.Rollback()
-		return errors.New("upgradeVip: " + err.Error())
+		return err
 	}
 	if rslt == nil {
 		tx.Rollback()
@@ -138,7 +139,7 @@ func upgradeVip(id uint32, openid, transid string) error {
 	}
 	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
 		tx.Rollback()
-		return errors.New("upgradeVip: recharge may not exists, or is already handled")
+		return errors.New("upgradeVip: recharge may not exists, or has already been handled")
 	}
 	return tx.Commit()
 }
@@ -147,7 +148,8 @@ func rechargeRose(id, num uint32, openid, transid string) error {
 	var tx *sql.Tx
 	tx, err := DB.Begin()
 	if err != nil {
-		return errors.New("rechargeRose: " + err.Error())
+		tx.Rollback()
+		return err
 	}
 	_, err = tx.Exec(
 		`UPDATE `+conf.MMConf.Database+`.user SET rose=rose+?,points=points+? WHERE open_id=? LIMIT 1`,
@@ -155,7 +157,7 @@ func rechargeRose(id, num uint32, openid, transid string) error {
 	)
 	if err != nil {
 		tx.Rollback()
-		return errors.New("rechargeRose: " + err.Error())
+		return err
 	}
 	var rslt sql.Result
 	rslt, err = tx.Exec(
@@ -164,7 +166,7 @@ func rechargeRose(id, num uint32, openid, transid string) error {
 	)
 	if err != nil {
 		tx.Rollback()
-		return errors.New("rechargeRose: " + err.Error())
+		return err
 	}
 	if rslt == nil {
 		tx.Rollback()
@@ -172,7 +174,7 @@ func rechargeRose(id, num uint32, openid, transid string) error {
 	}
 	if affec, err := rslt.RowsAffected(); err != nil || affec != 1 {
 		tx.Rollback()
-		return errors.New("rechargeRose: recharge may not exists, or is already handled")
+		return errors.New("rechargeRose: recharge may not exists, or has already been handled")
 	}
 	return tx.Commit()
 }

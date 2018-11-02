@@ -37,48 +37,48 @@ type (
 	}
 
 	detailUserInfo struct {
-		OpenID           string  `json:"open_id"`
-		NickName         string  `json:"nick_name"`
-		RealName         string  `json:"real_name"`
-		Sex              uint8   `json:"sex"`
-		Age              uint8   `json:"age"`
-		Height           string  `json:"height"`
-		Location         string  `json:"location"`
-		Job              string  `json:"job"`
-		Faith            string  `json:"faith"`
-		Constellation    string  `json:"constellation"`
-		SelfIntroduction string  `json:"self_introduction"`
-		SelecCriteria    []string  `json:"selec_criteria"`
-		Certified        bool    `json:"certified"`
-		Vip              bool    `json:"vip"`
-		Points           float64 `json:"points"`
-		Rose             uint32  `json:"rose"`
-		Charm            uint32  `json:"charm"`
-		DatePrivilege    uint32  `json:"date_privilege"`
+		OpenID           string   `json:"open_id"`
+		NickName         string   `json:"nick_name"`
+		RealName         string   `json:"real_name"`
+		Sex              uint8    `json:"sex"`
+		Age              uint8    `json:"age"`
+		Height           string   `json:"height"`
+		Location         string   `json:"location"`
+		Job              string   `json:"job"`
+		Faith            string   `json:"faith"`
+		Constellation    string   `json:"constellation"`
+		SelfIntroduction string   `json:"self_introduction"`
+		SelecCriteria    []string `json:"selec_criteria"`
+		Certified        bool     `json:"certified"`
+		Vip              bool     `json:"vip"`
+		Points           float64  `json:"points"`
+		Rose             uint32   `json:"rose"`
+		Charm            uint32   `json:"charm"`
+		DatePrivilege    uint32   `json:"date_privilege"`
 
 		HasFollowed bool `json:"has_followed"`
 	}
 
 	fillInfo struct {
-		Phone            string `json:"phone" validate:"required,numeric,len=11"`
-		Wechat           string `json:"wechat" validate:"required"`
-		Sex              uint8  `json:"sex" validate:"required,gte=1"`
-		RealName         string `json:"real_name" validate:"required"`
-		Birthday         string `json:"birthday" validate:"required,len=10,contains=-"`
-		Height           string `json:"height" validate:"required"`
-		Job              string `json:"job" validate:"required"`
-		Faith            string `json:"faith" validate:"required"`
-		SelfIntroduction string `json:"self_introduction" validate:"required"`
+		Phone            string   `json:"phone" validate:"required,numeric,len=11"`
+		Wechat           string   `json:"wechat" validate:"required"`
+		Sex              uint8    `json:"sex" validate:"required,gte=1"`
+		RealName         string   `json:"real_name" validate:"required"`
+		Birthday         string   `json:"birthday" validate:"required,len=10,contains=-"`
+		Height           string   `json:"height" validate:"required"`
+		Job              string   `json:"job" validate:"required"`
+		Faith            string   `json:"faith" validate:"required"`
+		SelfIntroduction string   `json:"self_introduction" validate:"required"`
 		SelecCriteria    []string `json:"selec_criteria" validate:"required"`
 	}
 
 	changeInfo struct {
-		NickName         string `json:"nick_name" validate:"required"`
-		Faith            string `json:"faith" validate:"required"`
-		SelfIntroduction string `json:"self_introduction" validate:"required"`
+		NickName         string   `json:"nick_name" validate:"required"`
+		Faith            string   `json:"faith" validate:"required"`
+		SelfIntroduction string   `json:"self_introduction" validate:"required"`
 		SelecCriteria    []string `json:"selec_criteria" validate:"required"`
-		Phone            string `json:"phone" validate:"required,numeric,len=11"`
-		Wechat           string `json:"wechat" validate:"required"`
+		Phone            string   `json:"phone" validate:"required,numeric,len=11"`
+		Wechat           string   `json:"wechat" validate:"required"`
 	}
 
 	wechatCode struct {
@@ -95,7 +95,7 @@ var auth = wx.NewOauth()
 // WechatLogin
 func WechatLogin(this *server.Context) error {
 	var (
-		err 	   error
+		err        error
 		wechatCode wechatCode
 		wechatData oauth.ResAccessToken
 		userData   oauth.UserInfo

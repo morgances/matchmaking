@@ -39,14 +39,14 @@ var (
 
 	// Users look through the newest post
 	unrvwdSQL = `SELECT p.id,p.open_id,p.content,p.date_time,p.commend,u.nick_name,u.vip,u.age,u.location,u.height,u.constellation 
-					FROM `+conf.MMConf.Database+`.post p 
-					JOIN `+conf.MMConf.Database+`.user u ON p.open_id=u.open_id 
+					FROM ` + conf.MMConf.Database + `.post p 
+					JOIN ` + conf.MMConf.Database + `.user u ON p.open_id=u.open_id 
 					WHERE p.reviewed=0 
 					ORDER BY date_time ASC LOCK IN SHARE MODE`
 	// admin looks through the oldest post
 	rvwdSQL = `SELECT p.id,p.open_id,p.content,p.date_time,p.commend,u.nick_name,u.vip,u.age,u.location,u.height,u.constellation 
-					FROM `+conf.MMConf.Database+`.post p 
-					JOIN `+conf.MMConf.Database+`.user u ON p.open_id=u.open_id 
+					FROM ` + conf.MMConf.Database + `.post p 
+					JOIN ` + conf.MMConf.Database + `.user u ON p.open_id=u.open_id 
 					WHERE p.reviewed=1 
 					ORDER BY date_time DESC LOCK IN SHARE MODE`
 )
@@ -96,8 +96,8 @@ func (postServPrvd) FindByOpenID(oid string) (ps []Post, err error) {
 
 func (postServPrvd) FindMany(isreviewed bool) (ps []Post, err error) {
 	var (
-		rows  *sql.Rows
-		SQL string
+		rows *sql.Rows
+		SQL  string
 	)
 
 	if isreviewed {
