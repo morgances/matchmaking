@@ -154,6 +154,6 @@ func PayResult(this *server.Context) error {
 	if result == "FAIL" {
 		return errors.New("PayResult: wechat pay callback failed")
 	}
-	fmt.Println("recharge id:" + outTradeNo + " callback succed")
+	fmt.Println("recharge id:" + outTradeNo + " callback succeed")
 	return nil
 }

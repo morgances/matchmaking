@@ -12,6 +12,7 @@ import (
 	"errors"
 	"time"
 
+	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/conf"
 	"github.com/morgances/matchmaking/backend/util"
 )
@@ -123,6 +124,8 @@ func (userServPrvd) RecommendByCharm(sex uint8) (us []User, err error) {
 	}
 	defer rows.Close()
 
+	// TODO:recommend a batch of users every time ?
+	// us = make([]User,length) ; give a initially length for efficient.
 	for i := 0; rows.Next(); i++ {
 		us = append(us, User{})
 		err = rows.Scan(
@@ -131,7 +134,9 @@ func (userServPrvd) RecommendByCharm(sex uint8) (us []User, err error) {
 			&us[i].OpenID, &us[i].Age, &us[i].CreateAt, &us[i].Certified, &us[i].Vip, &us[i].DatePrivilege, &us[i].Points, &us[i].Rose, &us[i].Charm,
 		)
 		if err != nil {
-			return nil, err
+			i--
+			log.Error(err)
+			continue
 		}
 	}
 	return us, rows.Err()

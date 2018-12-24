@@ -35,6 +35,7 @@ var (
 	TradeService tradeServPrvd
 )
 
+// TODO: trade be canceled automaticly with a time limit
 func (tradeServPrvd) Insert(t *Trade) error {
 	tx, err := DB.Begin()
 	if err != nil {

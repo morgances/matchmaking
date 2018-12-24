@@ -17,6 +17,6 @@ import (
 func NewOauth() *oauth.Oauth {
 	return oauth.NewOauth(&context.Context{
 		AppID:     conf.MMConf.AppID,
-		AppSecret: conf.MMConf.AppID,
+		AppSecret: conf.MMConf.AppSecret,
 	})
 }

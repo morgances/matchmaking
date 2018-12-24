@@ -6,16 +6,13 @@
 package wx
 
 import (
-	"fmt"
-	"math/rand"
 	"strconv"
-	"time"
-
 	"github.com/TechCatsLab/apix/http/server"
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/conf"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
+	"github.com/morgances/matchmaking/backend/util"
 
 	"github.com/193Eric/go-wechat"
 )
@@ -41,7 +38,6 @@ type OrderInfo struct {
 
 // VipOrderInfo create a OrderInfo instance for recharge vip
 func VipOrderInfo(spbillCreateIP, outTradeNo, openID string) *OrderInfo {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	return &OrderInfo{
 		AppID:     conf.MMConf.AppID,
 		Body:      constant.RechargeVIPBody,
@@ -51,7 +47,7 @@ func VipOrderInfo(spbillCreateIP, outTradeNo, openID string) *OrderInfo {
 		TradeType: constant.TradeType,
 		Key:       conf.MMConf.AppOrderKey,
 
-		NonceStr:       fmt.Sprintf("%d%s", r.Intn(10000), openID[5:]),
+		NonceStr:       util.RandomStr(20),
 		SpbillCreateIP: spbillCreateIP,
 		OutTradeNo:     outTradeNo,
 		OpenID:         openID,
@@ -60,7 +56,6 @@ func VipOrderInfo(spbillCreateIP, outTradeNo, openID string) *OrderInfo {
 
 // RoseOrder create a OrderInfo instance for recharge rose
 func RoseOrder(spbillCreateIP, outTradeNo, openID string, num uint32) *OrderInfo {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	return &OrderInfo{
 		AppID:     conf.MMConf.AppID,
 		Body:      constant.RechargeRoseBody,
@@ -70,7 +65,7 @@ func RoseOrder(spbillCreateIP, outTradeNo, openID string, num uint32) *OrderInfo
 		TradeType: constant.TradeType,
 		Key:       conf.MMConf.AppOrderKey,
 
-		NonceStr:       fmt.Sprintf("%d%s", r.Intn(10000), openID[5:]),
+		NonceStr:       util.RandomStr(20),
 		SpbillCreateIP: spbillCreateIP,
 		OutTradeNo:     outTradeNo,
 		OpenID:         openID,
@@ -106,6 +101,6 @@ func HandleRecharge(outTradeNo, transactionID, resultCode string) {
 			log.Error("HandleRecharge: ", err)
 		}
 	default:
-		log.Error("unknown resultCode " + resultCode)
+		log.Error("unknown resultCode: " + resultCode)
 	}
 }
