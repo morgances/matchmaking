@@ -18,6 +18,14 @@ import (
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/wx"
 	"github.com/zh1014/comment/response"
+	"time"
+	"github.com/morgances/matchmaking/backend/conf"
+)
+
+const (
+	// Re-signing is consistent with the signature type of the unified order
+	// The third-part package I chosen using MD5 to sign for unify order
+	signType = "MD5"
 )
 
 type (
@@ -76,7 +84,12 @@ func RechargeRose(this *server.Context) error {
 			RoseNum uint32 `json:"rose_num" validate:"required,gte=1"`
 		}
 		resp struct {
-			PrepayID string `json:"prepay_id"`
+			AppID string `json:"app_id"`
+			TimeStamp string `json:"time_stamp"`
+			NonceStr string `json:"nonce_str"`
+			Package string `json:"package"`
+			SignType string `json:"sign_type"`
+			PaySign string `json:"pay_sign"`
 		}
 	)
 	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
@@ -114,7 +127,21 @@ func RechargeRose(this *server.Context) error {
 		}
 		return response.WriteStatusAndDataJSON(this, constant.ErrWechatPay, nil)
 	}
-	resp.PrepayID = unifyOrderResp.Prepay_id
+	resp.AppID = unifyOrderResp.Appid
+	resp.TimeStamp = strconv.Itoa(int(time.Now().Unix()))
+	resp.NonceStr = unifyOrderResp.Nonce_str
+	resp.Package = "prepay_id="+unifyOrderResp.Prepay_id
+	resp.SignType = signType
+
+	params := make(map[string]interface{}, 5)
+	params["appId"] = resp.AppID
+	params["timeStamp"] = resp.TimeStamp
+	params["nonceStr"] = resp.NonceStr
+	params["package"] = resp.Package
+	params["signType"] = resp.SignType
+
+	resp.PaySign = wx.CalculateSign(params, conf.MMConf.AppOrderKey)
+
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
 }
 

@@ -15,6 +15,11 @@ import (
 	"github.com/morgances/matchmaking/backend/util"
 
 	"github.com/193Eric/go-wechat"
+	"sort"
+	"fmt"
+	"crypto/md5"
+	"strings"
+	"encoding/hex"
 )
 
 var (
@@ -103,4 +108,32 @@ func HandleRecharge(outTradeNo, transactionID, resultCode string) {
 	default:
 		log.Error("unknown resultCode: " + resultCode)
 	}
+}
+
+func CalculateSign(params map[string]interface{}, key string) string {
+	sorted_keys := make([]string, 5)
+	for k, _ := range params {
+		sorted_keys = append(sorted_keys, k)
+	}
+
+	sort.Strings(sorted_keys)
+
+	var signStrings string
+	for _, k := range sorted_keys {
+		value := fmt.Sprintf("%v", params[k])
+		if value != "" {
+			signStrings = signStrings + k + "=" + value + "&"
+		}
+	}
+
+	if key != "" {
+		signStrings = signStrings + "key=" + key
+	}
+
+	md5Ctx := md5.New()
+	md5Ctx.Write([]byte(signStrings))
+	cipherStr := md5Ctx.Sum(nil)
+	upperSign := strings.ToUpper(hex.EncodeToString(cipherStr))
+
+	return upperSign
 }
