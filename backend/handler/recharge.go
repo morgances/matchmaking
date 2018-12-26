@@ -10,16 +10,18 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/TechCatsLab/apix/http/server"
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/morgances/matchmaking/backend/conf"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/wx"
 	"github.com/zh1014/comment/response"
-	"time"
-	"github.com/morgances/matchmaking/backend/conf"
+
+	"github.com/193Eric/go-wechat"
 )
 
 const (
@@ -38,14 +40,18 @@ type (
 		TransactionID string
 		Status        uint8
 	}
+
+	signAgainResp struct {
+		AppID     string `json:"app_id"`
+		TimeStamp string `json:"time_stamp"`
+		NonceStr  string `json:"nonce_str"`
+		Package   string `json:"package"`
+		SignType  string `json:"sign_type"`
+		PaySign   string `json:"pay_sign"`
+	}
 )
 
 func RechargeVip(this *server.Context) error {
-	var (
-		resp struct {
-			PrepayID string `json:"prepay_id"`
-		}
-	)
 	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
 	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -72,8 +78,8 @@ func RechargeVip(this *server.Context) error {
 		}
 		return response.WriteStatusAndDataJSON(this, constant.ErrWechatPay, nil)
 	}
-	resp.PrepayID = unifyOrderResp.Prepay_id
-	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
+
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, *signAgain(unifyOrderResp))
 }
 
 func RechargeRose(this *server.Context) error {
@@ -82,14 +88,6 @@ func RechargeRose(this *server.Context) error {
 		outTradeNo uint32
 		req        struct {
 			RoseNum uint32 `json:"rose_num" validate:"required,gte=1"`
-		}
-		resp struct {
-			AppID string `json:"app_id"`
-			TimeStamp string `json:"time_stamp"`
-			NonceStr string `json:"nonce_str"`
-			Package string `json:"package"`
-			SignType string `json:"sign_type"`
-			PaySign string `json:"pay_sign"`
 		}
 	)
 	openid, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["open_id"].(string)
@@ -127,10 +125,16 @@ func RechargeRose(this *server.Context) error {
 		}
 		return response.WriteStatusAndDataJSON(this, constant.ErrWechatPay, nil)
 	}
-	resp.AppID = unifyOrderResp.Appid
+
+	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, *signAgain(unifyOrderResp))
+}
+
+func signAgain(uoResp *wechat.UnifyOrderResp) *signAgainResp {
+	resp := new(signAgainResp)
+	resp.AppID = uoResp.Appid
 	resp.TimeStamp = strconv.Itoa(int(time.Now().Unix()))
-	resp.NonceStr = unifyOrderResp.Nonce_str
-	resp.Package = "prepay_id="+unifyOrderResp.Prepay_id
+	resp.NonceStr = uoResp.Nonce_str
+	resp.Package = "prepay_id=" + uoResp.Prepay_id
 	resp.SignType = signType
 
 	params := make(map[string]interface{}, 5)
@@ -141,8 +145,8 @@ func RechargeRose(this *server.Context) error {
 	params["signType"] = resp.SignType
 
 	resp.PaySign = wx.CalculateSign(params, conf.MMConf.AppOrderKey)
-
-	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
+	params = nil
+	return resp
 }
 
 func GetRechargeRecord(this *server.Context) error {
