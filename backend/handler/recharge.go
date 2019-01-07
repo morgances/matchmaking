@@ -8,7 +8,6 @@ package handler
 import (
 	"errors"
 	"fmt"
-	"net/http"
 	"strconv"
 	"time"
 
@@ -16,6 +15,7 @@ import (
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/morgances/matchmaking/backend/conf"
+	"github.com/morgances/matchmaking/backend/util"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/wx"
@@ -56,14 +56,13 @@ func RechargeVip(this *server.Context) error {
 	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	spbillCreateIp := this.Request().Header.Get(http.CanonicalHeaderKey("X-Forwarded-For"))
 
 	outTradeNo, err := model.RechargeService.Insert("vip", openid, 1)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	unifyOrderResp, err := wx.SetOrder(wx.VipOrderInfo(spbillCreateIp, strconv.Itoa(int(outTradeNo)), openid))
+	unifyOrderResp, err := wx.SetOrder(wx.VipOrderInfo(util.RemoteIp(this.Request()), strconv.Itoa(int(outTradeNo)), openid))
 	if err != nil {
 		log.Error(err)
 		if err = model.RechargeService.Fail(outTradeNo); err != nil {
@@ -103,14 +102,12 @@ func RechargeRose(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
-	spbillCreateIp := this.Request().Header.Get(http.CanonicalHeaderKey("X-Forwarded-For"))
-
 	outTradeNo, err = model.RechargeService.Insert("rose", openid, req.RoseNum)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	unifyOrderResp, err := wx.SetOrder(wx.RoseOrder(spbillCreateIp, strconv.Itoa(int(outTradeNo)), openid, req.RoseNum))
+	unifyOrderResp, err := wx.SetOrder(wx.RoseOrder(util.RemoteIp(this.Request()), strconv.Itoa(int(outTradeNo)), openid, req.RoseNum))
 	if err != nil {
 		log.Error(err)
 		if err = model.RechargeService.Fail(outTradeNo); err != nil {
