@@ -116,7 +116,6 @@
     }
     async onLoad() {
       let resp = await homeData()
-      console.log(resp)
       this.loveCircle = [...resp.data.data]
       this.$apply()
     }

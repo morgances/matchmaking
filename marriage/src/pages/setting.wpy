@@ -171,7 +171,7 @@
 }
 .redwoman {
   position: fixed;
-  top: 20rpx;
+  top: 5rpx;
   right: 30rpx;
   height: 100rpx;
   width: 200rpx;
@@ -185,19 +185,21 @@
 
 <template>
   <view class="layout">
-    <view class="head-flex">
-      <view class="left-flex">
-        <image class="avatar" src="https://images.pexels.com/photos/894723/pexels-photo-894723.jpeg?auto=compress&cs=tinysrgb&h=350" />
-        <view class="name-flex">
-          <text class="word-name">One Wechat</text>
-          <text class="word-id">交友ID: 72544</text>
+    <navigator url="/pages/setting/userDetail" open-type="navigateTo">
+      <view class="head-flex">
+        <view class="left-flex">
+          <image class="avatar" src="https://images.pexels.com/photos/894723/pexels-photo-894723.jpeg?auto=compress&cs=tinysrgb&h=350" />
+          <view class="name-flex">
+            <text class="word-name">One Wechat</text>
+            <text class="word-id">交友ID: 72544</text>
+          </view>
+        </view>
+        <view class="data-flex">
+          <text class="word-data">资料完整度80%</text>
+          <image class="arrow" src="../assets/images/arrow.png" />
         </view>
       </view>
-      <view class="data-flex">
-        <text class="word-data">资料完整度80%</text>
-        <image class="arrow" src="../assets/images/arrow.png" />
-      </view>
-    </view>
+    </navigator>
     <view class="icon-neck-flex">
       <view class="flex-icon">
         <view class="vip-flex">
