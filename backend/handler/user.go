@@ -17,9 +17,10 @@ import (
 	"github.com/morgances/matchmaking/backend/util"
 	"github.com/morgances/matchmaking/backend/wx"
 	"github.com/zh1014/comment/response"
+	"github.com/morgances/matchmaking/backend/conf"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/silenceper/wechat/oauth"
+	"github.com/193Eric/go-wechat"
 )
 
 type (
@@ -94,11 +95,15 @@ var auth = wx.NewOauth()
 
 // WechatLogin
 func WechatLogin(this *server.Context) error {
+
+	// TODO: 1. store session_key
+	//       2. get wechat user information
+	//       3. use id to replace openid
+
 	var (
 		err        error
 		wechatCode wechatCode
-		wechatData oauth.ResAccessToken
-		userData   oauth.UserInfo
+		wechatData *wechat.WXBody
 		resp       token
 	)
 
@@ -113,29 +118,30 @@ func WechatLogin(this *server.Context) error {
 	}
 
 	// fetch response after send code to wechat
-	wechatData, err = auth.GetUserAccessToken(wechatCode.Code)
+	wechatData, err = wechat.GetSessionKey(wechatCode.Code, conf.MMConf.AppID, conf.MMConf.AppSecret)
 	if err != nil {
 		log.Error("Error get user accessToken:", err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrWechatAuth, nil)
 	}
 
 	// fetch response after send accesstoken and openid to wechat
-	userData, err = auth.GetUserInfo(wechatData.AccessToken, wechatData.OpenID)
-	if err != nil {
-		log.Error("Error get user information:", err)
-		return response.WriteStatusAndDataJSON(this, constant.ErrWechatAuth, nil)
-	}
+	//userData, err = auth.GetUserInfo(wechatData.AccessToken, wechatData.OpenID)
+	//if err != nil {
+	//	log.Error("Error get user information:", err)
+	//	return response.WriteStatusAndDataJSON(this, constant.ErrWechatAuth, nil)
+	//}
 
 	// register if needed
-	err = model.UserService.WeChatLogin(userData.OpenID, userData.Nickname, userData.City, uint8(userData.Sex))
+	err = model.UserService.WeChatLogin(wechatData.Openid, "null", "null", 0)
 	if err != nil {
 		log.Error("wechat login failed: ", err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	// set wechat avatar as init avatar
-	util.SaveWechatAvatar(userData.OpenID, userData.HeadImgURL)
 
-	resp.Token, err = util.NewToken(wechatData.OpenID, uint8(userData.Sex), false)
+	// set wechat avatar as init avatar
+	//util.SaveWechatAvatar(userData.OpenID, userData.HeadImgURL)
+
+	resp.Token, err = util.NewToken(wechatData.Openid, 0, false)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)

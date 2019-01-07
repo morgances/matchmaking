@@ -20,7 +20,7 @@ import (
 )
 
 func main() {
-	config := &server.Configuration{Address: conf.MMConf.Address + ":" + conf.MMConf.Port}
+	config := &server.Configuration{Address: "0.0.0.0:" + conf.MMConf.Port}
 	ep := server.NewEntrypoint(config, nil)
 
 	ep.AttachMiddleware(middleware.NegroniCorsAllowAll())

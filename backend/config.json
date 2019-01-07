@@ -4,25 +4,25 @@
         "password": "123456",
         "protocol": "tcp",
         "host": {
-            "address": "127.0.0.1",
-            "port": "3333"
+            "address": "140.143.250.187",
+            "port": "13306"
         },
         "database": "match_making"
     },
     "host": {
-        "address": "0.0.0.0",
-        "port": "3000"
+        "address": "140.143.250.187",
+        "port": "11014"
     },
     "admin": {
         "account": "zhanghao",
         "password": "123456"
     },
     "app": {
-        "app_id": "",
-        "app_secret": "",
-        "mch_id": "",
-        "key": "",
-        "vip_fee": 3000,
+        "app_id": "wxf44b565b208f9f1a",
+        "app_secret": "691bccc323f4d47cf4be8aa73ebc8a30",
+        "mch_id": "1517801171",
+        "key": "zhanghao",
+        "vip_fee": 1,
         "private_token_key": "zhanghao"
     }
 }

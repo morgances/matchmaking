@@ -72,7 +72,7 @@ func (userServPrvd) WeChatLogin(oid, nickName, loc string, sex uint8) error {
 func (userServPrvd) insert(u *User) error {
 	_, err := DB.Exec(
 		`INSERT INTO `+conf.MMConf.Database+`.user(open_id, nick_name, sex, location,create_at)
-					VALUES(?,?,?,?,?,NOW())`,
+					VALUES(?,?,?,?,NOW())`,
 		u.OpenID, u.NickName, u.Sex, u.Location,
 	)
 	return err

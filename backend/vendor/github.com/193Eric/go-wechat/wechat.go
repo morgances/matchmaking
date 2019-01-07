@@ -111,22 +111,19 @@ type WXUser struct {
 	HeadimgUrl  string `orm:"column(headimg_url)"`
 }
 
-type WXBody struct { 
-	AccessToken string `json:"access_token"`
-	ExpiresIn int `json:"expires_in"`
-	RefreshToken string `json:"refresh_token"`
+type WXBody struct {
+	SessionKey string `json:"session_key"`
 	Openid string `json:"openid"`
-	Scope string `json:"scope"`
-} 
+}
 
-type WXInfo struct { 
+type WXInfo struct {
 	Openid string `json:"openid"`
 	Nickname interface{} `json:"nickname"`
 	City  interface{} `json:"city"`
 	Country  interface{} `json:"country"`
 	Province  interface{} `json:"province"`
 	HeadimgUrl  interface{} `json:"headimgurl"`
-} 
+}
 
 type Ticket struct { 
 	Errcode int `json:"errcode"`
@@ -140,23 +137,24 @@ type SDK struct {
 	Noncestr string `json:"noncestr"`
 }
 
-func  GetWeixinToken(code, appid, secret string) (*WXBody,error){
-
+func  GetSessionKey(code, appid, secret string) (*WXBody,error){
 	//获取openid
-	requestLine := strings.Join([]string{"https://api.weixin.qq.com/sns/oauth2/access_token",
-        "?appid=", appid,
-        "&secret=", secret,
-        "&code=", code,
-        "&grant_type=authorization_code"}, "")
+	requestLine := "https://api.weixin.qq.com/sns/jscode2session?"+
+        "appid="+appid+
+        "&secret="+secret+
+        "&js_code="+code+"&grant_type=authorization_code"
 
-	resp, err := http.Get(requestLine)	
+	resp, err := http.Get(requestLine)
+	if err != nil {
+		return nil, err
+	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
-	logs.Info(err)
-	if bytes.Contains(body, []byte("access_token")) {
-		
-	}else{
-		return nil,errors.New("get msg fail")
+	if err != nil {
+		return nil, err
+	}
+	if !bytes.Contains(body, []byte("openid")) {
+		return nil, errors.New("get msg fail")
 	}
 
 	atr := WXBody{}
@@ -217,45 +215,45 @@ func SendWeixinMs(accessToken string,data interface{}) (string,error){
 	return string(body),nil
 }
 
-func GetWeixinAccessToken(appid string , appsecret string)(string,error){
-	Url := strings.Join([]string{"https://api.weixin.qq.com/cgi-bin/token",
-        "?grant_type=", "client_credential",
-        "&appid=",appid,
-		"&secret=",appsecret,}, "")
-	infoBody, err := http.Get(Url)
-	if err != nil{
-		return "",err
-	}
-	defer infoBody.Body.Close()
-	info, _ := ioutil.ReadAll(infoBody.Body)
-	atr := WXBody{}
-	err = json.Unmarshal(info, &atr)
-	if err != nil{
-		return "",err
-	}else{
-		return  atr.AccessToken,nil
-	}
-}
+//func GetWeixinAccessToken(appid string , appsecret string)(string,error){
+//	Url := strings.Join([]string{"https://api.weixin.qq.com/cgi-bin/token",
+//        "?grant_type=", "client_credential",
+//        "&appid=",appid,
+//		"&secret=",appsecret,}, "")
+//	infoBody, err := http.Get(Url)
+//	if err != nil{
+//		return "",err
+//	}
+//	defer infoBody.Body.Close()
+//	info, _ := ioutil.ReadAll(infoBody.Body)
+//	atr := WXBody{}
+//	err = json.Unmarshal(info, &atr)
+//	if err != nil{
+//		return "",err
+//	}else{
+//		return  atr.AccessToken,nil
+//	}
+//}
 
-func GetWeixinTicket(appid string , appsecret string)(string,error){
-	access_token,err := GetWeixinAccessToken(appid,appsecret)
-	Url := strings.Join([]string{"https://api.weixin.qq.com/cgi-bin/ticket/getticket",
-        "?access_token=", access_token,
-        "&type=jsapi",}, "")
-	infoBody, err := http.Get(Url)
-	if err != nil{
-		return "",err
-	}
-	defer infoBody.Body.Close()
-	info, _ := ioutil.ReadAll(infoBody.Body)
-	atr := Ticket{}
-	err = json.Unmarshal(info, &atr)
-	if err != nil{
-		return atr.Errmsg,err
-	}else{
-		return  atr.Ticket,nil
-	}
-}
+//func GetWeixinTicket(appid string , appsecret string)(string,error){
+//	access_token,err := GetWeixinAccessToken(appid,appsecret)
+//	Url := strings.Join([]string{"https://api.weixin.qq.com/cgi-bin/ticket/getticket",
+//        "?access_token=", access_token,
+//        "&type=jsapi",}, "")
+//	infoBody, err := http.Get(Url)
+//	if err != nil{
+//		return "",err
+//	}
+//	defer infoBody.Body.Close()
+//	info, _ := ioutil.ReadAll(infoBody.Body)
+//	atr := Ticket{}
+//	err = json.Unmarshal(info, &atr)
+//	if err != nil{
+//		return atr.Errmsg,err
+//	}else{
+//		return  atr.Ticket,nil
+//	}
+//}
 
 func InitSDK(ticket string,url string,noncestr string)(*SDK,error){
 	timestamp := time.Now().Unix()
@@ -383,15 +381,15 @@ func Sha1(data string) string {
 	return hex.EncodeToString(sha1.Sum([]byte("")))
 }
 
-func GetWeixinSDK(appid string , appsecret string,url string,noncestr string)(*SDK,error){
-	res,_ := GetWeixinTicket(appid,appsecret)
-	sdk,err := InitSDK(res,url,noncestr)
-	if err != nil{
-		return nil,err
-	}else{
-		return sdk,nil
-	}
-}	
+//func GetWeixinSDK(appid string , appsecret string,url string,noncestr string)(*SDK,error){
+//	res,_ := GetWeixinTicket(appid,appsecret)
+//	sdk,err := InitSDK(res,url,noncestr)
+//	if err != nil{
+//		return nil,err
+//	}else{
+//		return sdk,nil
+//	}
+//}
 
 //微信退款回调
 func WxRefundCallback(w http.ResponseWriter, r *http.Request, f func(string),key string)(string,string) {
