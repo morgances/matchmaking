@@ -1,0 +1,118 @@
+<style scoped>
+.head {
+  height: 220rpx;
+  border-bottom: 1px solid #f2f4f9;
+  position: relative;
+  padding: 30rpx;
+}
+
+.userAvatar {
+  margin-left: 20rpx;
+  margin-top: 30rpx;
+  height: 150rpx;
+  width: 150rpx;
+  border-radius: 100%;
+}
+
+.userName {
+  position: absolute;
+  display: block;
+  font-size: 20px;
+  top: 100rpx;
+  left: 250rpx;
+}
+
+.body_container {
+  border-bottom: 1px solid #f2f4f9;
+  padding-top: 20rpx;
+  padding-bottom: 20rpx;
+  padding-left: 50rpx;
+}
+
+.tag_container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag {
+  display: inline-block;
+  color: rgb(196, 65, 65);
+  background-color: rgb(243, 232, 232);
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 16px;
+  margin: 5px;
+}
+
+.intruduce_tag {
+  display: inline-block;
+  color: white;
+  background-color: rgb(170, 212, 233);
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 16px;
+  margin: 5px;
+}
+
+.footer {
+  height: 70rpx;
+  text-align: center;
+  padding: 20rpx;
+  position: fixed;
+  bottom: 0rpx;
+}
+</style>
+
+<template>
+  <scroll-view scroll-y>
+    <view class="head">
+      <image class="userAvatar" src="https://images.pexels.com/photos/894723/pexels-photo-894723.jpeg?auto=compress&cs=tinysrgb&h=350" />
+      <text class="userName">User</text>
+    </view>
+    <view class="body">
+      <view class="body_container">
+        <text>年龄：20</text>
+      </view>
+      <view class="body_container">
+        <text>身高：180cm</text>
+      </view>
+      <view class="body_container">
+        <text>所在地：保定</text>
+      </view>
+      <view class="body_container">
+        <text>我的个人标签：</text>
+        <view class="tag_container">
+          <text class="tag">180cm</text>
+          <text class="tag">白羊座</text>
+          <text class="tag">程序员</text>
+          <text class="tag">无宗教信仰</text>
+          <text class="tag">+ 添加更多我的专属标签</text>
+        </view>
+      </view>
+      <view class="body_container">
+        <text>我的择偶要求：</text>
+        <view class="tag_container">
+          <text class="intruduce_tag">身高 170cm 以上</text>
+          <text class="intruduce_tag">有车有房</text>
+          <text class="intruduce_tag">年收入 10W+</text>
+          <text class="intruduce_tag">孝顺，性格好</text>
+          <text class="intruduce_tag">+ 添加更多我的择偶要求</text>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Fate extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的资料'
+    }
+
+    data = {
+      list: [{id: 1, title: 'title1'}, {id: 2, title: 'title2'}]
+    }
+  }
+</script>

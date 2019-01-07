@@ -4,6 +4,7 @@
 <script>
 import wepy from 'wepy'
 import 'wepy-async-function'
+import { setToken } from './utils/requset'
 
 export default class extends wepy.app {
   config = {
@@ -22,6 +23,7 @@ export default class extends wepy.app {
       'pages/setting/watch',
       'pages/setting/watched',
       'pages/setting/rose',
+      'pages/setting/userDetail',
       'pages/setting/gift',
       'pages/love/publish',
       'pages/mall/history'
@@ -66,7 +68,8 @@ export default class extends wepy.app {
   }
 
   globalData = {
-    userInfo: null
+    token: null,
+    code: null
   }
 
   constructor () {
@@ -75,8 +78,11 @@ export default class extends wepy.app {
     this.use('promisify')
   }
 
-  onLaunch() {
-    this.testAsync()
+  async onLaunch(res) {
+    const { code } = await wepy.login()
+    this.globalData.code = code
+    console.log(code, 'code')
+    // await this.getUserInfo(code)
   }
 
   sleep (s) {
@@ -92,16 +98,15 @@ export default class extends wepy.app {
     console.log(data)
   }
 
-  getUserInfo(cb) {
-    const that = this
-    if (this.globalData.userInfo) {
-      return this.globalData.userInfo
-    }
-    wepy.getUserInfo({
-      success (res) {
-        that.globalData.userInfo = res.userInfo
-        cb && cb(res.userInfo)
+  async getUserInfo(code) {
+    wepy.request({
+      url: 'http://140.143.250.187:11014/matchmaking/user/wechatlogin',
+      method: 'POST',
+      data: {
+        'code': code
       }
+    }).then((resp) => {
+      setToken(resp.data.data.token)
     })
   }
 }

@@ -1,8 +1,21 @@
 <style scoped>
 .image {
-  height: 400rpx;
-  background-color: gray;
+  height: 300rpx;
+  background-color: rgb(243, 232, 232);
   width: 100%;
+  text-align: center;
+  padding-top: 100rpx;
+  padding-bottom: 40rpx;
+}
+
+.iamge_detail {
+  width: 200rpx;
+  height: 200rpx;
+}
+
+.image_title {
+  display: block;
+  margin-top: 30rpx;
 }
 
 .banner {
@@ -32,28 +45,45 @@
 
 <template>
   <view>
-    <image class="image" src="" />
+    <view class="image">
+      <image class="iamge_detail" src="../../../assets/images/getRose.png" />
+      <text class="image_title">玫瑰 {{ nummber }} 朵 </text>
+    </view>
     <view class="banner">
       <text class="banner_title">1 朵玫瑰 = 1 人民币</text>
     </view>
     <view class="charge">
       <text>请输入想兑换的数量:</text>
-      <input />
+      <input bindinput="bindKeyInput()" type="digit" />
     </view>
     <view>
-      <button class="chargeButton">确认兑换</button>
+      <button bindtap="getRoes()" class="chargeButton">确认兑换</button>
     </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import { rechargeRose } from '../../service/recharge'
+
   export default class Fate extends wepy.page {
     config = {
       navigationBarTitleText: '充值玫瑰'
     }
     data = {
-      list: [{id: 1, title: 'title1'}, {id: 2, title: 'title2'}]
+      nummber: 10,
+      inputValue: null
+    }
+
+    bindKeyInput(e) {
+      this.inputValue = e.detail.value
+      this.$apply()
+    }
+
+    async getRoes() {
+      console.log(this.inputValue)
+      const resp = await rechargeRose()
+      console.log(resp)
     }
   }
 </script>

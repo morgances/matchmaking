@@ -48,8 +48,5 @@
 import wepy from 'wepy'
 
 export default class GoodsCard extends wepy.component {
-  props = {
-    item: Object
-  }
 }
 </script>

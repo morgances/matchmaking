@@ -10,7 +10,6 @@
 
 .container {
   padding: 15px 15px 15px 15px;
-  border-bottom: 1px solid #999;
   background-color: white;
   margin-top: -10px;
 }
@@ -22,8 +21,7 @@
 }
 
 .detail {
-  position: relative;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .photoList {
@@ -32,15 +30,38 @@
   padding: 15px;
 }
 
+.photoContainer {
+  position: relative;
+}
+
 .photo {
-  width: 100px;
-  height: 100px;
+  width: 160rpx;
+  height: 160rpx;
+  margin-right: 16rpx;
+}
+
+.background-white {
+  width: 160rpx;
+  height: 170rpx;
+  margin-top: -180rpx;
+  background-color: white;
+  opacity: 0.9;
+  z-index: 9;
+}
+
+.lock {
+  position: absolute;
+  z-index: 10;
+  width: 100rpx;
+  height: 100rpx;
+  top: 30rpx;
+  left: 30rpx;
 }
 
 .background {
   background-color: white;
   padding: 15px;
-  border-top: 1px solid #999;
+  border: 0.5px solid #f4f2f9;
 }
 
 .intruduce {
@@ -79,6 +100,7 @@
 
 .tag_container {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .tag {
@@ -90,25 +112,49 @@
   font-size: 16px;
   margin: 5px;
 }
+
+.intruduce_tag {
+  display: inline-block;
+  color: white;
+  background-color: rgb(170, 212, 233);
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 16px;
+  margin: 5px;
+}
 </style>
 
 <template>
   <view class="total">
-    <image class="banner" src="https://images.unsplash.com/photo-1507402086209-7bc75ccf5369?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=76da8cd3566839e142eeace5c2823fb7&auto=format&fit=crop&w=500&q=60" />
+    <image class="banner" src="https://images.pexels.com/photos/894723/pexels-photo-894723.jpeg?auto=compress&cs=tinysrgb&h=350"/>
     <view class="container">
       <view>
         <text class="name">{{item.nick_name}} {{item.age}}岁</text>
       </view>
       <view>
-        <text class="detail">{{item.sex == 1 ? '男' : '女'}} | {{item.location}}</text>
+        <text class="detail">{{item.sex == 1 ? '男' : '女'}} | 成都</text>
       </view>
     </view>
     <view>
       <view class="container">
-        <text class="detail">照片 1</text>
+        <text class="detail">我的照片</text>
       </view>
       <view class="photoList">
-        <image class="photo" src="https://images.unsplash.com/photo-1507402086209-7bc75ccf5369?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=76da8cd3566839e142eeace5c2823fb7&auto=format&fit=crop&w=500&q=60" />
+        <view class="photoContainer">
+          <image class="photo" src="https://images.pexels.com/photos/894723/pexels-photo-894723.jpeg?auto=compress&cs=tinysrgb&h=350" />
+          <view class="background-white"></view>
+          <image class="lock" src="../../assets/images/lock.png" />
+        </view>
+        <view class="photoContainer">
+          <image class="photo" src="https://images.pexels.com/photos/894723/pexels-photo-894723.jpeg?auto=compress&cs=tinysrgb&h=350" />
+          <view class="background-white"></view>
+          <image class="lock" src="../../assets/images/lock.png" />
+        </view>
+        <view class="photoContainer">
+          <image class="photo" src="https://images.pexels.com/photos/894723/pexels-photo-894723.jpeg?auto=compress&cs=tinysrgb&h=350" />
+          <view class="background-white"></view>
+          <image class="lock" src="../../assets/images/lock.png" />
+        </view>
       </view>
     </view>
     <view class="background">
@@ -126,13 +172,18 @@
     </view>
     <view class="background">
       <text class="intruduce">择偶要求</text>
-      <text class="detail">{{item.selec_criteria}}</text>
+      <view class="tag_container">
+        <text class="intruduce_tag">身高 170cm 以上</text>
+        <text class="intruduce_tag">有车有房</text>
+        <text class="intruduce_tag">年收入 10W+</text>
+        <text class="intruduce_tag">孝顺，性格好</text>
+      </view>
     </view>
-    <view bindtap=flower({{item.open_id}}) class="makeFriend">
+    <view bindtap="flower({{item.open_id}})" class="makeFriend">
       <text class="makeFriend_content">送花</text>
     </view>
     <view bindtap="watch({{item.open_id}})" class="watch">
-      <text class="makeFriend_content">关注</text>
+      <text class="makeFriend_content">{{item.has_followed ? '已关注' : '关注'}}</text>
     </view>
   </view>
 </template>
@@ -159,7 +210,6 @@
     }
     async onLoad(options) {
       let resp = await getDetail(options)
-      console.log(resp)
       this.item = resp.data.data
       this.$apply()
     }
