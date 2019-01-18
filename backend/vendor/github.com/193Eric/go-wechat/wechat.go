@@ -347,6 +347,9 @@ func wxpayCalcSign(mReq map[string]interface{}, key string) string {
 		signStrings = signStrings + "key=" + key
 	}
 
+	// TODO: delete
+	fmt.Println("................拼接后未加密的string", signStrings)
+
 	//fmt.Println("========STEP4, 进行MD5签名并且将所有字符转为大写.========")
 	//STEP4, 进行MD5签名并且将所有字符转为大写.
 	md5Ctx := md5.New()
