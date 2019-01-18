@@ -12,15 +12,15 @@ import (
 
 	"github.com/TechCatsLab/apix/http/server"
 	log "github.com/TechCatsLab/logging/logrus"
+	"github.com/morgances/matchmaking/backend/conf"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
 	"github.com/morgances/matchmaking/backend/wx"
 	"github.com/zh1014/comment/response"
-	"github.com/morgances/matchmaking/backend/conf"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/193Eric/go-wechat"
+	"github.com/dgrijalva/jwt-go"
 )
 
 type (
@@ -266,6 +266,9 @@ func GetUserDetail(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
 
+	if req.TargetOpenID == "myself0000000000000000000000" {
+		req.TargetOpenID = openid
+	}
 	userp, err = model.UserService.FindByOpenID(req.TargetOpenID)
 	if err != nil {
 		log.Error(err)

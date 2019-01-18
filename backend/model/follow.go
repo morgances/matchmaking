@@ -9,6 +9,7 @@ package model
 
 import (
 	"database/sql"
+
 	"github.com/morgances/matchmaking/backend/conf"
 )
 
@@ -97,6 +98,9 @@ func (followServPrvd) Delete(fan, idol string) error {
 }
 
 func (followServPrvd) FollowExist(fan, idol string) (bool, error) {
+	if fan == idol {
+		return true, nil
+	}
 	row := DB.QueryRow(
 		`SELECT COUNT(0) FROM `+conf.MMConf.Database+`.follow WHERE fan=? AND idol=? LOCK IN SHARE MODE`,
 		fan, idol,
