@@ -113,7 +113,7 @@ func HandleRecharge(outTradeNo, transactionID, resultCode string) {
 }
 
 func CalculateSign(params map[string]interface{}, key string) string {
-	sorted_keys := make([]string, 5)
+	sorted_keys := make([]string, 0, 5)
 	for k, _ := range params {
 		sorted_keys = append(sorted_keys, k)
 	}
