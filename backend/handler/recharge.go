@@ -15,9 +15,9 @@ import (
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/morgances/matchmaking/backend/conf"
-	"github.com/morgances/matchmaking/backend/util"
 	"github.com/morgances/matchmaking/backend/constant"
 	"github.com/morgances/matchmaking/backend/model"
+	"github.com/morgances/matchmaking/backend/util"
 	"github.com/morgances/matchmaking/backend/wx"
 	"github.com/zh1014/comment/response"
 
@@ -107,7 +107,7 @@ func RechargeRose(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	unifyOrderResp, err := wx.SetOrder(wx.RoseOrder(util.RemoteIp(this.Request()), strconv.Itoa(int(outTradeNo)), openid, req.RoseNum))
+	unifyOrderResp, err := wx.SetOrder(wx.RoseOrder(util.RemoteIp(this.Request()), "123456789_"+strconv.Itoa(int(outTradeNo)), openid, req.RoseNum))
 	if err != nil {
 		log.Error(err)
 		if err = model.RechargeService.Fail(outTradeNo); err != nil {

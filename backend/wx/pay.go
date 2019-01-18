@@ -7,6 +7,7 @@ package wx
 
 import (
 	"strconv"
+
 	"github.com/TechCatsLab/apix/http/server"
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/conf"
@@ -14,12 +15,13 @@ import (
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
 
-	"github.com/193Eric/go-wechat"
-	"sort"
-	"fmt"
 	"crypto/md5"
-	"strings"
 	"encoding/hex"
+	"fmt"
+	"sort"
+	"strings"
+
+	"github.com/193Eric/go-wechat"
 )
 
 var (
@@ -90,7 +92,7 @@ func PayCallback(ctx *server.Context, f func(string, string, string)) (string, s
 
 // HandleRecharge used as the second
 func HandleRecharge(outTradeNo, transactionID, resultCode string) {
-	outNum, err := strconv.Atoi(outTradeNo)
+	outNum, err := strconv.Atoi(outTradeNo[strings.Index(outTradeNo, "_")+1:])
 	if err != nil {
 		log.Error("convert out_trade_no to number: " + err.Error())
 	}
