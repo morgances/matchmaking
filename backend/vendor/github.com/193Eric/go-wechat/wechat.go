@@ -323,7 +323,7 @@ func wxpayCalcSign(mReq map[string]interface{}, key string) string {
 	//fmt.Println("========STEP 1, 对key进行升序排序.========")
 	//fmt.Println("微信支付签名计算, API KEY:", key)
 	//STEP 1, 对key进行升序排序.
-	sorted_keys := make([]string, 10)
+	sorted_keys := make([]string, 0, 10)
 	for k, _ := range mReq {
 		sorted_keys = append(sorted_keys, k)
 	}
