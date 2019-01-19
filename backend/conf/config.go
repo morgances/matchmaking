@@ -6,6 +6,8 @@
 package conf
 
 import (
+	"strings"
+
 	"github.com/spf13/viper"
 )
 
@@ -19,8 +21,10 @@ type matchMakeConfig struct {
 	Database     string
 
 	// server config
-	Address string
-	Port    string
+	Address      string
+	Port         string
+	ImgURLPrefix string
+	ImgRoot      string
 
 	// app config
 	AppID           string
@@ -35,6 +39,7 @@ type matchMakeConfig struct {
 	AdmPassword string
 }
 
+// MMConf hold config of matchmaking
 var MMConf *matchMakeConfig
 
 func init() {
@@ -52,8 +57,10 @@ func init() {
 		MysqlPort:    viper.GetString("mysql.host.port"),
 		Database:     viper.GetString("mysql.database"),
 
-		Address: viper.GetString("host.address"),
-		Port:    viper.GetString("host.port"),
+		Address:      viper.GetString("host.address"),
+		Port:         viper.GetString("host.port"),
+		ImgURLPrefix: viper.GetString("host.img_url_prefix"),
+		ImgRoot:      viper.GetString("host.img_root"),
 
 		PrivateTokenKey: viper.GetString("app.private_token_key"),
 		AppID:           viper.GetString("app.app_id"),
@@ -64,5 +71,11 @@ func init() {
 
 		AdmAccount:  viper.GetString("admin.account"),
 		AdmPassword: viper.GetString("admin.password"),
+	}
+	if !strings.HasSuffix(MMConf.ImgURLPrefix, "/") {
+		MMConf.ImgURLPrefix += "/"
+	}
+	if !strings.HasSuffix(MMConf.ImgRoot, "/") {
+		MMConf.ImgRoot += "/"
 	}
 }

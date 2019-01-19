@@ -2,8 +2,7 @@
  * Revision History:
  *     Initial: 2018/10/15        Zhang Hao
  */
-
-package util
+package img
 
 import (
 	"errors"
@@ -17,6 +16,20 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/morgances/matchmaking/backend/conf"
+)
+
+var (
+	AlbumDir  = conf.MMConf.ImgRoot + "album/"
+	AvatarDir = conf.MMConf.ImgRoot + "avatar/"
+	PostDir   = conf.MMConf.ImgRoot + "post/"
+	GoodsDir  = conf.MMConf.ImgRoot + "goods/"
+
+	AlbumURL  = conf.MMConf.ImgURLPrefix + "album/"
+	AvatarURL = conf.MMConf.ImgURLPrefix + "avatar/"
+	PostURL   = conf.MMConf.ImgURLPrefix + "post/"
+	GoodsURL  = conf.MMConf.ImgURLPrefix + "goods/"
 )
 
 var ErrNoImageExist = errors.New("error user has no album")
@@ -28,10 +41,10 @@ func SaveWechatAvatar(oid, url string) error {
 		return err
 	}
 	defer resp.Body.Close()
-	file, err := os.Create("./avatar/" + oid + ".jpg")
+	file, err := os.Create(AvatarDir + oid + ".jpg")
 	if err != nil {
 		if os.IsNotExist(err) {
-			if err := os.Mkdir("./avatar", 0755); err != nil {
+			if err := os.Mkdir(AvatarDir, 0755); err != nil {
 				return err
 			}
 		} else {
@@ -44,53 +57,10 @@ func SaveWechatAvatar(oid, url string) error {
 }
 
 func ChangeAvatar(oid string, avatar multipart.File) error {
-	return SaveImage("./avatar/"+oid+".jpg", avatar)
+	return saveImage(AvatarDir+oid+".jpg", avatar)
 }
 
-// SavePhotos save photos to user album
-func SavePhotos(oid string, r *http.Request) error {
-	return SaveImages("./album/"+oid+"/", r)
-}
-
-func RemovePhotosIfExist(openid string, photos []string) {
-	bases := GetImageBase(photos)
-	if len(bases) == 0 {
-		return
-	}
-	dir := "./album/" + openid + "/"
-	for _, base := range bases {
-		os.Remove(dir + base)
-	}
-}
-
-// operate post image -----------------------------------------------
-
-func SavePostImages(id uint32, r *http.Request) error {
-	return SaveImages(fmt.Sprintf("./post/%d/", id), r)
-}
-
-// ClearPostImages if exist
-func ClearPostImages(postid uint32) error {
-	err := os.RemoveAll(fmt.Sprintf("./post/%d", postid))
-	if err != nil {
-		return errors.New(fmt.Sprintf("ClearPostImages ./post/%d/ :", postid) + err.Error())
-	}
-	return nil
-}
-
-// operate goods image--------------------------------------------------
-
-func ChangeGoodsImage(goodsid uint32, avatar multipart.File) error {
-	return SaveImage(fmt.Sprintf("./goods/%d.jpg", goodsid), avatar)
-}
-
-func RemoveGoodsImage(goodsid uint32) error {
-	return os.RemoveAll(fmt.Sprintf("./goods/%d.jpg", goodsid))
-}
-
-// ------------------------------------------------------------------
-
-func SaveImages(dir string, r *http.Request) error {
+func saveImages(dir string, r *http.Request) error {
 	numString := r.FormValue("image_num")
 	// return nil when there is no image
 	if numString == "" {
@@ -110,7 +80,7 @@ func SaveImages(dir string, r *http.Request) error {
 		}
 		// todo: let images will not be created with the same name when one user upload photos twice in a second
 		// todo: should I return err when one of images failed to save ?
-		err = SaveImage(dir+fmt.Sprintf("%d-%d.jpg", timeUnix, i), image)
+		err = saveImage(dir+fmt.Sprintf("%d-%d.jpg", timeUnix, i), image)
 		if err != nil {
 			hasImageSaveFailed = true
 		}
@@ -123,7 +93,7 @@ func SaveImages(dir string, r *http.Request) error {
 }
 
 // SaveImage will cover origin image when name is the same
-func SaveImage(name string, image multipart.File) error {
+func saveImage(name string, image multipart.File) error {
 	localImage, err := os.Create(name)
 	defer localImage.Close()
 	if err != nil {
@@ -163,14 +133,11 @@ func GetImages(dir string) (imgs []string, err error) {
 		}
 		return nil, err
 	}
+	imgs = make([]string, 0, len(infos))
 	for _, info := range infos {
-		name := info.Name()
-		if !strings.HasSuffix(name, ".jpg") {
-			continue
-		}
-		imgs = append(imgs, dir+name)
+		imgs = append(imgs, dir+info.Name())
 	}
-	if imgs == nil {
+	if len(imgs) == 0 {
 		return nil, ErrNoImageExist
 	}
 	return imgs, nil
@@ -178,11 +145,8 @@ func GetImages(dir string) (imgs []string, err error) {
 
 // GetImageBase get bases of an arry of paths, path is skipped when it is empty or consists entirely of slashes
 func GetImageBase(paths []string) (base []string) {
+	base = make([]string, 0, len(paths))
 	for _, aPath := range paths {
-		aPath = strings.TrimRight(aPath, "/ ")
-		if len(aPath) == 0 {
-			continue
-		}
 		base = append(base, path.Base(aPath))
 	}
 	return base

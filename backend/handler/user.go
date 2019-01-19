@@ -2,7 +2,7 @@
  * @Author: zhanghao
  * @DateTime: 2018-10-09 21:34:00
  * @Last Modified by: zhanghao
- * @Last Modified time: 2018-10-10 22:50:51
+ * @Last Modified time: 2019-01-20 00:48:14
  */
 
 package handler
@@ -14,6 +14,7 @@ import (
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/conf"
 	"github.com/morgances/matchmaking/backend/constant"
+	"github.com/morgances/matchmaking/backend/img"
 	"github.com/morgances/matchmaking/backend/model"
 	"github.com/morgances/matchmaking/backend/util"
 	"github.com/morgances/matchmaking/backend/wx"
@@ -99,6 +100,8 @@ func WechatLogin(this *server.Context) error {
 	// TODO: 1. store session_key
 	//       2. get wechat user information
 	//       3. use id to replace openid
+	//		 4. log
+	//		 5. out_trade_no = time + 随机string
 
 	var (
 		err        error
@@ -389,9 +392,9 @@ func GetAlbum(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
 
-	resp, err = util.GetImages("./album/" + req.TargetOpenID + "/")
+	resp, err = img.GetAlbum(req.TargetOpenID)
 	if err != nil {
-		if err == util.ErrNoImageExist {
+		if err == img.ErrNoImageExist {
 			return response.WriteStatusAndDataJSON(this, constant.ErrNoAlbum, nil)
 		}
 		log.Error(err)
@@ -405,7 +408,7 @@ func UploadPhotos(this *server.Context) error {
 	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	if err := util.SavePhotos(openid, this.Request()); err != nil {
+	if err := img.SavePhotos(openid, this.Request()); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrSaveImage, nil)
 	}
@@ -431,7 +434,7 @@ func RemovePhotos(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
-	util.RemovePhotosIfExist(openid, req.Images)
+	img.RemovePhotosIfExist(openid, req.Images)
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }
 
@@ -445,7 +448,7 @@ func ChangeAvatar(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
-	err = util.ChangeAvatar(openid, req)
+	err = img.ChangeAvatar(openid, req)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
