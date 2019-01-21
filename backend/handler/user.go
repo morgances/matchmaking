@@ -25,20 +25,8 @@ import (
 )
 
 type (
-	userInfo struct {
-		OpenID           string `json:"open_id"`
-		NickName         string `json:"nick_name"`
-		Sex              uint8  `json:"sex"`
-		Age              uint8  `json:"age"`
-		Height           string `json:"height"`
-		Location         string `json:"location"`
-		Job              string `json:"job"`
-		Certified        bool   `json:"certified"`
-		Vip              bool   `json:"vip"`
-		SelfIntroduction string `json:"self_introduction"`
-	}
-
 	detailUserInfo struct {
+		Avatar           string   `json:"avatar"`
 		OpenID           string   `json:"open_id"`
 		NickName         string   `json:"nick_name"`
 		RealName         string   `json:"real_name"`
@@ -278,6 +266,7 @@ func GetUserDetail(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 
+	resp.Avatar = img.AvatarURL + userp.OpenID + ".jpg"
 	resp.OpenID = userp.OpenID
 	resp.RealName = userp.RealName
 	resp.Job = userp.Job
@@ -308,10 +297,6 @@ func GetUserDetail(this *server.Context) error {
 }
 
 func GetRecommendUsers(this *server.Context) error {
-	var (
-		resp []userInfo
-	)
-
 	sex, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["sex"].(float64)
 	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
@@ -321,11 +306,10 @@ func GetRecommendUsers(this *server.Context) error {
 	var recommedSex uint8 = 0
 	switch sex {
 	case 1:
-		recommedSex = 1
+		recommedSex = 2
 	case 2:
 		recommedSex = 1
 	default:
-		recommedSex = 0
 	}
 
 	userSlice, err := model.UserService.RecommendByCharm(recommedSex)
@@ -333,9 +317,11 @@ func GetRecommendUsers(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
+	resp := make([]detailUserInfo, 0, len(userSlice))
 	for i, user := range userSlice {
-		resp = append(resp, userInfo{})
+		resp = append(resp, detailUserInfo{})
 		resp[i].OpenID = user.OpenID
+		resp[i].Avatar = img.AvatarURL + resp[i].OpenID + ".jpg"
 		resp[i].NickName = user.NickName
 		resp[i].Sex = user.Sex
 		resp[i].Age = user.Age
@@ -443,12 +429,12 @@ func ChangeAvatar(this *server.Context) error {
 	if !ok {
 		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
-	req, _, err := this.Request().FormFile("avatar")
+	f, _, err := this.Request().FormFile("avatar")
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
 	}
-	err = img.ChangeAvatar(openid, req)
+	err = img.ChangeAvatar(openid, f)
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)

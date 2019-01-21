@@ -67,7 +67,7 @@ func RoseOrder(spbillCreateIP, outTradeNo, openID string, num uint32) *OrderInfo
 		AppID:     conf.MMConf.AppID,
 		Body:      constant.RechargeRoseBody,
 		MchID:     conf.MMConf.MchID,
-		TotalFee:  num * 1,
+		TotalFee:  num * conf.MMConf.RoseFee,
 		NotifyUrl: notifyURL,
 		TradeType: constant.TradeType,
 		Key:       conf.MMConf.AppOrderKey,

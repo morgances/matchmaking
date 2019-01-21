@@ -6,7 +6,6 @@
 package handler
 
 import (
-	"strconv"
 	"time"
 
 	"github.com/TechCatsLab/apix/http/server"
@@ -83,7 +82,7 @@ func GetReviewedPost(this *server.Context) error {
 		post.Location = rawPost.Location
 		post.Height = rawPost.Height
 		post.Constellation = rawPost.Constellation
-		post.Images, _ = img.GetImages("./post/" + strconv.Itoa(int(post.ID)))
+		post.Images = img.GetPostImgs(post.ID)
 		resp = append(resp, post)
 	}
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
@@ -110,7 +109,7 @@ func GetMyPost(this *server.Context) error {
 		post.Content = rawPost.Content
 		post.Date = rawPost.DateTime
 		post.Commend = rawPost.Commend
-		post.Images, _ = img.GetImages("./post/" + strconv.Itoa(int(post.ID)))
+		post.Images = img.GetPostImgs(post.ID)
 		resp = append(resp, post)
 	}
 

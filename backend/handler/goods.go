@@ -63,7 +63,7 @@ func CreateGoods(this *server.Context) error {
 	}
 	resp.GoodsID = lastId
 
-	image, _, err := this.Request().FormFile("goods_image")
+	f, _, err := this.Request().FormFile("goods_image")
 	if err != nil {
 		if err == http.ErrMissingFile {
 			return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
@@ -71,7 +71,7 @@ func CreateGoods(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, resp)
 	}
-	if err = img.SaveGoodsImage(lastId, image); err != nil {
+	if err = img.SaveGoodsImage(lastId, f); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrSaveImage, resp)
 	}
@@ -175,8 +175,8 @@ func ChangeGoodsImage(this *server.Context) error {
 		gid int
 		// req form-data: goods_id goods_image
 		req struct {
-			goodsID    uint32
-			goodsImage multipart.File
+			goodsID uint32
+			file    multipart.File
 		}
 	)
 	isAdmin, ok := this.Request().Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)["is_admin"].(bool)
@@ -186,7 +186,7 @@ func ChangeGoodsImage(this *server.Context) error {
 	if !isAdmin {
 		return response.WriteStatusAndDataJSON(this, constant.ErrPermission, nil)
 	}
-	req.goodsImage, _, err = this.Request().FormFile("goods_image")
+	req.file, _, err = this.Request().FormFile("goods_image")
 	if err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, nil)
@@ -194,9 +194,9 @@ func ChangeGoodsImage(this *server.Context) error {
 	gid, err = strconv.Atoi(this.FormValue("goods_id"))
 	req.goodsID = uint32(gid)
 
-	if err = img.ChangeGoodsImage(req.goodsID, req.goodsImage); err != nil {
+	if err = img.ChangeGoodsImage(req.goodsID, req.file); err != nil {
 		log.Error(err)
-		return response.WriteStatusAndDataJSON(this, constant.ErrSaveImage, nil)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)

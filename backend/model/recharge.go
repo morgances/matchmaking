@@ -2,7 +2,6 @@
  * Revision History:
  *     Initial: 2018/10/19        Zhang Hao
  */
-
 package model
 
 import (
@@ -37,7 +36,7 @@ func (rechargeServPrvd) Insert(proj, openid string, num uint32) (id uint32, err 
 	case "vip":
 		fee = conf.MMConf.VIPFee
 	case "rose":
-		fee = num * 100
+		fee = num * conf.MMConf.RoseFee
 	default:
 		return 0, errors.New("unknown recharge project: " + proj)
 	}

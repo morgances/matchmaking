@@ -14,7 +14,6 @@ import (
 func GetAlbum(id string) (imgs []string, err error) {
 	dir := AlbumDir + id + "/"
 	imgs, err = GetImages(dir)
-	imgs = GetImageBase(imgs)
 	for i := range imgs {
 		imgs[i] = AlbumURL + imgs[i]
 	}

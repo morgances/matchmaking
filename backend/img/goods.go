@@ -13,8 +13,8 @@ import (
 	"strconv"
 )
 
-func ChangeGoodsImage(goodsid uint32, avatar multipart.File) error {
-	return saveImage(GoodsDir+strconv.Itoa(int(goodsid)), avatar)
+func ChangeGoodsImage(id uint32, f multipart.File) error {
+	return SaveGoodsImage(id, f)
 }
 
 func RemoveGoodsImage(goodsid uint32) error {

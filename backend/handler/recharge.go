@@ -107,7 +107,11 @@ func RechargeRose(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	unifyOrderResp, err := wx.SetOrder(wx.RoseOrder(util.RemoteIp(this.Request()), "123456789_"+strconv.Itoa(int(outTradeNo)), openid, req.RoseNum))
+	unifyOrderResp, err := wx.SetOrder(wx.RoseOrder(
+		util.RemoteIp(this.Request()),
+		strconv.Itoa(int(time.Now().Unix()))+"_"+strconv.Itoa(int(outTradeNo)),
+		openid,
+		req.RoseNum))
 	if err != nil {
 		log.Error(err)
 		if err = model.RechargeService.Fail(outTradeNo); err != nil {

@@ -203,7 +203,7 @@ func GetUnreviewedPost(this *server.Context) error {
 		post.Location = rawPost.Location
 		post.Height = rawPost.Height
 		post.Constellation = rawPost.Constellation
-		post.Images, _ = img.GetPostImgs(post.ID)
+		post.Images = img.GetPostImgs(post.ID)
 		resp = append(resp, post)
 	}
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
@@ -265,7 +265,7 @@ func AdminDeletePost(this *server.Context) error {
 	if err = img.ClearPostImages(req.TargetID); err != nil {
 		// make a log but tell admin succeed, because it succeed in database
 		log.Error(err)
-		return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
+		return response.WriteStatusAndDataJSON(this, constant.ErrInternalServerError, nil)
 	}
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
 }

@@ -17,6 +17,7 @@ import (
 	"strings"
 	"time"
 
+	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/morgances/matchmaking/backend/conf"
 )
 
@@ -56,8 +57,8 @@ func SaveWechatAvatar(oid, url string) error {
 	return err
 }
 
-func ChangeAvatar(oid string, avatar multipart.File) error {
-	return saveImage(AvatarDir+oid+".jpg", avatar)
+func ChangeAvatar(oid string, f multipart.File) error {
+	return saveImage(AvatarDir+oid+".jpg", f)
 }
 
 func saveImages(dir string, r *http.Request) error {
@@ -69,25 +70,20 @@ func saveImages(dir string, r *http.Request) error {
 
 	num, err := strconv.Atoi(numString)
 	if err != nil {
-		return errors.New("Save images: " + err.Error())
+		log.Error("saveImages: " + err.Error())
+		return nil
 	}
-	hasImageSaveFailed := true
-	timeUnix := time.Now().Unix()
 	for i := 1; i <= num; i++ {
-		image, _, err := r.FormFile(fmt.Sprintf("image_%d", i))
+		f, _, err := r.FormFile(fmt.Sprintf("image_%d", i))
 		if err != nil {
-			return errors.New(fmt.Sprintf("Save images %d: %v", i, err))
+			continue
 		}
-		// todo: let images will not be created with the same name when one user upload photos twice in a second
-		// todo: should I return err when one of images failed to save ?
-		err = saveImage(dir+fmt.Sprintf("%d-%d.jpg", timeUnix, i), image)
+		na := dir + fmt.Sprintf("%d.jpg", time.Now().UnixNano())
+		err = saveImage(na, f)
 		if err != nil {
-			hasImageSaveFailed = true
+			log.Error("saveImages " + na + " failed: " + err.Error())
 		}
-		image.Close()
-	}
-	if hasImageSaveFailed {
-		return errors.New("There is image failed to be saved in " + dir)
+		f.Close()
 	}
 	return nil
 }
@@ -135,7 +131,7 @@ func GetImages(dir string) (imgs []string, err error) {
 	}
 	imgs = make([]string, 0, len(infos))
 	for _, info := range infos {
-		imgs = append(imgs, dir+info.Name())
+		imgs = append(imgs, info.Name())
 	}
 	if len(imgs) == 0 {
 		return nil, ErrNoImageExist
@@ -143,10 +139,16 @@ func GetImages(dir string) (imgs []string, err error) {
 	return imgs, nil
 }
 
-// GetImageBase get bases of an arry of paths, path is skipped when it is empty or consists entirely of slashes
+// GetImageBase get bases of an arry of paths
 func GetImageBase(paths []string) (base []string) {
+	if paths == nil {
+		return nil
+	}
 	base = make([]string, 0, len(paths))
 	for _, aPath := range paths {
+		if aPath == "" {
+			continue
+		}
 		base = append(base, path.Base(aPath))
 	}
 	return base

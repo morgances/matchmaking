@@ -32,6 +32,7 @@ type matchMakeConfig struct {
 	MchID           string
 	AppOrderKey     string
 	VIPFee          uint32
+	RoseFee         uint32
 	PrivateTokenKey string
 
 	// admin config
@@ -67,6 +68,7 @@ func init() {
 		AppSecret:       viper.GetString("app.app_secret"),
 		MchID:           viper.GetString("app.mch_id"),
 		VIPFee:          uint32(viper.GetInt32("app.vip_fee")),
+		RoseFee:         uint32(viper.GetInt32("app.rose_fee")),
 		AppOrderKey:     viper.GetString("app.key"),
 
 		AdmAccount:  viper.GetString("admin.account"),
