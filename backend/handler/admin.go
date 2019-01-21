@@ -6,7 +6,7 @@
 package handler
 
 import (
-	"strconv"
+	"github.com/morgances/matchmaking/backend/img"
 
 	"github.com/dgrijalva/jwt-go"
 
@@ -203,7 +203,7 @@ func GetUnreviewedPost(this *server.Context) error {
 		post.Location = rawPost.Location
 		post.Height = rawPost.Height
 		post.Constellation = rawPost.Constellation
-		post.Images, _ = util.GetImages("./post/" + strconv.Itoa(int(post.ID)))
+		post.Images, _ = img.GetPostImgs(post.ID)
 		resp = append(resp, post)
 	}
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
@@ -262,7 +262,7 @@ func AdminDeletePost(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	if err = util.ClearPostImages(req.TargetID); err != nil {
+	if err = img.ClearPostImages(req.TargetID); err != nil {
 		// make a log but tell admin succeed, because it succeed in database
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)

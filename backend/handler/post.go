@@ -13,8 +13,8 @@ import (
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/morgances/matchmaking/backend/constant"
+	"github.com/morgances/matchmaking/backend/img"
 	"github.com/morgances/matchmaking/backend/model"
-	"github.com/morgances/matchmaking/backend/util"
 	"github.com/zh1014/comment/response"
 )
 
@@ -53,7 +53,7 @@ func CreatePost(this *server.Context) error {
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
 
-	if err = util.SavePostImages(postId, this.Request()); err != nil {
+	if err = img.SavePostImages(postId, this.Request()); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrSaveImage, nil)
 	}
@@ -83,7 +83,7 @@ func GetReviewedPost(this *server.Context) error {
 		post.Location = rawPost.Location
 		post.Height = rawPost.Height
 		post.Constellation = rawPost.Constellation
-		post.Images, _ = util.GetImages("./post/" + strconv.Itoa(int(post.ID)))
+		post.Images, _ = img.GetImages("./post/" + strconv.Itoa(int(post.ID)))
 		resp = append(resp, post)
 	}
 	return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, resp)
@@ -110,7 +110,7 @@ func GetMyPost(this *server.Context) error {
 		post.Content = rawPost.Content
 		post.Date = rawPost.DateTime
 		post.Commend = rawPost.Commend
-		post.Images, _ = util.GetImages("./post/" + strconv.Itoa(int(post.ID)))
+		post.Images, _ = img.GetImages("./post/" + strconv.Itoa(int(post.ID)))
 		resp = append(resp, post)
 	}
 
@@ -160,7 +160,7 @@ func DeletePost(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	if err = util.ClearPostImages(req.TargetID); err != nil {
+	if err = img.ClearPostImages(req.TargetID); err != nil {
 		// make a log but tell user succeed, because it succeed in database
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)

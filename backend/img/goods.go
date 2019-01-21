@@ -7,6 +7,7 @@
 package img
 
 import (
+	"fmt"
 	"mime/multipart"
 	"os"
 	"strconv"
@@ -18,4 +19,9 @@ func ChangeGoodsImage(goodsid uint32, avatar multipart.File) error {
 
 func RemoveGoodsImage(goodsid uint32) error {
 	return os.RemoveAll(GoodsDir + strconv.Itoa(int(goodsid)))
+}
+
+func SaveGoodsImage(id uint32, f multipart.File) error {
+	n := fmt.Sprintf(GoodsDir+"%d.jpg", id)
+	return saveImage(n, f)
 }

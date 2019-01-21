@@ -6,18 +6,18 @@
 package handler
 
 import (
-	"fmt"
 	"mime/multipart"
 	"strconv"
+
+	"net/http"
 
 	"github.com/TechCatsLab/apix/http/server"
 	log "github.com/TechCatsLab/logging/logrus"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/morgances/matchmaking/backend/constant"
+	"github.com/morgances/matchmaking/backend/img"
 	"github.com/morgances/matchmaking/backend/model"
-	"github.com/morgances/matchmaking/backend/util"
 	"github.com/zh1014/comment/response"
-	"net/http"
 )
 
 type (
@@ -71,7 +71,7 @@ func CreateGoods(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrInvalidParam, resp)
 	}
-	if err = util.SaveImage(fmt.Sprintf("./goods/%d.jpg", lastId), image); err != nil {
+	if err = img.SaveGoodsImage(lastId, image); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrSaveImage, resp)
 	}
@@ -194,7 +194,7 @@ func ChangeGoodsImage(this *server.Context) error {
 	gid, err = strconv.Atoi(this.FormValue("goods_id"))
 	req.goodsID = uint32(gid)
 
-	if err = util.ChangeGoodsImage(req.goodsID, req.goodsImage); err != nil {
+	if err = img.ChangeGoodsImage(req.goodsID, req.goodsImage); err != nil {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrSaveImage, nil)
 	}
@@ -227,7 +227,7 @@ func DeleteGoods(this *server.Context) error {
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrMysql, nil)
 	}
-	if err = util.RemoveGoodsImage(req.TargetID); err != nil {
+	if err = img.RemoveGoodsImage(req.TargetID); err != nil {
 		// make a log but tell admin delete succeed, because it succeed in database
 		log.Error(err)
 		return response.WriteStatusAndDataJSON(this, constant.ErrSucceed, nil)
